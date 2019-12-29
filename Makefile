@@ -6,13 +6,15 @@ LDFLAGS=-lm `pkg-config --libs gtk+-3.0` \
 default: management
 all: management
 
-management: main.o RepoRecent.o RepoSelect.o %.h
+management: main.o RepoRecent.o RepoSelect.o
 	cc main.o RepoRecent.o RepoSelect.o ${LDFLAGS} -o management
 
-main.o: main.c %.h
-	cc ${CFLAGS} -c main.c ${LDFLAGS}
+%.o: %.c %.h
+	cc ${CFLAGS} -c $< ${LDFLAGS}
 
 .PHONY: clean
 clean:
 	-rm management
 	-rm main.o
+	-rm RepoRecent.o
+	-rm RepoSelect.o

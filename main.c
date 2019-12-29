@@ -5,11 +5,11 @@
 #include "RepoSelect.h"
 
 int main(int argc, char *argv[]) {
-    gtk_init(argc, argv);
+    gtk_init(&argc, &argv);
 
-    RepoSelect rs = repo_select_new();
-    repo_select_set_quit_on_destroy(true);
-    repo_select_run(&rs);
+    RepoSelect* rs = repo_select_new();
+    repo_select_set_quit_on_destroy(rs, true);
+    repo_select_run(rs);
 
     gtk_main();
     return 0;
