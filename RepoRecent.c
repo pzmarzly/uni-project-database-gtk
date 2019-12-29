@@ -34,13 +34,13 @@ FILE *get_recent_file(const char *mode) {
     return fp;
 }
 
-int repo_recent_load(char **dest) {
+int repo_recent_load(char **dest, int max) {
     FILE *fp = get_recent_file("rb");
     if (fp == NULL) return 0;
 
     int items = fgetc(fp);
     if (items == EOF) return 0;
-    if (items > 5) items = 5;
+    if (items > max) items = max;
 
     for (int i = 0; i < items; i++) {
         int len;
@@ -57,7 +57,7 @@ void repo_recent_save(char **src, int items) {
     FILE *fp = get_recent_file("wb");
     if (fp == NULL) return;
 
-    if (items > 5) items = 5;
+    if (items > 255) items = 255;
     char items_c = items;
     fputc(items_c, fp);
 

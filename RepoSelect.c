@@ -31,6 +31,11 @@ void on_destroy(GtkObject *sender, gpointer user_data) {
 void repo_select_run(RepoSelect *rs) {
     GtkWindow *window = gtk_builder_get_object(rs->ui, "window");
     g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(on_destroy), rs);
-    char **recent = repo_recent_load();
+
+    char *recent[5];
+    int recent_len = repo_recent_load(recent, 5);
+    GtkLabel *recent = gtk_builder_get_object(rs->ui, "recent");
+    gtk_label_set_text(recent, "Test. <a href=\"http://github.com/\" target=\"_blank\">Test</a>");
+
     gtk_widget_show_all(window);
 }
