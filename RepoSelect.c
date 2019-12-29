@@ -4,6 +4,7 @@
 #include "RepoSelect.h"
 #include <gtk/gtk.h>
 #include "RepoRecent.h"
+#include "Utils.h"
 
 struct RepoSelect {
     GtkBuilder *ui;
@@ -12,7 +13,9 @@ struct RepoSelect {
 
 RepoSelect* repo_select_new() {
     RepoSelect *rs = malloc(sizeof(RepoSelect));
-    rs->ui = gtk_builder_new_from_file("RepoSelect.xml");
+    char *xml = basedir();
+    strcat(xml, "/RepoSelect.xml");
+    rs->ui = gtk_builder_new_from_file(xml);
     rs->quit_on_destroy = false;
     return rs;
 }
@@ -29,8 +32,15 @@ void on_destroy(GtkWidget *sender, gpointer user_data) {
     free(rs);
 }
 
-void on_click(GtkWidget *sender, gpointer user_data) {
-    printf("Click\n");
+bool on_click(GtkWidget *sender, gpointer user_data) {
+    printf("Clicked on %s\n", user_data);
+    return true;
+}
+
+void make_recent(char* path, GObject *box) {
+    GtkWidget *recent_label = gtk_link_button_new_with_label(path, path);
+    g_signal_connect(G_OBJECT(recent_label), "activate-link", G_CALLBACK(on_click), path);
+    gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
 }
 
 void repo_select_run(RepoSelect *rs) {
@@ -40,13 +50,12 @@ void repo_select_run(RepoSelect *rs) {
     char *recent[5];
     int recent_len = repo_recent_load(recent, 5);
     GObject *recent_box = gtk_builder_get_object(rs->ui, "recent");
-
-    GtkWidget *event_box = gtk_event_box_new();
-    GtkWidget *recent_label = gtk_label_new("Test. <a href=\"http://github.com/\" target=\"_blank\">Test</a>");
-    g_signal_connect(G_OBJECT(event_box), "button-press-event", G_CALLBACK(on_click), NULL);
-    gtk_label_set_xalign(GTK_LABEL(recent_label), 0.1);
-    gtk_container_add(GTK_CONTAINER(event_box), GTK_WIDGET(recent_label));
-    gtk_box_pack_start(GTK_BOX(recent_box), GTK_WIDGET(event_box), 0, 0, 0);
+    for (int i = 0; i < recent_len; i++) {
+        make_recent(recent[i], recent_box);
+    }
+    char *demo = basedir();
+    strcat(demo, "/demo.db");
+    make_recent(demo, recent_box);
 
     gtk_widget_show_all(GTK_WIDGET(window));
 }
