@@ -42,26 +42,15 @@ int repo_recent_load(char **dest) {
     if (items == EOF) return 0;
     if (items > 5) items = 5;
 
-    int i, j;
-    for (i = 0; i < items; i++) {
-        char len1 = fgetc(fp);
-        if (len1 == EOF) return 0;
-        char len2 = fgetc(fp);
-        if (len2 == EOF) return 0;
-        int len = len1 << 8 | len2;
-        if (len > 8192) return 0;
-        char *item = malloc(len + 1);
-        for (j = 0; j < len; j++) {
-            char c = fgetc(fp);
-            if (c == EOF) return 0;
-            item[j] = c;
-        }
-        item[j] = '\0';
-        dest[i] = item;
+    for (int i = 0; i < items; i++) {
+        int len;
+        if (fread(&len, sizeof(int), 1, fp) != 1) return 0;
+        dest[i] = malloc(len + 1);
+        if (fread(dest[i], len + 1, 1, fp) != 1) return 0;
     }
 
     fclose(fp);
-    return i;
+    return items;
 }
 
 void repo_recent_save(char **src, int items) {
@@ -74,13 +63,8 @@ void repo_recent_save(char **src, int items) {
 
     for (int i = 0; i < items; i++) {
         int len = strlen(src[i]);
-        if (len > 8192) continue;
-        fputc(len >> 8 & 0xFF, fp);
-        fputc(len & 0xFF, fp);
-        for (int j = 0; j < len; j++) {
-            fputc(item[j], fp);
-        }
-        fputc('\0', fp);
+        fwrite(len, sizeof(int), 1, fp);
+        fwrite(src[i], len + 1, 1, fp);
     }
 
     fclose(fp);
