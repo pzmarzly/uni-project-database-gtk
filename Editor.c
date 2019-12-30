@@ -11,6 +11,7 @@ struct Editor {
     bool quit_on_destroy;
     GObject *window;
     Repo *repo;
+    char *repo_path;
 };
 
 Editor* editor_new(char *path, bool create) {
@@ -23,6 +24,7 @@ Editor* editor_new(char *path, bool create) {
     re->quit_on_destroy = false;
     re->window = NULL;
     re->repo = repo_open(path, create);
+    re->repo_path = g_strdup(path);
     return re;
 }
 
@@ -42,6 +44,11 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
 void editor_run(Editor *re) {
     re->window = gtk_builder_get_object(re->ui, "window");
     g_signal_connect(G_OBJECT(re->window), "destroy", G_CALLBACK(on_destroy), re);
+
+    char title[8192];
+    strcpy(title, re->repo_path);
+    strcat(title, " - WeźMnie");
+    gtk_window_set_title(GTK_WINDOW(re->window), title);
 
     if (re->repo == NULL) {
         const char *msg = "Nie udało się otworzyć pliku!";

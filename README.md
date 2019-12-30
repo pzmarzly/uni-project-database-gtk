@@ -1,4 +1,4 @@
-# Projekt końcowy WdPwjC: Paweł Zmarzły
+# Projekt końcowy WdPwjC: WeźMnie, autor: Paweł Zmarzły
 
 ## Polecenie
 
@@ -12,5 +12,3 @@ inne sensowne zapytania do systemu.
 System rejestracji danych powinien zapisywać wszystkie wprowadzone dane do plików,
 odczytywać je przy kolejnym uruchomieniu programu oraz umożliwiać korektę i usuwanie
 wcześniej wprowadzonych informacji.
-
-TODO: management-tui

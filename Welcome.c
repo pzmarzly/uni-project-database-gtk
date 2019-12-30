@@ -158,6 +158,7 @@ static void make_recent_label(Welcome *rs, char* path, GObject *box, bool pack_s
 void welcome_run(Welcome *rs) {
     rs->window = gtk_builder_get_object(rs->ui, "window");
     g_signal_connect(G_OBJECT(rs->window), "destroy", G_CALLBACK(on_destroy), rs);
+    gtk_window_set_title(GTK_WINDOW(rs->window), "WeźMnie");
     apply_css(GTK_WIDGET(rs->window), "label, button { margin: 5px; }");
 
     GObject *btn_new = gtk_builder_get_object(rs->ui, "new");

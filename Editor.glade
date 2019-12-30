@@ -4,6 +4,7 @@
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
+    <property name="icon_name">accessories-dictionary</property>
     <child>
       <placeholder/>
     </child>

@@ -7,6 +7,7 @@
     <property name="height_request">300</property>
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
+    <property name="icon_name">accessories-dictionary</property>
     <child>
       <placeholder/>
     </child>
