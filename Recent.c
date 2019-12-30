@@ -24,7 +24,7 @@ static void create_program_folder() {
     free(path);
 }
 
-static FILE *get_recent_file(const char *mode) {
+static FILE *open_recent_file(const char *mode) {
     create_program_folder();
 
     int path_len = strlen(getenv("HOME")) + 1
@@ -43,7 +43,7 @@ static FILE *get_recent_file(const char *mode) {
 }
 
 int recent_load(char **dest, int max) {
-    FILE *fp = get_recent_file("rb");
+    FILE *fp = open_recent_file("rb");
     if (fp == NULL) return 0;
 
     int len = fgetc(fp);
@@ -62,7 +62,7 @@ int recent_load(char **dest, int max) {
 }
 
 void recent_save(char **src, int len) {
-    FILE *fp = get_recent_file("wb");
+    FILE *fp = open_recent_file("wb");
     if (fp == NULL) return;
 
     if (len > 255) len = 255;

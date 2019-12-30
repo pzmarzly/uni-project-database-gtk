@@ -23,7 +23,7 @@ Editor* editor_new(char *path, bool create) {
 
     re->quit_on_destroy = false;
     re->window = NULL;
-    re->repo = repo_open(path, create);
+    re->repo = repo_open(path, create, 0);
     re->repo_path = g_strdup(path);
     return re;
 }
