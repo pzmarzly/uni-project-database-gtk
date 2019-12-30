@@ -78,7 +78,7 @@ void recent_save(char **src, int len) {
     fclose(fp);
 }
 
-void recent_push(char **src, int len, int limit, char *path) {
+int recent_push(char **src, int len, int limit, char *path) {
     // remove duplicates
     for (int i = 0; i < len; i++) {
         if (strcmp(src[i], path) == 0) {
@@ -91,7 +91,9 @@ void recent_push(char **src, int len, int limit, char *path) {
     // shift right
     for (int i = limit - 1; i > 0; i--)
         src[i] = src[i - 1];
-    src[0] = path;
+    src[0] = g_strdup(path);
     if (len < limit) len++;
     recent_save(src, len);
+
+    return len;
 }

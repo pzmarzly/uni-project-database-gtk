@@ -42,6 +42,10 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
     Welcome *rs = (Welcome *)user_data;
     if (rs->quit_on_destroy)
         gtk_main_quit();
+
+    for (int i = 1; i < rs->recent_len; i++)
+        free(rs->recent[i]);
+    free(rs->demo);
     free(rs);
 }
 
@@ -61,7 +65,12 @@ static LoadEditorRequest* prepare_request(Welcome *rs, char *path, bool create) 
 
 static void load_editor(LoadEditorRequest *req) {
     if (strcmp(req->path, req->rs->demo) != 0)
-        recent_push(req->rs->recent, req->rs->recent_len, MAX_RECENT, req->path);
+        req->rs->recent_len = recent_push(
+            req->rs->recent,
+            req->rs->recent_len,
+            MAX_RECENT,
+            req->path
+        );
 
     welcome_set_quit_on_destroy(req->rs, false);
     gtk_widget_destroy(GTK_WIDGET(req->rs->window));
@@ -140,11 +149,14 @@ static bool on_recent_label_clicked(GtkWidget *sender, gpointer user_data) {
     return true;
 }
 
-static void make_recent_label(Welcome *rs, char* path, GObject *box) {
+static void make_recent_label(Welcome *rs, char* path, GObject *box, bool pack_start) {
     GtkWidget *recent_label = gtk_link_button_new_with_label(path, path);
     g_signal_connect(G_OBJECT(recent_label), "activate-link",
         G_CALLBACK(on_recent_label_clicked), prepare_request(rs, path, false));
-    gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
+    if (pack_start)
+        gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
+    else
+        gtk_box_pack_end(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
 }
 
 void welcome_run(Welcome *rs) {
@@ -160,11 +172,11 @@ void welcome_run(Welcome *rs) {
     rs->recent_len = recent_load(rs->recent, MAX_RECENT);
     GObject *recent_box = gtk_builder_get_object(rs->ui, "recent");
     for (int i = 0; i < rs->recent_len; i++) {
-        make_recent_label(rs, rs->recent[i], recent_box);
+        make_recent_label(rs, rs->recent[i], recent_box, true);
     }
 
     rs->demo = strcat(basedir(), "/demo.db");
-    make_recent_label(rs, rs->demo, recent_box);
+    make_recent_label(rs, rs->demo, recent_box, false);
 
     gtk_widget_show_all(GTK_WIDGET(rs->window));
 }

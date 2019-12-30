@@ -40,12 +40,18 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
 }
 
 void editor_run(Editor *re) {
-    if (re->repo == NULL) {
-        return; // TODO: dialog
-    }
-
     re->window = gtk_builder_get_object(re->ui, "window");
     g_signal_connect(G_OBJECT(re->window), "destroy", G_CALLBACK(on_destroy), re);
+
+    if (re->repo == NULL) {
+        const char *msg = "Nie udało się otworzyć pliku!";
+        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(re->window),
+            GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", msg);
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        gtk_widget_destroy(GTK_WIDGET(re->window));
+        return;
+    }
 
     gtk_widget_show_all(GTK_WIDGET(re->window));
 }
