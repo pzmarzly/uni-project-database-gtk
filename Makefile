@@ -9,10 +9,13 @@ all: management
 management: main.o RepoEditor.o RepoRecent.o RepoSelect.o Utils.o
 	cc main.o RepoEditor.o RepoRecent.o RepoSelect.o Utils.o ${LDFLAGS} -o management
 
-%.o: %.c %.h
-	cc ${CFLAGS} -c $< ${LDFLAGS}
+%.o: %.c
+	cc ${CFLAGS} -c -MMD $< ${LDFLAGS}
 
 .PHONY: clean
 clean:
 	-rm management
 	-rm *.o
+	-rm *.d
+
+-include *.d
