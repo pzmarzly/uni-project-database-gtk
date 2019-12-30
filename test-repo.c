@@ -23,9 +23,15 @@ void creates_and_overrides() {
     repo_close(r);
 }
 
+void handles_equipment() {
+
+}
+
 int main() {
     creates_and_overrides();
+    handles_equipment();
 
     printf("OK\n");
+    clean();
     return 0;
 }

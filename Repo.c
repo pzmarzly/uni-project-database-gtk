@@ -109,6 +109,8 @@ void equipment_save(Repo *repo, EquipmentID id, Equipment *src) {
     }
     fseek(repo->file, sizeof(Header) + id * sizeof(Equipment), SEEK_SET);
     fwrite(src, sizeof(Equipment), 1, repo->file);
+    if (id >= repo->header.equipment_used)
+        repo->header.equipment_used = id;
 }
 void equipment_remove(Repo *repo, EquipmentID id) {
     if (id >= repo->header.equipment_used) return;
@@ -141,6 +143,8 @@ void periodic_reservation_save(Repo *repo, PeriodicReservationID id, PeriodicRes
     }
     fseek(repo->file, sizeof(Header) + id * sizeof(PeriodicReservation), SEEK_SET);
     fwrite(src, sizeof(PeriodicReservation), 1, repo->file);
+    if (id >= repo->header.periodic_reservation_used)
+        repo->header.periodic_reservation_used = id;
 }
 void periodic_reservation_remove(Repo *repo, PeriodicReservationID id) {
     if (id >= repo->header.periodic_reservation_used) return;
@@ -173,6 +177,8 @@ void one_time_reservation_save(Repo *repo, OneTimeReservationID id, OneTimeReser
     }
     fseek(repo->file, sizeof(Header) + id * sizeof(OneTimeReservation), SEEK_SET);
     fwrite(src, sizeof(OneTimeReservation), 1, repo->file);
+    if (id >= repo->header.one_time_reservation_used)
+        repo->header.one_time_reservation_used = id;
 }
 void one_time_reservation_remove(Repo *repo, OneTimeReservationID id) {
     if (id >= repo->header.one_time_reservation_used) return;
