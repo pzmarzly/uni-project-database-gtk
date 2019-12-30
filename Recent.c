@@ -1,4 +1,4 @@
-#include "RepoRecent.h"
+#include "Recent.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -42,7 +42,7 @@ static FILE *get_recent_file(const char *mode) {
     return fp;
 }
 
-int repo_recent_load(char **dest, int max) {
+int recent_load(char **dest, int max) {
     FILE *fp = get_recent_file("rb");
     if (fp == NULL) return 0;
 
@@ -61,7 +61,7 @@ int repo_recent_load(char **dest, int max) {
     return len;
 }
 
-void repo_recent_save(char **src, int len) {
+void recent_save(char **src, int len) {
     FILE *fp = get_recent_file("wb");
     if (fp == NULL) return;
 
@@ -78,7 +78,7 @@ void repo_recent_save(char **src, int len) {
     fclose(fp);
 }
 
-void repo_recent_push(char **src, int len, int limit, char *path) {
+void recent_push(char **src, int len, int limit, char *path) {
     // remove duplicates
     for (int i = 0; i < len; i++) {
         if (strcmp(src[i], path) == 0) {
@@ -93,5 +93,5 @@ void repo_recent_push(char **src, int len, int limit, char *path) {
         src[i] = src[i - 1];
     src[0] = path;
     if (len < limit) len++;
-    repo_recent_save(src, len);
+    recent_save(src, len);
 }

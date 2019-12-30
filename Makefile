@@ -6,8 +6,9 @@ LDFLAGS=-lm `pkg-config --libs gtk+-3.0` \
 default: management
 all: management
 
-management: main.o RepoEditor.o RepoRecent.o RepoSelect.o Utils.o
-	cc main.o RepoEditor.o RepoRecent.o RepoSelect.o Utils.o ${LDFLAGS} -o management
+MANAGEMENT_OBJS = main.o Repo.o Editor.o Recent.o Welcome.o Utils.o
+management: ${MANAGEMENT_OBJS}
+	cc ${MANAGEMENT_OBJS} ${LDFLAGS} -o management
 
 %.o: %.c
 	cc ${CFLAGS} -c -MMD $< ${LDFLAGS}
