@@ -8,10 +8,15 @@
 #include "RepoEditor.h"
 #include "Utils.h"
 
+#define MAX_RECENT 5
+
 struct RepoSelect {
     GtkBuilder *ui;
     bool quit_on_destroy;
     GObject *window;
+    char *recent[MAX_RECENT];
+    int recent_len;
+    char *demo;
 };
 
 RepoSelect* repo_select_new() {
@@ -23,7 +28,7 @@ RepoSelect* repo_select_new() {
 
     rs->quit_on_destroy = false;
     rs->window = NULL;
-
+    rs->recent_len = 0;
     return rs;
 }
 
@@ -54,10 +59,13 @@ static LoadRepoEditorRequest* prepare_request(RepoSelect *rs, char *path, bool c
 }
 
 static void load_repo_editor(LoadRepoEditorRequest *req) {
+    if (strcmp(req->path, req->rs->demo) != 0)
+        repo_recent_push(req->rs->recent, req->rs->recent_len, MAX_RECENT, req->path);
+
     repo_select_set_quit_on_destroy(req->rs, false);
     gtk_widget_destroy(GTK_WIDGET(req->rs->window));
 
-    RepoEditor* re = repo_editor_new(req->path);
+    RepoEditor* re = repo_editor_new(req->path, req->create);
     repo_editor_set_quit_on_destroy(re, true);
     repo_editor_run(re);
 
@@ -148,16 +156,14 @@ void repo_select_run(RepoSelect *rs) {
     g_signal_connect(G_OBJECT(btn_new), "clicked", G_CALLBACK(on_btn_new), rs);
     g_signal_connect(G_OBJECT(btn_open), "clicked", G_CALLBACK(on_btn_open), rs);
 
-    char *recent[5];
-    int recent_len = repo_recent_load(recent, 5);
+    rs->recent_len = repo_recent_load(rs->recent, MAX_RECENT);
     GObject *recent_box = gtk_builder_get_object(rs->ui, "recent");
-    for (int i = 0; i < recent_len; i++) {
-        make_recent(rs, recent[i], recent_box);
+    for (int i = 0; i < rs->recent_len; i++) {
+        make_recent(rs, rs->recent[i], recent_box);
     }
 
-    char *demo = strcat(basedir(), "/demo.db");
-    make_recent(rs, demo, recent_box);
-    free(demo);
+    rs->demo = strcat(basedir(), "/demo.db");
+    make_recent(rs, rs->demo, recent_box);
 
     gtk_widget_show_all(GTK_WIDGET(rs->window));
 }

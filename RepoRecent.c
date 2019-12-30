@@ -46,11 +46,11 @@ int repo_recent_load(char **dest, int max) {
     FILE *fp = get_recent_file("rb");
     if (fp == NULL) return 0;
 
-    int items = fgetc(fp);
-    if (items == EOF) return 0;
-    if (items > max) items = max;
+    int len = fgetc(fp);
+    if (len == EOF) return 0;
+    if (len > max) len = max;
 
-    for (int i = 0; i < items; i++) {
+    for (int i = 0; i < len; i++) {
         int len;
         if (fread(&len, sizeof(int), 1, fp) != 1) return 0;
         dest[i] = malloc(len + 1);
@@ -58,22 +58,40 @@ int repo_recent_load(char **dest, int max) {
     }
 
     fclose(fp);
-    return items;
+    return len;
 }
 
-void repo_recent_save(char **src, int items) {
+void repo_recent_save(char **src, int len) {
     FILE *fp = get_recent_file("wb");
     if (fp == NULL) return;
 
-    if (items > 255) items = 255;
-    char items_c = items;
-    fputc(items_c, fp);
+    if (len > 255) len = 255;
+    char len_c = len;
+    fputc(len_c, fp);
 
-    for (int i = 0; i < items; i++) {
+    for (int i = 0; i < len; i++) {
         int len = strlen(src[i]);
         fwrite(&len, sizeof(int), 1, fp);
         fwrite(src[i], len + 1, 1, fp);
     }
 
     fclose(fp);
+}
+
+void repo_recent_push(char **src, int len, int limit, char *path) {
+    // remove duplicates
+    for (int i = 0; i < len; i++) {
+        if (strcmp(src[i], path) == 0) {
+            if (i != len - 1)
+                src[i] = src[i + 1];
+            len--;
+        }
+    }
+
+    // shift right
+    for (int i = limit - 1; i > 0; i--)
+        src[i] = src[i - 1];
+    src[0] = path;
+    if (len < limit) len++;
+    repo_recent_save(src, len);
 }

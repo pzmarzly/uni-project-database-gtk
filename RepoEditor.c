@@ -9,10 +9,11 @@ struct RepoEditor {
     GtkBuilder *ui;
     bool quit_on_destroy;
     GObject *window;
-    char *path;
+    FILE *file;
+    bool unsaved;
 };
 
-RepoEditor* repo_editor_new(char *path) {
+RepoEditor* repo_editor_new(char *path, bool create) {
     RepoEditor *re = malloc(sizeof(RepoEditor));
 
     char *glade = strcat(basedir(), "/RepoEditor.glade");
@@ -21,7 +22,8 @@ RepoEditor* repo_editor_new(char *path) {
 
     re->quit_on_destroy = false;
     re->window = NULL;
-    re->path = g_strdup(path);
+    re->file = fopen(path, create ? "wb" : "r+b");
+    re->unsaved = false;
     return re;
 }
 
@@ -34,11 +36,27 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
     RepoEditor *re = (RepoEditor *)user_data;
     if (re->quit_on_destroy)
         gtk_main_quit();
+    fclose(re->file);
     free(re);
 }
 
+static bool on_delete(GtkWidget *sender, gpointer user_data) {
+    (void)sender;
+    RepoEditor *re = (RepoEditor *)user_data;
+    if (re->unsaved) {
+        // TODO: dialog
+        return true;
+    }
+    return false;
+}
+
 void repo_editor_run(RepoEditor *re) {
+    if (re->file == NULL) {
+        return; // TODO: dialog
+    }
+
     re->window = gtk_builder_get_object(re->ui, "window");
+    g_signal_connect(G_OBJECT(re->window), "delete", G_CALLBACK(on_delete), re);
     g_signal_connect(G_OBJECT(re->window), "destroy", G_CALLBACK(on_destroy), re);
 
     gtk_widget_show_all(GTK_WIDGET(re->window));
