@@ -15,8 +15,7 @@ struct RepoEditor {
 RepoEditor* repo_editor_new(char *path) {
     RepoEditor *re = malloc(sizeof(RepoEditor));
 
-    char *glade = basedir();
-    strcat(glade, "/RepoEditor.glade");
+    char *glade = strcat(basedir(), "/RepoEditor.glade");
     re->ui = gtk_builder_new_from_file(glade);
     free(glade);
 

@@ -17,8 +17,7 @@ struct RepoSelect {
 RepoSelect* repo_select_new() {
     RepoSelect *rs = malloc(sizeof(RepoSelect));
 
-    char *glade = basedir();
-    strcat(glade, "/RepoSelect.glade");
+    char *glade = strcat(basedir(), "/RepoSelect.glade");
     rs->ui = gtk_builder_new_from_file(glade);
     free(glade);
 
@@ -156,8 +155,7 @@ void repo_select_run(RepoSelect *rs) {
         make_recent(rs, recent[i], recent_box);
     }
 
-    char *demo = basedir();
-    strcat(demo, "/demo.db");
+    char *demo = strcat(basedir(), "/demo.db");
     make_recent(rs, demo, recent_box);
     free(demo);
 
