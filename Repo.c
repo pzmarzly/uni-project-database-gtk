@@ -9,6 +9,7 @@ struct Repo {
 Repo* repo_open(char *path, bool create) {
     Repo *repo = malloc(sizeof(Repo));
     repo->file = fopen(path, create ? "wb" : "r+b");
+    if (repo->file == NULL) return NULL;
     return repo;
 }
 

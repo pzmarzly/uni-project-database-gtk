@@ -91,7 +91,7 @@ int recent_push(char **src, int len, int limit, char *path) {
     // shift right
     for (int i = limit - 1; i > 0; i--)
         src[i] = src[i - 1];
-    src[0] = g_strdup(path);
+    src[0] = path;
     if (len < limit) len++;
     recent_save(src, len);
 

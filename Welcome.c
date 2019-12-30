@@ -42,10 +42,6 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
     Welcome *rs = (Welcome *)user_data;
     if (rs->quit_on_destroy)
         gtk_main_quit();
-
-    for (int i = 1; i < rs->recent_len; i++)
-        free(rs->recent[i]);
-    free(rs->demo);
     free(rs);
 }
 
