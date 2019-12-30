@@ -21,9 +21,9 @@ int main(int argc, char *argv[]) {
         printf("1.0.0\n");
     } else {
         FILE *f = fopen(argv[1], "rb");
-        bool create = f == NULL;
+        bool override = f == NULL;
         if (f != NULL) fclose(f);
-        Editor* re = editor_new(argv[1], create);
+        Editor* re = editor_new(argv[1], override);
         editor_set_quit_on_destroy(re, true);
         editor_run(re);
         gtk_main();

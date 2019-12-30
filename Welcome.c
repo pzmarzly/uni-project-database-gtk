@@ -48,14 +48,14 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
 typedef struct {
     Welcome *rs;
     char *path;
-    bool create;
+    bool override;
 } LoadEditorRequest;
 
-static LoadEditorRequest* prepare_request(Welcome *rs, char *path, bool create) {
+static LoadEditorRequest* prepare_request(Welcome *rs, char *path, bool override) {
     LoadEditorRequest *req = malloc(sizeof(LoadEditorRequest));
     req->rs = rs;
     req->path = g_strdup(path);
-    req->create = create;
+    req->override = override;
     return req;
 }
 
@@ -71,7 +71,7 @@ static void load_editor(LoadEditorRequest *req) {
     welcome_set_quit_on_destroy(req->rs, false);
     gtk_widget_destroy(GTK_WIDGET(req->rs->window));
 
-    Editor* re = editor_new(req->path, req->create);
+    Editor* re = editor_new(req->path, req->override);
     editor_set_quit_on_destroy(re, true);
     editor_run(re);
 

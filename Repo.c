@@ -40,14 +40,14 @@ static void save_header(Repo *repo) {
     fflush(repo->file);
 }
 
-Repo* repo_open(char *path, bool create, Timestamp semester_start) {
+Repo* repo_open(char *path, bool override, Timestamp semester_start) {
     Repo *repo = malloc(sizeof(Repo));
-    repo->file = fopen(path, create ? "wb" : "r+b");
+    repo->file = fopen(path, override ? "w+b" : "r+b");
     if (repo->file == NULL) {
         printf("Nie udało się otworzyć %s, kod %d\n", path, errno);
         return NULL;
     }
-    if (create) {
+    if (override) {
         default_header(&repo->header, semester_start);
         save_header(repo);
     } else {

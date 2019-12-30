@@ -14,7 +14,7 @@ struct Editor {
     char *repo_path;
 };
 
-Editor* editor_new(char *path, bool create) {
+Editor* editor_new(char *path, bool override) {
     Editor *re = malloc(sizeof(Editor));
 
     char *glade = strcat(basedir(), "/Editor.glade");
@@ -23,7 +23,7 @@ Editor* editor_new(char *path, bool create) {
 
     re->quit_on_destroy = false;
     re->window = NULL;
-    re->repo = repo_open(path, create, 0);
+    re->repo = repo_open(path, override, 0);
     re->repo_path = g_strdup(path);
     return re;
 }
