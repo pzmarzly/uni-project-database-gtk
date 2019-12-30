@@ -142,6 +142,7 @@ static void make_recent(RepoSelect *rs, char* path, GObject *box) {
 void repo_select_run(RepoSelect *rs) {
     rs->window = gtk_builder_get_object(rs->ui, "window");
     g_signal_connect(G_OBJECT(rs->window), "destroy", G_CALLBACK(on_destroy), rs);
+    apply_css(GTK_WIDGET(rs->window), "label, button { margin: 5px; }");
 
     GObject *btn_new = gtk_builder_get_object(rs->ui, "new");
     GObject *btn_open = gtk_builder_get_object(rs->ui, "open");
