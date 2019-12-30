@@ -8,7 +8,7 @@
 const char* PROGRAM_FOLDER = ".local/share/pl.pzmarzly.management";
 const char* RECENT_FILE = "recent.bin";
 
-void create_program_folder() {
+static void create_program_folder() {
     int path_len = strlen(getenv("HOME")) + 1
         + strlen(PROGRAM_FOLDER);
     char *path = malloc(path_len + 1);
@@ -24,7 +24,7 @@ void create_program_folder() {
     free(path);
 }
 
-FILE *get_recent_file(const char *mode) {
+static FILE *get_recent_file(const char *mode) {
     create_program_folder();
 
     int path_len = strlen(getenv("HOME")) + 1
