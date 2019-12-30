@@ -29,9 +29,14 @@ Timestamp repo_get_semester_start(Repo *repo) {
     return repo->header.semester_start;
 }
 
-static void load_header(Repo *repo) {
+static bool load_header(Repo *repo) {
     fseek(repo->file, 0, SEEK_SET);
-    fread(&repo->header, sizeof(Header), 1, repo->file);
+    int read = fread(&repo->header, sizeof(Header), 1, repo->file);
+    if (read != 1) return false;
+    for (size_t i = 0; i < TABLE_NUM; i++) {
+        if (repo->header.table_used[i] > repo->header.table_size[i]) return false;
+    }
+    return true;
 }
 
 static void save_header(Repo *repo) {
@@ -45,19 +50,24 @@ Repo* repo_open(char *path, bool override, Timestamp semester_start) {
     repo->file = fopen(path, override ? "w+b" : "r+b");
     if (repo->file == NULL) {
         printf("Nie udało się otworzyć %s, kod %d\n", path, errno);
+        free(repo);
         return NULL;
     }
     if (override) {
         default_header(&repo->header, semester_start);
         save_header(repo);
     } else {
-        load_header(repo);
+        if (!load_header(repo)) {
+            free(repo);
+            return NULL;
+        }
     }
     return repo;
 }
 
 void repo_close(Repo *repo) {
     if (repo != NULL) {
+        save_header(repo);
         fclose(repo->file);
         free(repo);
     }
