@@ -9,9 +9,10 @@ struct RepoEditor {
     GtkBuilder *ui;
     bool quit_on_destroy;
     GObject *window;
+    char *path;
 };
 
-RepoEditor* repo_editor_new() {
+RepoEditor* repo_editor_new(char *path) {
     RepoEditor *re = malloc(sizeof(RepoEditor));
 
     char *glade = basedir();
@@ -21,6 +22,7 @@ RepoEditor* repo_editor_new() {
 
     re->quit_on_destroy = false;
     re->window = NULL;
+    re->path = g_strdup(path);
     return re;
 }
 

@@ -1,14 +1,18 @@
 #include "Utils.h"
-
-#define _POSIX_C_SOURCE 200809L
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <gtk/gtk.h>
 
 char* basedir() {
-    char* buf = malloc(8192);
-    int len = readlink("/proc/self/exe", buf, 8192 - 1);
-    buf[len] = '\0';
-    *(strrchr(buf, '/')) = '\0';
-    return buf;
+    GError* error = NULL;
+    char *path = g_file_read_link("/proc/self/exe", &error);
+    *(strrchr(path, '/')) = '\0';
+    return path;
+}
+
+GtkFileFilter* file_filter() {
+    GtkFileFilter *filter = gtk_file_filter_new();
+    gtk_file_filter_add_pattern(filter, "*.db");
+    return filter;
 }

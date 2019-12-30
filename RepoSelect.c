@@ -2,7 +2,6 @@
 // Projekt, grupa MPi śr 12-14
 
 #include "RepoSelect.h"
-#define _POSIX_C_SOURCE 200809L
 #include <gtk/gtk.h>
 #include <string.h>
 #include "RepoRecent.h"
@@ -44,7 +43,16 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
 typedef struct {
     RepoSelect *rs;
     char *path;
+    bool create;
 } LoadRepoEditorRequest;
+
+static LoadRepoEditorRequest* prepare_request(RepoSelect *rs, char *path, bool create) {
+    LoadRepoEditorRequest *req = malloc(sizeof(LoadRepoEditorRequest));
+    req->rs = rs;
+    req->path = g_strdup(path);
+    req->create = create;
+    return req;
+}
 
 static void load_repo_editor(LoadRepoEditorRequest *req) {
     repo_select_set_quit_on_destroy(req->rs, false);
@@ -58,6 +66,66 @@ static void load_repo_editor(LoadRepoEditorRequest *req) {
     free(req);
 }
 
+static void on_btn_new(GtkWidget *sender, gpointer user_data) {
+    (void)sender;
+    RepoSelect *rs = (RepoSelect *)user_data;
+
+    GtkWidget *dialog = gtk_file_chooser_dialog_new(
+        "Utwórz bazę",
+        GTK_WINDOW(rs->window),
+        GTK_FILE_CHOOSER_ACTION_SAVE,
+        "Anuluj",
+        GTK_RESPONSE_CANCEL,
+        "Utwórz",
+        GTK_RESPONSE_ACCEPT,
+        NULL
+    );
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), file_filter());
+    gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
+    gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), "baza.db");
+
+    int res = gtk_dialog_run(GTK_DIALOG(dialog));
+    LoadRepoEditorRequest *req = NULL;
+    if (res == GTK_RESPONSE_ACCEPT) {
+        char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        req = prepare_request(rs, path, true);
+        g_free(path);
+    }
+    gtk_widget_destroy(dialog);
+
+    if (req != NULL)
+        load_repo_editor(req);
+}
+
+static void on_btn_open(GtkWidget *sender, gpointer user_data) {
+    (void)sender;
+    RepoSelect *rs = (RepoSelect *)user_data;
+
+    GtkWidget *dialog = gtk_file_chooser_dialog_new(
+        "Wybierz bazę",
+        GTK_WINDOW(rs->window),
+        GTK_FILE_CHOOSER_ACTION_SAVE,
+        "Anuluj",
+        GTK_RESPONSE_CANCEL,
+        "Otwórz",
+        GTK_RESPONSE_ACCEPT,
+        NULL
+    );
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), file_filter());
+
+    int res = gtk_dialog_run(GTK_DIALOG(dialog));
+    LoadRepoEditorRequest *req = NULL;
+    if (res == GTK_RESPONSE_ACCEPT) {
+        char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        req = prepare_request(rs, path, false);
+        g_free(path);
+    }
+    gtk_widget_destroy(dialog);
+
+    if (req != NULL)
+        load_repo_editor(req);
+}
+
 static bool load_recent(GtkWidget *sender, gpointer user_data) {
     (void)sender;
     load_repo_editor((LoadRepoEditorRequest *)user_data);
@@ -65,18 +133,20 @@ static bool load_recent(GtkWidget *sender, gpointer user_data) {
 }
 
 static void make_recent(RepoSelect *rs, char* path, GObject *box) {
-    LoadRepoEditorRequest *req = malloc(sizeof(LoadRepoEditorRequest));
-    req->rs = rs;
-    req->path = strdup(path);
-
     GtkWidget *recent_label = gtk_link_button_new_with_label(path, path);
-    g_signal_connect(G_OBJECT(recent_label), "activate-link", G_CALLBACK(load_recent), req);
+    g_signal_connect(G_OBJECT(recent_label), "activate-link",
+        G_CALLBACK(load_recent), prepare_request(rs, path, false));
     gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
 }
 
 void repo_select_run(RepoSelect *rs) {
     rs->window = gtk_builder_get_object(rs->ui, "window");
     g_signal_connect(G_OBJECT(rs->window), "destroy", G_CALLBACK(on_destroy), rs);
+
+    GObject *btn_new = gtk_builder_get_object(rs->ui, "new");
+    GObject *btn_open = gtk_builder_get_object(rs->ui, "open");
+    g_signal_connect(G_OBJECT(btn_new), "clicked", G_CALLBACK(on_btn_new), rs);
+    g_signal_connect(G_OBJECT(btn_open), "clicked", G_CALLBACK(on_btn_open), rs);
 
     char *recent[5];
     int recent_len = repo_recent_load(recent, 5);
