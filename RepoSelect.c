@@ -14,6 +14,7 @@ struct RepoSelect {
     GtkBuilder *ui;
     bool quit_on_destroy;
     GObject *window;
+
     char *recent[MAX_RECENT];
     int recent_len;
     char *demo;
@@ -133,16 +134,16 @@ static void on_btn_open(GtkWidget *sender, gpointer user_data) {
         load_repo_editor(req);
 }
 
-static bool load_recent(GtkWidget *sender, gpointer user_data) {
+static bool on_recent_label_clicked(GtkWidget *sender, gpointer user_data) {
     (void)sender;
     load_repo_editor((LoadRepoEditorRequest *)user_data);
     return true;
 }
 
-static void make_recent(RepoSelect *rs, char* path, GObject *box) {
+static void make_recent_label(RepoSelect *rs, char* path, GObject *box) {
     GtkWidget *recent_label = gtk_link_button_new_with_label(path, path);
     g_signal_connect(G_OBJECT(recent_label), "activate-link",
-        G_CALLBACK(load_recent), prepare_request(rs, path, false));
+        G_CALLBACK(on_recent_label_clicked), prepare_request(rs, path, false));
     gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
 }
 
@@ -159,11 +160,11 @@ void repo_select_run(RepoSelect *rs) {
     rs->recent_len = repo_recent_load(rs->recent, MAX_RECENT);
     GObject *recent_box = gtk_builder_get_object(rs->ui, "recent");
     for (int i = 0; i < rs->recent_len; i++) {
-        make_recent(rs, rs->recent[i], recent_box);
+        make_recent_label(rs, rs->recent[i], recent_box);
     }
 
     rs->demo = strcat(basedir(), "/demo.db");
-    make_recent(rs, rs->demo, recent_box);
+    make_recent_label(rs, rs->demo, recent_box);
 
     gtk_widget_show_all(GTK_WIDGET(rs->window));
 }

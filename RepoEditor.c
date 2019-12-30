@@ -56,7 +56,7 @@ void repo_editor_run(RepoEditor *re) {
     }
 
     re->window = gtk_builder_get_object(re->ui, "window");
-    g_signal_connect(G_OBJECT(re->window), "delete", G_CALLBACK(on_delete), re);
+    g_signal_connect(G_OBJECT(re->window), "delete-event", G_CALLBACK(on_delete), re);
     g_signal_connect(G_OBJECT(re->window), "destroy", G_CALLBACK(on_destroy), re);
 
     gtk_widget_show_all(GTK_WIDGET(re->window));
