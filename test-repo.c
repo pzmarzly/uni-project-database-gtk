@@ -24,7 +24,16 @@ void creates_and_overrides() {
 }
 
 void handles_equipment() {
-
+    clean();
+    Repo *r = repo_open("./test-repo.db", true, 1);
+    Equipment eq = {0, {0}, 0};
+    assert(repo_len(r, TableEquipment) == 0);
+    assert(repo_get(r, TableEquipment, 0, &eq) == false);
+    repo_set(r, TableEquipment, 0, &eq);
+    assert(repo_len(r, TableEquipment) == 1);
+    eq.type = 1;
+    assert(repo_get(r, TableEquipment, 0, &eq) == true);
+    assert(eq.type == 0);
 }
 
 int main() {

@@ -9,10 +9,16 @@ Repo* repo_open(char *path, bool create, Timestamp semester_start);
 void repo_close(Repo *repo);
 
 // Data types
-typedef unsigned int EquipmentID;
-typedef unsigned int PeriodicReservationID;
-typedef unsigned int OneTimeReservationID;
-typedef unsigned int StringID;
+typedef unsigned int ID;
+typedef unsigned int String;
+
+#define TABLE_NUM 4
+typedef enum {
+    TableEquipment = 0,
+    TablePeriodicReservation,
+    TableOneTimeReservation,
+    TableStringFragment,
+} TableID;
 
 typedef enum {
     Projector = 0,
@@ -24,7 +30,7 @@ typedef enum {
 typedef struct {
     EquipmentType type;
     char name[32];
-    StringID description;
+    String description;
 } Equipment;
 
 typedef enum {
@@ -53,24 +59,15 @@ typedef struct {
     OneTimeReservationType type;
     Timestamp start;
     Timestamp end;
-    StringID description;
+    String description;
 } OneTimeReservation;
 
-bool equipment_load(Repo *repo, EquipmentID id, Equipment *dest);
-void equipment_save(Repo *repo, EquipmentID id, Equipment *src);
-void equipment_remove(Repo *repo, EquipmentID id);
-unsigned equipment_len(Repo *repo);
+typedef struct {
+    int len;
+    char data[256];
+} StringFragment;
 
-bool periodic_reservation_load(Repo *repo, PeriodicReservationID id, PeriodicReservation *dest);
-void periodic_reservation_save(Repo *repo, PeriodicReservationID id, PeriodicReservation *src);
-void periodic_reservation_remove(Repo *repo, PeriodicReservationID id);
-unsigned periodic_reservation_len(Repo *repo);
-
-bool one_time_reservation_load(Repo *repo, OneTimeReservationID id, OneTimeReservation *dest);
-void one_time_reservation_save(Repo *repo, OneTimeReservationID id, OneTimeReservation *src);
-void one_time_reservation_remove(Repo *repo, OneTimeReservationID id);
-unsigned one_time_reservation_len(Repo *repo);
-
-bool string_load(Repo *repo, StringID id, char **dest);
-StringID string_save(Repo *repo, char **src);
-void string_remove(Repo *repo, StringID id);
+bool repo_get(Repo *repo, TableID table, ID id, void *dest);
+void repo_set(Repo *repo, TableID table, ID id, void *src);
+void repo_del(Repo *repo, TableID table, ID id);
+unsigned repo_len(Repo *repo, TableID table);
