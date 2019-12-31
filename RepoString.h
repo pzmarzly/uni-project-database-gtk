@@ -1,3 +1,4 @@
+#pragma once
 #include "Repo.h"
 
 bool repo_string_load(Repo *repo, String str, char **dest);

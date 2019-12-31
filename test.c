@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 #include "Repo.h"
+#include "RepoString.h"
 
 void clean() {
     system("rm test-repo.db || true");
@@ -57,9 +59,50 @@ void handles_data() {
     repo_close(r);
 }
 
+void handles_strings() {
+    clean();
+    Repo *r = repo_open("./test-repo.db", true, 1);
+    char *c1 = "Trochę tekstu.", *c2 = "Drugi tekst.", *c3 = "Trzeci tekst.";
+    char *str = c1;
+
+    assert(repo_string_load(r, 0, &str) == false);
+    assert(repo_string_save(r, &str) == 0);
+    str = NULL;
+    assert(repo_string_load(r, 0, &str) == true);
+    assert(strcmp(str, c1) == 0);
+    free(str);
+
+    str = c2;
+    assert(repo_string_save(r, &str) == 1);
+    repo_string_remove(r, 1);
+    str = c3;
+    assert(repo_string_save(r, &str) == 2);
+
+    str = NULL;
+    assert(repo_string_load(r, 0, &str) == true);
+    assert(strcmp(str, c1) == 0);
+    free(str);
+    str = NULL;
+    assert(repo_string_load(r, 1, &str) == false);
+    assert(repo_string_load(r, 2, &str) == true);
+    assert(strcmp(str, c3) == 0);
+    free(str);
+
+    repo_string_remove(r, 0);
+    str = NULL;
+    assert(repo_string_load(r, 0, &str) == false);
+    assert(repo_string_load(r, 1, &str) == false);
+    assert(repo_string_load(r, 2, &str) == true);
+    assert(strcmp(str, c3) == 0);
+    free(str);
+
+    repo_close(r);
+}
+
 int main() {
     opens_and_overrides();
     handles_data();
+    handles_strings();
 
     printf("OK\n");
     clean();

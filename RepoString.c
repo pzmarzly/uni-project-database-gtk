@@ -1,9 +1,12 @@
 #include "RepoString.h"
+#include <stdlib.h>
+#include <string.h>
+#include "Utils.h"
 
 // Returns the ID of the first part of the string.
-bool string_to_id(Repo *repo, String str, ID *output) {
+static bool string_to_id(Repo *repo, String str, ID *output) {
     StringFragment fragment;
-    ID max = repo_len(repo, TableStringFragment);
+    unsigned max = repo_len(repo, TableStringFragment);
     for (ID i = str; i < max;) {
         if (!repo_get(repo, TableStringFragment, i, &fragment)) return false;
         if (fragment.string > str) return false;
@@ -44,16 +47,18 @@ bool repo_string_load(Repo *repo, String str, char **dest) {
 String repo_string_save(Repo *repo, char **src) {
     // Get the last String and add 1.
     StringFragment fragment;
-    ID old_last = repo_len(repo, TableStringFragment);
-    if (!repo_get(repo, TableStringFragment, old_last, &fragment))
-        bug("Nie można wczytać ostatniego elementu StringFragment.");
-    String old_last_str = fragment.string;
+    unsigned table_size = repo_len(repo, TableStringFragment);
+    String str = 0;
+    ID first = table_size;
+    if (table_size > 0) {
+        if (!repo_get(repo, TableStringFragment, table_size - 1, &fragment))
+            bug("Nie można wczytać ostatniego elementu StringFragment.");
+        str = fragment.string + 1;
+    }
 
-    String str = old_last_str + 1;
-    ID first = old_last + 1;
     ID id = first;
     int data = strlen(*src);
-    for (int written = 0; i <= data;) {
+    for (int written = 0; written <= data;) {
         int to_copy = data - written;
         fragment.len = to_copy;
         if (fragment.len > STRING_FRAGMENT_MAX) {
@@ -62,7 +67,8 @@ String repo_string_save(Repo *repo, char **src) {
         }
 
         fragment.string = str;
-        strncpy(fragment.data, str, to_copy);
+        memcpy(fragment.data, *src + written, to_copy);
+        fragment.data[to_copy] = '\0';
         repo_set(repo, TableStringFragment, id, &fragment);
 
         written += fragment.len;
