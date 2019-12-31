@@ -1,28 +1,33 @@
-CC?=gcc
-CFLAGS=-ggdb -std=c11 -xc -Wall -Wextra `pkg-config --cflags gtk+-3.0`
-LDFLAGS=-lm `pkg-config --libs gtk+-3.0` \
+CC ?= gcc
+CFLAGS = -ggdb -std=c11 -xc -Wall -Wextra `pkg-config --cflags gtk+-3.0`
+LDFLAGS = -lm `pkg-config --libs gtk+-3.0` \
 	-fstack-protector-all -fsanitize=undefined \
 	-fsanitize=address -fno-omit-frame-pointer
+OBJ_DIR ?= obj
+BIN_DIR ?= bin
 
-default: wez-mnie-gtk
-all: wez-mnie-gtk test
+default: $(BIN_DIR)/wez-mnie-gtk
+all: $(BIN_DIR)/wez-mnie-gtk $(BIN_DIR)/test
 
-WEZ_MNIE_GTK = main.o Repo.o Editor.o Recent.o Welcome.o Utils.o
-wez-mnie-gtk: ${WEZ_MNIE_GTK}
+WEZ_MNIE_GTK_SRC = main.c Repo.c Editor.c Recent.c Welcome.c Utils.c
+WEZ_MNIE_GTK = ${WEZ_MNIE_GTK_SRC:%.c=$(OBJ_DIR)/%.o}
+$(BIN_DIR)/wez-mnie-gtk: ${WEZ_MNIE_GTK} | $(BIN_DIR)
 	$(CC) ${WEZ_MNIE_GTK} ${LDFLAGS} -o $@
 
-TEST = test.o Repo.o RepoString.o Utils.o
-test: ${TEST}
+TEST_SRC = test.c Repo.c RepoString.c Utils.c
+TEST = ${TEST_SRC:%.c=$(OBJ_DIR)/%.o}
+$(BIN_DIR)/test: ${TEST} | $(BIN_DIR)
 	$(CC) ${TEST} ${LDFLAGS} -o $@
 
-%.o: %.c
-	$(CC) ${CFLAGS} -c -MMD $<
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
+	$(CC) ${CFLAGS} -c -MMD $< -o $@
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 .PHONY: clean
 clean:
-	-rm wez-mnie-gtk
-	-rm test
-	-rm *.o
-	-rm *.d
+	-rm -f wez-mnie-gtk test
+	-rm -rf $(OBJ_DIR)
 
 -include *.d
