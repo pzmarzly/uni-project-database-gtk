@@ -10,7 +10,7 @@ GtkWidget* equipment_icon(EquipmentType type, unsigned size) {
     } else if (type == Whiteboard) {
         strcat(path, "/icons/white-board.png");
     } else {
-        strcat(path, "/icons/more.png");
+        strcat(path, "/icons/question-mark.png");
     }
     GError *error = NULL;
     GdkPixbuf* pixbuf = gdk_pixbuf_new_from_file_at_size(path, size, size, &error);
