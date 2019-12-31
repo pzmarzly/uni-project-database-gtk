@@ -6,6 +6,7 @@
 #include "Repo.h"
 #include "Utils.h"
 #include "EditorEquipment.h"
+#include "EditorReports.h"
 
 struct Editor {
     GtkBuilder *ui;
@@ -15,6 +16,7 @@ struct Editor {
     char *repo_path;
 
     EditorEquipment *equipment;
+    EditorReports *reports;
 };
 
 Editor* editor_new(char *path, bool overwrite) {
@@ -29,6 +31,7 @@ Editor* editor_new(char *path, bool overwrite) {
     re->repo = repo_open(path, overwrite, 0);
     re->repo_path = g_strdup(path);
     re->equipment = editor_equipment_new(re->repo, re->ui);
+    re->reports = editor_reports_new(re->repo, re->ui);
     return re;
 }
 
@@ -65,6 +68,7 @@ bool editor_run(Editor *re) {
     }
 
     editor_equipment_show(re->equipment);
+    editor_reports_show(re->reports);
 
     gtk_widget_show_all(GTK_WIDGET(re->window));
     return true;
