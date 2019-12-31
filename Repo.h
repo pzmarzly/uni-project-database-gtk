@@ -12,7 +12,10 @@ void repo_close(Repo *repo);
 typedef unsigned int ID;
 typedef unsigned int String;
 
+// Number of vector-like tables
 #define TABLE_NUM 4
+// Max size of table row
+#define MAX_STRUCT_SIZE 1024
 typedef enum {
     TableEquipment = 0,
     TablePeriodicReservation,
