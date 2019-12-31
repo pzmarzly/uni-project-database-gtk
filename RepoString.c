@@ -21,13 +21,12 @@ static bool string_to_id(Repo *repo, String str, ID *output) {
 
 bool repo_string_load(Repo *repo, String str, char **dest) {
     StringFragment fragment;
-    ID first, id;
+    ID first;
     if (!string_to_id(repo, str, &first)) return false;
 
     // Count the parts.
-    id = first;
     int parts = 0;
-    while (true) {
+    for (ID id = first; true; id++) {
         if (!repo_get(repo, TableStringFragment, id, &fragment)) break;
         if (fragment.string != str) break;
         if (fragment.len == STRING_FRAGMENT_TOMBSTONE) return false;
@@ -36,8 +35,7 @@ bool repo_string_load(Repo *repo, String str, char **dest) {
     }
 
     *dest = calloc(parts * STRING_FRAGMENT_MAX + 1, sizeof(char));
-    id = first;
-    for (int i = 0; i < parts; i++) {
+    for (ID id = first; id < first + parts; id++) {
         if (!repo_get(repo, TableStringFragment, id, &fragment)) return false;
         strcat(*dest, fragment.data);
     }
@@ -71,7 +69,7 @@ String repo_string_save(Repo *repo, char **src) {
         fragment.data[to_copy] = '\0';
         repo_set(repo, TableStringFragment, id, &fragment);
 
-        written += fragment.len;
+        written += to_copy;
         id++;
 
         if (written == data && fragment.len != STRING_FRAGMENT_MORE) break;

@@ -13,10 +13,29 @@ void repo_close(Repo *repo);
 typedef unsigned int ID;
 typedef unsigned int String;
 
-// Number of vector-like tables
+// Number of vector-like tables.
 #define TABLE_NUM 4
-// Max size of table row
+// Amount of rows preallocated in an empty database
+#define TABLE_SIZE1 64
+#define TABLE_SIZE2 1024
+// Max size of a table row
+// max(sizeof(Equipment), sizeof(PeriodicReservation),
+//     sizeof(OneTimeReservation), sizeof(StringFragment))
 #define MAX_STRUCT_SIZE 1024
+// Max length of a string fragment.
+#define STRING_FRAGMENT_MAX 255
+
+// Compile with `make clean test CFLAGS=-DDEBUG_REPO`
+// to test reallocations.
+#ifdef DEBUG_REPO
+    #undef TABLE_SIZE1
+    #define TABLE_SIZE1 1
+    #undef TABLE_SIZE2
+    #define TABLE_SIZE2 1
+    #undef STRING_FRAGMENT_MAX
+    #define STRING_FRAGMENT_MAX 1
+#endif
+
 typedef enum {
     TableEquipment = 0,
     TablePeriodicReservation,
@@ -66,8 +85,6 @@ typedef struct {
     String description;
 } OneTimeReservation;
 
-// Max length of string fragment.
-#define STRING_FRAGMENT_MAX 255
 // Magic number (goes into len) to symbolize more data awaiting.
 #define STRING_FRAGMENT_MORE 1024
 // Magic number (goes into len) to symbolize deleted element.

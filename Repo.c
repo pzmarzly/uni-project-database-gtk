@@ -14,10 +14,10 @@ typedef struct {
 
 static void default_header(Header *header, Timestamp semester_start) {
     header->semester_start = semester_start;
-    header->table_size[TableEquipment] = 64;
-    header->table_size[TablePeriodicReservation] = 64;
-    header->table_size[TableOneTimeReservation] = 1024;
-    header->table_size[TableStringFragment] = 1024;
+    header->table_size[TableEquipment] = TABLE_SIZE1;
+    header->table_size[TablePeriodicReservation] = TABLE_SIZE1;
+    header->table_size[TableOneTimeReservation] = TABLE_SIZE2;
+    header->table_size[TableStringFragment] = TABLE_SIZE2;
     memset(header->table_used, 0, sizeof(header->table_used));
 }
 
