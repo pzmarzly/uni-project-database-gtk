@@ -5,6 +5,7 @@
 #include <gtk/gtk.h>
 #include "Repo.h"
 #include "Utils.h"
+#include "EditorSemester.h"
 #include "EditorEquipment.h"
 #include "EditorReports.h"
 
@@ -15,6 +16,7 @@ struct Editor {
     Repo *repo;
     char *repo_path;
 
+    EditorSemester *semester;
     EditorEquipment *equipment;
     EditorReports *reports;
 };
@@ -30,6 +32,7 @@ Editor* editor_new(char *path, bool overwrite) {
     this->window = NULL;
     this->repo = repo_open(path, overwrite, 0);
     this->repo_path = g_strdup(path);
+    this->semester = editor_semester_new(this->repo, this->ui);
     this->equipment = editor_equipment_new(this->repo, this->ui);
     this->reports = editor_reports_new(this->repo, this->ui);
     return this;
@@ -67,6 +70,7 @@ bool editor_run(Editor *this) {
         return false;
     }
 
+    editor_semester_show(this->semester);
     editor_equipment_show(this->equipment);
     editor_reports_show(this->reports);
 

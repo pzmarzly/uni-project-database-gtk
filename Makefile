@@ -9,7 +9,7 @@ all: wez-mnie-gtk test gen-demo
 
 WEZ_MNIE_GTK = main.o Welcome.o Recent.o
 WEZ_MNIE_GTK += Editor.o EditorEquipment.o
-WEZ_MNIE_GTK += EditorReports.o
+WEZ_MNIE_GTK += EditorReports.o EditorSemester.o
 WEZ_MNIE_GTK += Repo.o RepoData.o RepoString.o
 WEZ_MNIE_GTK += Utils.o
 wez-mnie-gtk: ${WEZ_MNIE_GTK}

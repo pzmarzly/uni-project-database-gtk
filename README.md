@@ -32,14 +32,27 @@ wywołania programu, użytkownik będzie mógł pominąć to okno i od razu prze
 
 Edytor będzie zawierał kilka kart:
 
-- Start - wybór daty startu semestru, oraz zablokowanie/odblokowanie usuwania elementów,
+- Semestr - wybór daty startu semestru, start i anulowanie semestru,
 - Sprzęt - edycja sprzętu dostępnego na uczelni (nazwa, typ, opis),
-- Cykliczne - edycja rezerwacji cotygodniowych, powodująca usunięcie wszystkich rezerwacji
-jednorazowych (z powodu potencjalnych konfliktów),
+- Cykliczne - edycja rezerwacji cotygodniowych,
 - Wypożyczenia - widok tygodniowy, z opcją dodania nowej rezerwacji lub pominięcia wybranej
 rezerwacji cyklicznej w danym tygodniu,
 - Raporty - zawiera przyciski do generowania raportów (plan danego tygodnia, wolny sprzęt
 w danym terminie, ranking sprzętu według dostępności).
+
+Przed startem semestru będzie można zmieniać datę startu semestru, dodawać i usuwać sprzęt,
+a także dodawać i usuwać wypożyczenia cykliczne. Po starcie semestru będzie można dodawać
+sprzęt, dodawać i anulować wypożyczenia cykliczne (zaczynając od danej daty), pomijać
+wypożyczenia cykliczne w danych dniach, a także dodawać i usuwać rezerwacje pojedyncze.
+
+W przypadku awarii sprzętu dostępnego na uczelni użytkownik będzie mógł utworzyć rezerwację
+na okres naprawy (np. na kilka dni).
+
+Anulowanie semestru spowoduje usunięcie wszystkich jednorazowych wypożyczeń, wszystkich
+anulowanych cyklicznych wypożyczeń oraz wszystkich pominięć cyklicznych wypożyczeń. Ułatwi
+to przygotowanie planu na następny semestr (użytkownik będzie mógł skopiować bazę obecnego
+semestru, anulować w niej semestr, zmienić datę rozpoczęcia semestru i rozpocząć nowy semestr,
+nie musząc ręcznie przenosić z zakładek Sprzęt i Cykliczne).
 
 Format bazy danych:
 

@@ -67,10 +67,19 @@ typedef enum {
     Sunday,
 } Day;
 
+typedef enum {
+    DefinedBeforeSemester = 0,
+    DefinedDuringSemester,
+    CanceledDuringSemester,
+} PeriodicReservationType;
+
 typedef struct {
+    PeriodicReservationType type;
     Day day;
     HourAndMinute start;
     HourAndMinute end;
+    Timestamp active_since;
+    Timestamp active_until;
 } PeriodicReservation;
 
 typedef enum {
