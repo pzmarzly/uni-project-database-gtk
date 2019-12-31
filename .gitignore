@@ -2,6 +2,6 @@
 *.d
 *.db
 /wez-mnie-gtk
-/test-repo
+/test
 *~
 *.pdf

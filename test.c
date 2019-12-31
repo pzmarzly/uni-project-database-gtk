@@ -28,7 +28,7 @@ void handles_data() {
     Repo *r = repo_open("./test-repo.db", true, 1);
     Equipment eq = {1, {0}, 3};
     repo_set(r, TableEquipment, 0, &eq);
-    StringFragment str = {5, {0}};
+    StringFragment str = {3, 5, {0}};
 
     assert(repo_len(r, TableStringFragment) == 0);
     assert(repo_get(r, TableStringFragment, 0, &str) == false);

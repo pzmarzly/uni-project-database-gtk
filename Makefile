@@ -10,9 +10,9 @@ WEZ_MNIE_GTK = main.o Repo.o Editor.o Recent.o Welcome.o Utils.o
 wez-mnie-gtk: ${WEZ_MNIE_GTK}
 	cc ${WEZ_MNIE_GTK} ${LDFLAGS} -o wez-mnie-gtk
 
-TEST_REPO = test-repo.o Repo.o Utils.o
-test-repo: ${TEST_REPO}
-	cc ${TEST_REPO} ${LDFLAGS} -o test-repo
+TEST = test.o Repo.o RepoString.o Utils.o
+test: ${TEST}
+	cc ${TEST} ${LDFLAGS} -o test
 
 %.o: %.c
 	cc ${CFLAGS} -c -MMD $< ${LDFLAGS}
@@ -20,7 +20,7 @@ test-repo: ${TEST_REPO}
 .PHONY: clean
 clean:
 	-rm wez-mnie-gtk
-	-rm test-repo
+	-rm test
 	-rm *.o
 	-rm *.d
 

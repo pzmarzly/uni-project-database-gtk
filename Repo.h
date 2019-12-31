@@ -65,9 +65,16 @@ typedef struct {
     String description;
 } OneTimeReservation;
 
+// Max length of string fragment.
+#define STRING_FRAGMENT_MAX 255
+// Magic number (goes into len) to symbolize more data awaiting.
+#define STRING_FRAGMENT_MORE 1024
+// Magic number (goes into len) to symbolize deleted element.
+#define STRING_FRAGMENT_TOMBSTONE 2048
 typedef struct {
-    int len;
-    char data[256];
+    String string;
+    short len;
+    char data[STRING_FRAGMENT_MAX + 1];
 } StringFragment;
 
 bool repo_get(Repo *repo, TableID table, ID id, void *dest);

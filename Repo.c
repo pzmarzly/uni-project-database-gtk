@@ -3,8 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-// for g_strdup:
-#include <gtk/gtk.h>
+#include "Utils.h"
 
 typedef struct {
     Timestamp semester_start;
@@ -116,10 +115,9 @@ static void enlarge_table(Repo *repo, TableID table) {
     return;
 
     fail:
-    printf("BUG: Nie udało się zmienić rozmiaru bazy.\n");
     fclose(repo->file);
     fclose(old_repo->file);
-    exit(1);
+    bug("Nie udało się zmienić rozmiaru bazy.");
 }
 
 // Data types
@@ -164,9 +162,8 @@ bool repo_get(Repo *repo, TableID table, ID id, void *dest) {
 
 void repo_set(Repo *repo, TableID table, ID id, void *src) {
     if (id > repo->header.table_used[table]) {
-        printf("BUG: Dziura w tablicy.\n");
         fclose(repo->file);
-        exit(1);
+        bug("Dziura w tablicy.");
     }
 
     if (id >= repo->header.table_size[table])
@@ -188,7 +185,7 @@ void repo_del(Repo *repo, TableID table, ID id) {
     // Shift elements to the left.
     void *tmp = malloc(MAX_STRUCT_SIZE);
     for (ID i = id; i + 1 < repo->header.table_used[table]; i++) {
-        repo_get(repo, table, i + 1, tmp);
+        if (!repo_get(repo, table, i + 1, tmp)) bug("Nie można usunąć elementu.");
         repo_set(repo, table, i, tmp);
     }
     free(tmp);

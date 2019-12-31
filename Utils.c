@@ -2,7 +2,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <assert.h>
 #include <gtk/gtk.h>
+
+void bug(char *msg) {
+    printf("BUG: %s\n", msg);
+    abort();
+}
 
 char* basedir() {
     GError* error = NULL;
