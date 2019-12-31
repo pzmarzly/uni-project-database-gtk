@@ -20,9 +20,6 @@ test: ${TEST}
 
 .PHONY: clean
 clean:
-	-rm wez-mnie-gtk
-	-rm test
-	-rm *.o
-	-rm *.d
+	-rm -f wez-mnie-gtk test *.o *.d
 
 -include *.d
