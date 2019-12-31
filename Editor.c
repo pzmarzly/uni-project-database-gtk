@@ -14,7 +14,7 @@ struct Editor {
     char *repo_path;
 };
 
-Editor* editor_new(char *path, bool override) {
+Editor* editor_new(char *path, bool overwrite) {
     Editor *re = malloc(sizeof(Editor));
 
     char *glade = strcat(basedir(), "/Editor.glade");
@@ -23,7 +23,7 @@ Editor* editor_new(char *path, bool override) {
 
     re->quit_on_destroy = false;
     re->window = NULL;
-    re->repo = repo_open(path, override, 0);
+    re->repo = repo_open(path, overwrite, 0);
     re->repo_path = g_strdup(path);
     return re;
 }
@@ -41,7 +41,7 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
     free(re);
 }
 
-void editor_run(Editor *re) {
+bool editor_run(Editor *re) {
     re->window = gtk_builder_get_object(re->ui, "window");
     g_signal_connect(G_OBJECT(re->window), "destroy", G_CALLBACK(on_destroy), re);
 
@@ -56,9 +56,10 @@ void editor_run(Editor *re) {
             GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", msg);
         gtk_dialog_run(GTK_DIALOG(dialog));
         gtk_widget_destroy(dialog);
-        gtk_widget_destroy(GTK_WIDGET(re->window));
-        return;
+        free(re);
+        return false;
     }
 
     gtk_widget_show_all(GTK_WIDGET(re->window));
+    return true;
 }

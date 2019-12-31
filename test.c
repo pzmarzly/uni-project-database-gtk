@@ -9,7 +9,7 @@ void clean() {
     system("rm test-repo.db || true");
 }
 
-void opens_and_overrides() {
+void opens_and_overwrites() {
     clean();
     Repo *r = repo_open("./test-repo.db", true, 1);
     assert(r != NULL);
@@ -100,7 +100,7 @@ void handles_strings() {
 }
 
 int main() {
-    opens_and_overrides();
+    opens_and_overwrites();
     handles_data();
     handles_strings();
 

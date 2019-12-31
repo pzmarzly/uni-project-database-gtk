@@ -48,18 +48,23 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
 typedef struct {
     Welcome *rs;
     char *path;
-    bool override;
+    bool overwrite;
 } LoadEditorRequest;
 
-static LoadEditorRequest* prepare_request(Welcome *rs, char *path, bool override) {
+static LoadEditorRequest* prepare_request(Welcome *rs, char *path, bool overwrite) {
     LoadEditorRequest *req = malloc(sizeof(LoadEditorRequest));
     req->rs = rs;
     req->path = g_strdup(path);
-    req->override = override;
+    req->overwrite = overwrite;
     return req;
 }
 
 static void load_editor(LoadEditorRequest *req) {
+    Editor* re = editor_new(req->path, req->overwrite);
+    if (!editor_run(re)) {
+        return;
+    }
+
     if (strcmp(req->path, req->rs->demo) != 0)
         req->rs->recent_len = recent_push(
             req->rs->recent,
@@ -69,11 +74,8 @@ static void load_editor(LoadEditorRequest *req) {
         );
 
     welcome_set_quit_on_destroy(req->rs, false);
-    gtk_widget_destroy(GTK_WIDGET(req->rs->window));
-
-    Editor* re = editor_new(req->path, req->override);
     editor_set_quit_on_destroy(re, true);
-    editor_run(re);
+    gtk_widget_destroy(GTK_WIDGET(req->rs->window));
 
     free(req->path);
     free(req);
@@ -155,7 +157,7 @@ static void make_recent_label(Welcome *rs, char* path, GObject *box, bool pack_s
         gtk_box_pack_end(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
 }
 
-void welcome_run(Welcome *rs) {
+bool welcome_run(Welcome *rs) {
     rs->window = gtk_builder_get_object(rs->ui, "window");
     g_signal_connect(G_OBJECT(rs->window), "destroy", G_CALLBACK(on_destroy), rs);
     gtk_window_set_title(GTK_WINDOW(rs->window), "WeźMnie");
@@ -176,4 +178,5 @@ void welcome_run(Welcome *rs) {
     make_recent_label(rs, rs->demo, recent_box, false);
 
     gtk_widget_show_all(GTK_WIDGET(rs->window));
+    return true;
 }

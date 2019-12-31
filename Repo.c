@@ -36,7 +36,10 @@ static bool load_header(Repo *repo) {
     int read = fread(&repo->header, sizeof(Header), 1, repo->file);
     if (read != 1) return false;
     for (size_t i = 0; i < TABLE_NUM; i++) {
-        if (repo->header.table_used[i] > repo->header.table_size[i]) return false;
+        if (repo->header.table_used[i] > repo->header.table_size[i]) {
+            printf("Uszkodzony nagłówek\n");
+            return false;
+        }
     }
     return true;
 }
@@ -47,14 +50,14 @@ static void save_header(Repo *repo) {
     fflush(repo->file);
 }
 
-static Repo *repo_open_internal(Repo *repo, bool override, Timestamp semester_start) {
-    repo->file = fopen(repo->path, override ? "w+b" : "r+b");
+static Repo *repo_open_internal(Repo *repo, bool overwrite, Timestamp semester_start) {
+    repo->file = fopen(repo->path, overwrite ? "w+b" : "r+b");
     if (repo->file == NULL) {
         printf("Nie udało się otworzyć %s, kod %d\n", repo->path, errno);
         free(repo);
         return NULL;
     }
-    if (override) {
+    if (overwrite) {
         default_header(&repo->header, semester_start);
         save_header(repo);
     } else {
@@ -66,10 +69,10 @@ static Repo *repo_open_internal(Repo *repo, bool override, Timestamp semester_st
     return repo;
 }
 
-Repo* repo_open(char *path, bool override, Timestamp semester_start) {
+Repo* repo_open(char *path, bool overwrite, Timestamp semester_start) {
     Repo *repo = malloc(sizeof(Repo));
     repo->path = g_strdup(path);
-    return repo_open_internal(repo, override, semester_start);
+    return repo_open_internal(repo, overwrite, semester_start);
 }
 
 void repo_close(Repo *repo) {
