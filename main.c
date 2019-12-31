@@ -8,9 +8,9 @@
 
 // No CLI options provided.
 int nothing() {
-    Welcome* rs = welcome_new();
-    welcome_set_quit_on_destroy(rs, true);
-    if (welcome_run(rs))
+    Welcome* welcome = welcome_new();
+    welcome_set_quit_on_destroy(welcome, true);
+    if (welcome_run(welcome))
         gtk_main();
     return 0;
 }
@@ -38,9 +38,9 @@ int file(char *argv[]) {
     bool overwrite = f == NULL;
     if (f != NULL) fclose(f);
     // Open the editor directly.
-    Editor* re = editor_new(argv[1], overwrite);
-    editor_set_quit_on_destroy(re, true);
-    if (editor_run(re))
+    Editor* editor = editor_new(argv[1], overwrite);
+    editor_set_quit_on_destroy(editor, true);
+    if (editor_run(editor))
         gtk_main();
     return 0;
 }

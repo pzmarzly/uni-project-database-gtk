@@ -21,61 +21,61 @@ struct Welcome {
 };
 
 Welcome* welcome_new() {
-    Welcome *rs = malloc(sizeof(Welcome));
+    Welcome *this = malloc(sizeof(Welcome));
 
     char *glade = strcat(basedir(), "/Welcome.glade");
-    rs->ui = gtk_builder_new_from_file(glade);
+    this->ui = gtk_builder_new_from_file(glade);
     free(glade);
 
-    rs->quit_on_destroy = false;
-    rs->window = NULL;
-    rs->recent_len = 0;
-    return rs;
+    this->quit_on_destroy = false;
+    this->window = NULL;
+    this->recent_len = 0;
+    return this;
 }
 
-void welcome_set_quit_on_destroy(Welcome *rs, bool quit_on_destroy) {
-    rs->quit_on_destroy = quit_on_destroy;
+void welcome_set_quit_on_destroy(Welcome *this, bool quit_on_destroy) {
+    this->quit_on_destroy = quit_on_destroy;
 }
 
 static void on_destroy(GtkWidget *sender, gpointer user_data) {
     (void)sender;
-    Welcome *rs = (Welcome *)user_data;
-    if (rs->quit_on_destroy)
+    Welcome *this = (Welcome *)user_data;
+    if (this->quit_on_destroy)
         gtk_main_quit();
-    free(rs);
+    free(this);
 }
 
 typedef struct {
-    Welcome *rs;
+    Welcome *this;
     char *path;
     bool overwrite;
 } LoadEditorRequest;
 
-static LoadEditorRequest* prepare_load(Welcome *rs, char *path, bool overwrite) {
+static LoadEditorRequest* prepare_load(Welcome *this, char *path, bool overwrite) {
     LoadEditorRequest *req = malloc(sizeof(LoadEditorRequest));
-    req->rs = rs;
+    req->this = this;
     req->path = g_strdup(path);
     req->overwrite = overwrite;
     return req;
 }
 
 static void load_editor(LoadEditorRequest *req) {
-    Editor* re = editor_new(req->path, req->overwrite);
-    if (!editor_run(re)) {
+    Editor* editor = editor_new(req->path, req->overwrite);
+    if (!editor_run(editor)) {
         return;
     }
 
-    if (strcmp(req->path, req->rs->demo) != 0)
-        req->rs->recent_len = recent_push(
-            req->rs->recent,
-            req->rs->recent_len,
+    if (strcmp(req->path, req->this->demo) != 0)
+        req->this->recent_len = recent_push(
+            req->this->recent,
+            req->this->recent_len,
             MAX_RECENT,
             req->path
         );
 
-    welcome_set_quit_on_destroy(req->rs, false);
-    editor_set_quit_on_destroy(re, true);
-    gtk_widget_destroy(GTK_WIDGET(req->rs->window));
+    welcome_set_quit_on_destroy(req->this, false);
+    editor_set_quit_on_destroy(editor, true);
+    gtk_widget_destroy(GTK_WIDGET(req->this->window));
 
     free(req->path);
     free(req);
@@ -83,11 +83,11 @@ static void load_editor(LoadEditorRequest *req) {
 
 static void on_btn_new(GtkWidget *sender, gpointer user_data) {
     (void)sender;
-    Welcome *rs = (Welcome *)user_data;
+    Welcome *this = (Welcome *)user_data;
 
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
         "Utwórz bazę",
-        GTK_WINDOW(rs->window),
+        GTK_WINDOW(this->window),
         GTK_FILE_CHOOSER_ACTION_SAVE,
         "Anuluj",
         GTK_RESPONSE_CANCEL,
@@ -103,7 +103,7 @@ static void on_btn_new(GtkWidget *sender, gpointer user_data) {
     LoadEditorRequest *req = NULL;
     if (res == GTK_RESPONSE_ACCEPT) {
         char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-        req = prepare_load(rs, path, true);
+        req = prepare_load(this, path, true);
         g_free(path);
     }
     gtk_widget_destroy(dialog);
@@ -114,11 +114,11 @@ static void on_btn_new(GtkWidget *sender, gpointer user_data) {
 
 static void on_btn_open(GtkWidget *sender, gpointer user_data) {
     (void)sender;
-    Welcome *rs = (Welcome *)user_data;
+    Welcome *this = (Welcome *)user_data;
 
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
         "Wybierz bazę",
-        GTK_WINDOW(rs->window),
+        GTK_WINDOW(this->window),
         GTK_FILE_CHOOSER_ACTION_SAVE,
         "Anuluj",
         GTK_RESPONSE_CANCEL,
@@ -132,7 +132,7 @@ static void on_btn_open(GtkWidget *sender, gpointer user_data) {
     LoadEditorRequest *req = NULL;
     if (res == GTK_RESPONSE_ACCEPT) {
         char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-        req = prepare_load(rs, path, false);
+        req = prepare_load(this, path, false);
         g_free(path);
     }
     gtk_widget_destroy(dialog);
@@ -147,36 +147,36 @@ static bool on_recent_label_clicked(GtkWidget *sender, gpointer user_data) {
     return true;
 }
 
-static void make_recent_label(Welcome *rs, char* path, GObject *box, bool pack_start) {
+static void make_recent_label(Welcome *this, char* path, GObject *box, bool pack_start) {
     GtkWidget *recent_label = gtk_link_button_new_with_label(path, path);
     g_signal_connect(G_OBJECT(recent_label), "activate-link",
-        G_CALLBACK(on_recent_label_clicked), prepare_load(rs, path, false));
+        G_CALLBACK(on_recent_label_clicked), prepare_load(this, path, false));
     if (pack_start)
         gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
     else
         gtk_box_pack_end(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
 }
 
-bool welcome_run(Welcome *rs) {
-    rs->window = gtk_builder_get_object(rs->ui, "window");
-    g_signal_connect(G_OBJECT(rs->window), "destroy", G_CALLBACK(on_destroy), rs);
-    gtk_window_set_title(GTK_WINDOW(rs->window), "WeźMnie");
-    apply_css(GTK_WIDGET(rs->window), "label, button { margin: 5px; }");
+bool welcome_run(Welcome *this) {
+    this->window = gtk_builder_get_object(this->ui, "window");
+    g_signal_connect(G_OBJECT(this->window), "destroy", G_CALLBACK(on_destroy), this);
+    gtk_window_set_title(GTK_WINDOW(this->window), "WeźMnie");
+    apply_css(GTK_WIDGET(this->window), "label, button { margin: 5px; }");
 
-    GObject *btn_new = gtk_builder_get_object(rs->ui, "new");
-    GObject *btn_open = gtk_builder_get_object(rs->ui, "open");
-    g_signal_connect(G_OBJECT(btn_new), "clicked", G_CALLBACK(on_btn_new), rs);
-    g_signal_connect(G_OBJECT(btn_open), "clicked", G_CALLBACK(on_btn_open), rs);
+    GObject *btn_new = gtk_builder_get_object(this->ui, "new");
+    GObject *btn_open = gtk_builder_get_object(this->ui, "open");
+    g_signal_connect(G_OBJECT(btn_new), "clicked", G_CALLBACK(on_btn_new), this);
+    g_signal_connect(G_OBJECT(btn_open), "clicked", G_CALLBACK(on_btn_open), this);
 
-    rs->recent_len = recent_load(rs->recent, MAX_RECENT);
-    GObject *recent_box = gtk_builder_get_object(rs->ui, "recent");
-    for (int i = 0; i < rs->recent_len; i++) {
-        make_recent_label(rs, rs->recent[i], recent_box, true);
+    this->recent_len = recent_load(this->recent, MAX_RECENT);
+    GObject *recent_box = gtk_builder_get_object(this->ui, "recent");
+    for (int i = 0; i < this->recent_len; i++) {
+        make_recent_label(this, this->recent[i], recent_box, true);
     }
 
-    rs->demo = strcat(basedir(), "/demo.db");
-    make_recent_label(rs, rs->demo, recent_box, false);
+    this->demo = strcat(basedir(), "/demo.db");
+    make_recent_label(this, this->demo, recent_box, false);
 
-    gtk_widget_show_all(GTK_WIDGET(rs->window));
+    gtk_widget_show_all(GTK_WIDGET(this->window));
     return true;
 }
