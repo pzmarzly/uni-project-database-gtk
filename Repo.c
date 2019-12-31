@@ -185,14 +185,21 @@ void repo_set(Repo *repo, TableID table, ID id, void *src) {
 void repo_del(Repo *repo, TableID table, ID id) {
     if (id >= repo->header.table_used[table]) return;
 
-    // Shift elements to the left.
     void *tmp = malloc(MAX_STRUCT_SIZE);
+    // Shift elements to the left.
     for (ID i = id; i + 1 < repo->header.table_used[table]; i++) {
         if (!repo_get(repo, table, i + 1, tmp)) bug("Nie można usunąć elementu.");
         repo_set(repo, table, i, tmp);
     }
+    repo->header.table_used[table]--;
+    save_header(repo);
+
+    // Zero out the free space.
+    memset(tmp, 0, MAX_STRUCT_SIZE);
+    repo_set(repo, table, repo->header.table_used[table], tmp);
     free(tmp);
 
+    // repo_set just increased repo size, so we decrease it again.
     repo->header.table_used[table]--;
     save_header(repo);
 }

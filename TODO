@@ -1,12 +1,13 @@
 rename re -> ed
-principle of least surprise
 
 proper classes https://developer.gnome.org/gtk-tutorial/stable/x2200.html
 translation https://developer.gnome.org/gtk3/stable/gtk-question-index.html
+better enlarge_table
 
 ensure all headers have pragma once
 ensure all files have a signature
 static functions everywhere
+comments ending with dot
 free and unref
 
 question-mark image-projector laptop: Icon made by Freepik from www.flaticon.com

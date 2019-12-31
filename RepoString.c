@@ -85,6 +85,7 @@ void repo_string_remove(Repo *repo, String str) {
     if (!string_to_id(repo, str, &first)) return;
     if (!repo_get(repo, TableStringFragment, first, &fragment)) return;
     fragment.len = STRING_FRAGMENT_TOMBSTONE;
+    memset(fragment.data, 0, STRING_FRAGMENT_MAX + 1);
     repo_set(repo, TableStringFragment, first, &fragment);
 
     // Other parts can be deleted.
