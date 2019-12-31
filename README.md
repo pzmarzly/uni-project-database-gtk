@@ -1,3 +1,8 @@
+---
+lang: pl
+papersize: a4
+---
+
 # Projekt końcowy WdPwjC: WeźMnie, autor: Paweł Zmarzły
 
 ## Polecenie

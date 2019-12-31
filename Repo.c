@@ -91,16 +91,16 @@ static Position calc_position(Repo *repo, TableID table, ID id) {
     // Cascade addition of offset.
     switch (table) {
         case TableStringFragment:
-            if (!size) size = sizeof(TableStringFragment);
-            position += sizeof(OneTimeReservation) * repo->header.table_used[TableOneTimeReservation];
+            if (!size) size = sizeof(StringFragment);
+            position += sizeof(OneTimeReservation) * repo->header.table_size[TableOneTimeReservation];
             __attribute__((fallthrough));
         case TableOneTimeReservation:
             if (!size) size = sizeof(OneTimeReservation);
-            position += sizeof(PeriodicReservation) * repo->header.table_used[TablePeriodicReservation];
+            position += sizeof(PeriodicReservation) * repo->header.table_size[TablePeriodicReservation];
             __attribute__((fallthrough));
         case TablePeriodicReservation:
             if (!size) size = sizeof(PeriodicReservation);
-            position += sizeof(Equipment) * repo->header.table_used[TableEquipment];
+            position += sizeof(Equipment) * repo->header.table_size[TableEquipment];
             __attribute__((fallthrough));
         case TableEquipment:
             if (!size) size = sizeof(Equipment);
