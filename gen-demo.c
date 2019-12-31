@@ -14,12 +14,12 @@ void generate_demo() {
     Repo *r = repo_open("./demo.db", true, date);
 
     char *c1 = "Trochę tekstu.";
-    String desc = repo_string_save(r, &c1);
+    repo_string_set(r, 0, &c1);
 
     Equipment eq = {
         .name = "Rzutnik 1",
         .type = Projector,
-        .description = desc,
+        .description = 0,
     };
     repo_set(r, TableEquipment, 0, &eq);
 

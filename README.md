@@ -43,14 +43,18 @@ w danym terminie, ranking sprzętu według dostępności).
 
 Format bazy danych:
 
-- nagłówek - początek semestru, rozmiary sekcji,
-- rosnąca tablica TableEquipment - informacje o sprzęcie,
-- rosnąca tablica TablePeriodicReservation - informacje o rezerwacjach cyklicznych,
-- rosnąca tablica TableOneTimeReservation - informacje o rezerwacjach jednorazowych,
-- rosnąca tablica TableStringFragment - sekcja przeznaczona na tekst o nieznanej, nieograniczonej
+1. nagłówek - początek semestru, rozmiary sekcji,
+2. rosnąca tablica TableEquipment - informacje o sprzęcie,
+3. rosnąca tablica TablePeriodicReservation - informacje o rezerwacjach cyklicznych,
+4. rosnąca tablica TableOneTimeReservation - informacje o rezerwacjach jednorazowych,
+5. rosnąca tablica TableStringMetadata - sekcja przeznaczona na metadane tekstu,
+6. rosnąca tablica TableStringFragment - sekcja przeznaczona na tekst o nieznanej, nieograniczonej
 długości (będzie on dzielony na fragmenty po maksymalnie 255 znaków).
 
 Nagłówek będzie trzymany w pamięci, z pozostałych części bazy dane będą wczytywane fragmentami
-na żądanie. Zmiany będą zapisywane na dysk na bieżąco. Usunięte fragmenty tekstu będą pozostawiały
-nagrobki, w celu optymalizacji czasu dostępu do danych ($O(\frac{n}{i})$ zamiast $O(n)$
-dla $i$-tego elementu).
+na żądanie. Zmiany będą zapisywane na dysk na bieżąco. Format bazy danych pozwoli na odczyt
+danych w czasie $O(1)$, ich zapis w czasie $O(n)$ w zależności od całkowitego rozmiaru bazy,
+a także ich usuwanie w czasie $O(n)$ w zależności od rozmiaru segmentu, w którym są dane.
+Tablice 2. - 4. będą zawierały odniesienia do tablicy 5., więc usuwanie tekstu będzie pozostawiać
+w tablicy 5. informacje o usuwanym elemencie (aby identyfikatory pozostałych elementów nie uległy
+zmianie), usuwając jednak jego zawartość z tablicy 6.

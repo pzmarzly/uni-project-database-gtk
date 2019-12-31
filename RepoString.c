@@ -3,95 +3,69 @@
 #include <string.h>
 #include "Utils.h"
 
-// Returns the ID of the first part of the string.
-static bool string_to_id(Repo *repo, String str, ID *output) {
-    StringFragment fragment;
-    unsigned max = repo_len(repo, TableStringFragment);
-    for (ID i = str; i < max;) {
-        if (!repo_get(repo, TableStringFragment, i, &fragment)) return false;
-        if (fragment.string > str) return false;
-        if (fragment.string == str) {
-            *output = i;
-            return true;
-        }
-        i += str - fragment.string;
-    }
-    return false;
-}
+bool repo_string_get(Repo *repo, ID id, char **dest) {
+    StringMetadata metadata;
+    if (!repo_get(repo, TableStringMetadata, id, &metadata)) return false;
+    if (metadata.len == 0) return false;
 
-bool repo_string_load(Repo *repo, String str, char **dest) {
-    StringFragment fragment;
-    ID first;
-    if (!string_to_id(repo, str, &first)) return false;
-
-    // Count the parts.
-    int parts = 0;
-    for (ID id = first; true; id++) {
-        if (!repo_get(repo, TableStringFragment, id, &fragment)) break;
-        if (fragment.string != str) break;
-        if (fragment.len == STRING_FRAGMENT_TOMBSTONE) return false;
-        parts++;
-        if (fragment.len != STRING_FRAGMENT_MORE) break;
-    }
-
-    *dest = calloc(parts * STRING_FRAGMENT_MAX + 1, sizeof(char));
-    for (ID id = first; id < first + parts; id++) {
-        if (!repo_get(repo, TableStringFragment, id, &fragment)) return false;
-        strcat(*dest, fragment.data);
+    *dest = malloc(metadata.len * STRING_FRAGMENT_MAX);
+    for (ID i = 0; i < metadata.len; i++) {
+        StringFragment fragment;
+        if (!repo_get(repo, TableStringFragment, metadata.start + i, &fragment))
+            return false;
+        memcpy(*dest + i * STRING_FRAGMENT_MAX, fragment.data, STRING_FRAGMENT_MAX);
     }
     return true;
 }
 
-String repo_string_save(Repo *repo, char **src) {
-    // Get the last String and add 1.
-    StringFragment fragment;
-    unsigned table_size = repo_len(repo, TableStringFragment);
-    String str = 0;
-    ID first = table_size;
-    if (table_size > 0) {
-        if (!repo_get(repo, TableStringFragment, table_size - 1, &fragment))
-            bug("Nie można wczytać ostatniego elementu StringFragment.");
-        str = fragment.string + 1;
+void repo_string_set(Repo *repo, ID id, char **src) {
+    repo_string_del(repo, id);
+
+    StringMetadata metadata;
+    metadata.start = repo_len(repo, TableStringFragment);
+    unsigned data = strlen(*src) + 1;
+    metadata.len = data / STRING_FRAGMENT_MAX;
+    if (metadata.len * STRING_FRAGMENT_MAX < data) metadata.len++;
+
+    for (ID i = 0; i < metadata.len; i++) {
+        StringFragment fragment;
+        int to_copy = data;
+        if (to_copy > STRING_FRAGMENT_MAX) to_copy = STRING_FRAGMENT_MAX;
+        memcpy(fragment.data, *src + i * STRING_FRAGMENT_MAX, to_copy);
+        repo_set(repo, TableStringFragment, metadata.start + i, &fragment);
+        data -= to_copy;
     }
 
-    ID id = first;
-    int data = strlen(*src);
-    for (int written = 0; written <= data;) {
-        int to_copy = data - written;
-        fragment.len = to_copy;
-        if (fragment.len > STRING_FRAGMENT_MAX) {
-            to_copy = STRING_FRAGMENT_MAX;
-            fragment.len = STRING_FRAGMENT_MORE;
-        }
-
-        fragment.string = str;
-        memcpy(fragment.data, *src + written, to_copy);
-        fragment.data[to_copy] = '\0';
-        repo_set(repo, TableStringFragment, id, &fragment);
-
-        written += to_copy;
-        id++;
-
-        if (written == data && fragment.len != STRING_FRAGMENT_MORE) break;
-    }
-    return str;
+    repo_set(repo, TableStringMetadata, id, &metadata);
 }
 
-void repo_string_remove(Repo *repo, String str) {
-    StringFragment fragment;
+void repo_string_del(Repo *repo, ID id) {
+    if (id < repo_string_len(repo)) {
+        // Remove string content.
+        StringMetadata metadata;
+        if (!repo_get(repo, TableStringMetadata, id, &metadata)) return;
+        if (metadata.len == 0) return;
+        repo_del_n(repo, TableStringFragment, metadata.start, metadata.len);
 
-    // First part becomes a tombstone (to keep String keys constant).
-    ID first;
-    if (!string_to_id(repo, str, &first)) return;
-    if (!repo_get(repo, TableStringFragment, first, &fragment)) return;
-    fragment.len = STRING_FRAGMENT_TOMBSTONE;
-    memset(fragment.data, 0, STRING_FRAGMENT_MAX + 1);
-    repo_set(repo, TableStringFragment, first, &fragment);
+        // Fix references to the moved area.
+        for (ID i = 0; i < repo_string_len(repo); i++){
+            StringMetadata other;
+            if (!repo_get(repo, TableStringMetadata, i, &other)) {
+                printf("Nie można naprawić odniesienia %d (podczas usuwania %d).\n", i, id);
+                continue;
+            }
+            if (other.start > metadata.start) {
+                other.start -= metadata.len;
+                repo_set(repo, TableStringMetadata, i, &other);
+            }
+        }
 
-    // Other parts can be deleted.
-    while (true) {
-        if (!repo_get(repo, TableStringFragment, first + 1, &fragment)) return;
-        if (fragment.string != str) return;
-        repo_del(repo, TableStringFragment, first + 1);
+        // Leave a tombstone so that IDs don't change.
+        metadata.len = 0;
+        repo_set(repo, TableStringMetadata, id, &metadata);
     }
+}
+
+ID repo_string_len(Repo *repo) {
+    return repo_len(repo, TableStringMetadata);
 }

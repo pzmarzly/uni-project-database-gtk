@@ -11,35 +11,36 @@ void repo_close(Repo *repo);
 
 // Data types
 typedef unsigned int ID;
-typedef unsigned int String;
 
 // Number of vector-like tables.
-#define TABLE_NUM 4
+#define TABLE_NUM 5
 // Amount of rows preallocated in an empty database
 #define TABLE_SIZE1 64
 #define TABLE_SIZE2 1024
 // Max size of a table row
 // max(sizeof(Equipment), sizeof(PeriodicReservation),
-//     sizeof(OneTimeReservation), sizeof(StringFragment))
-#define MAX_STRUCT_SIZE 1024
+//     sizeof(OneTimeReservation), sizeof(StringMetadata),
+//     sizeof(StringFragment))
+#define MAX_STRUCT_SIZE 256
 // Max length of a string fragment.
 #define STRING_FRAGMENT_MAX 255
 
-// Compile with `make clean test CFLAGS=-DDEBUG_REPO`
+// Compile with `make clean test CFLAGS=-DDEBUG_REPO=1`
 // to test reallocations.
 #ifdef DEBUG_REPO
     #undef TABLE_SIZE1
-    #define TABLE_SIZE1 1
+    #define TABLE_SIZE1 DEBUG_REPO
     #undef TABLE_SIZE2
-    #define TABLE_SIZE2 1
+    #define TABLE_SIZE2 DEBUG_REPO
     #undef STRING_FRAGMENT_MAX
-    #define STRING_FRAGMENT_MAX 1
+    #define STRING_FRAGMENT_MAX DEBUG_REPO
 #endif
 
 typedef enum {
     TableEquipment = 0,
     TablePeriodicReservation,
     TableOneTimeReservation,
+    TableStringMetadata,
     TableStringFragment,
 } TableID;
 
@@ -53,7 +54,7 @@ typedef enum {
 typedef struct {
     EquipmentType type;
     char name[32];
-    String description;
+    ID description;
 } Equipment;
 
 typedef enum {
@@ -82,20 +83,20 @@ typedef struct {
     OneTimeReservationType type;
     Timestamp start;
     Timestamp end;
-    String description;
+    ID description;
 } OneTimeReservation;
 
-// Magic number (goes into len) to symbolize more data awaiting.
-#define STRING_FRAGMENT_MORE 1024
-// Magic number (goes into len) to symbolize deleted element.
-#define STRING_FRAGMENT_TOMBSTONE 2048
 typedef struct {
-    String string;
-    short len;
-    char data[STRING_FRAGMENT_MAX + 1];
+    ID start;
+    unsigned len;
+} StringMetadata;
+
+typedef struct {
+    char data[STRING_FRAGMENT_MAX];
 } StringFragment;
 
 bool repo_get(Repo *repo, TableID table, ID id, void *dest);
 void repo_set(Repo *repo, TableID table, ID id, void *src);
 void repo_del(Repo *repo, TableID table, ID id);
-unsigned repo_len(Repo *repo, TableID table);
+void repo_del_n(Repo *repo, TableID table, ID id, unsigned n);
+ID repo_len(Repo *repo, TableID table);

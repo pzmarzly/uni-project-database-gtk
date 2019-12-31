@@ -59,8 +59,8 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
             printf("Cannot read %u from EditorEquipment.\n", req->id);
             return;
         }
-        if (!repo_string_load(req->eq->repo, e.description, &desc)) {
-            printf("Cannot read %u from String.\n", e.description);
+        if (!repo_string_get(req->eq->repo, e.description, &desc)) {
+            printf("Cannot read string %u.\n", e.description); // TODO: PL
             return;
         }
     } else {
@@ -102,9 +102,7 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
         gtk_text_buffer_get_bounds(buf, &start, &end);
         desc = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
 
-        if (!req->empty)
-            repo_string_remove(req->eq->repo, e.description);
-        e.description = repo_string_save(req->eq->repo, &desc);
+        repo_string_set(req->eq->repo, e.description, &desc);
         repo_set(req->eq->repo, TableEquipment, req->id, &e);
         equipment_refresh(req->eq);
     }
@@ -155,7 +153,7 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
 
     int result = gtk_dialog_run(GTK_DIALOG(dialog));
     if (result == GTK_RESPONSE_YES) {
-        repo_string_remove(req->eq->repo, e.description);
+        repo_string_del(req->eq->repo, e.description);
         repo_del(req->eq->repo, TableEquipment, req->id);
         equipment_refresh(req->eq);
     }
