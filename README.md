@@ -32,6 +32,7 @@ wywołania programu, użytkownik będzie mógł pominąć to okno i od razu prze
 
 Edytor będzie zawierał kilka kart:
 
+- Start - wybór daty startu semestru, oraz zablokowanie/odblokowanie usuwania elementów,
 - Sprzęt - edycja sprzętu dostępnego na uczelni (nazwa, typ, opis),
 - Cykliczne - edycja rezerwacji cotygodniowych, powodująca usunięcie wszystkich rezerwacji
 jednorazowych (z powodu potencjalnych konfliktów),
@@ -50,4 +51,6 @@ Format bazy danych:
 długości (będzie on dzielony na fragmenty po maksymalnie 255 znaków).
 
 Nagłówek będzie trzymany w pamięci, z pozostałych części bazy dane będą wczytywane fragmentami
-na żądanie. Zmiany będą zapisywane na dysk na bieżąco.
+na żądanie. Zmiany będą zapisywane na dysk na bieżąco. Usunięte fragmenty tekstu będą pozostawiały
+nagrobki, w celu optymalizacji czasu dostępu do danych ($O(\frac{n}{i})$ zamiast $O(n)$
+dla $i$-tego elementu).
