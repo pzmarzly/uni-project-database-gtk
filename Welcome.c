@@ -51,7 +51,7 @@ typedef struct {
     bool overwrite;
 } LoadEditorRequest;
 
-static LoadEditorRequest* prepare_request(Welcome *rs, char *path, bool overwrite) {
+static LoadEditorRequest* prepare_load(Welcome *rs, char *path, bool overwrite) {
     LoadEditorRequest *req = malloc(sizeof(LoadEditorRequest));
     req->rs = rs;
     req->path = g_strdup(path);
@@ -103,7 +103,7 @@ static void on_btn_new(GtkWidget *sender, gpointer user_data) {
     LoadEditorRequest *req = NULL;
     if (res == GTK_RESPONSE_ACCEPT) {
         char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-        req = prepare_request(rs, path, true);
+        req = prepare_load(rs, path, true);
         g_free(path);
     }
     gtk_widget_destroy(dialog);
@@ -132,7 +132,7 @@ static void on_btn_open(GtkWidget *sender, gpointer user_data) {
     LoadEditorRequest *req = NULL;
     if (res == GTK_RESPONSE_ACCEPT) {
         char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-        req = prepare_request(rs, path, false);
+        req = prepare_load(rs, path, false);
         g_free(path);
     }
     gtk_widget_destroy(dialog);
@@ -150,7 +150,7 @@ static bool on_recent_label_clicked(GtkWidget *sender, gpointer user_data) {
 static void make_recent_label(Welcome *rs, char* path, GObject *box, bool pack_start) {
     GtkWidget *recent_label = gtk_link_button_new_with_label(path, path);
     g_signal_connect(G_OBJECT(recent_label), "activate-link",
-        G_CALLBACK(on_recent_label_clicked), prepare_request(rs, path, false));
+        G_CALLBACK(on_recent_label_clicked), prepare_load(rs, path, false));
     if (pack_start)
         gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
     else

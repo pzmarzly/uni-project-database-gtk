@@ -6,7 +6,7 @@
 #include "RepoString.h"
 
 void clean() {
-    system("rm test-repo.db || true");
+    system("rm -f test-repo.db || true");
 }
 
 void opens_and_overwrites() {

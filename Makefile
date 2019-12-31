@@ -5,9 +5,12 @@ LDFLAGS=-lm `pkg-config --libs gtk+-3.0` \
 	-fsanitize=address -fno-omit-frame-pointer
 
 default: wez-mnie-gtk
-all: wez-mnie-gtk test
+all: wez-mnie-gtk test gen-demo
 
-WEZ_MNIE_GTK = main.o Repo.o Editor.o Recent.o Welcome.o Utils.o
+WEZ_MNIE_GTK = main.o Welcome.o Recent.o
+WEZ_MNIE_GTK += Editor.o EditorEquipment.o
+WEZ_MNIE_GTK += Repo.o RepoData.o RepoString.o
+WEZ_MNIE_GTK += Utils.o
 wez-mnie-gtk: ${WEZ_MNIE_GTK}
 	$(CC) ${WEZ_MNIE_GTK} ${LDFLAGS} -o $@
 
@@ -15,11 +18,15 @@ TEST = test.o Repo.o RepoString.o Utils.o
 test: ${TEST}
 	$(CC) ${TEST} ${LDFLAGS} -o $@
 
+GEN_DEMO = gen-demo.o Repo.o RepoString.o Utils.o
+gen-demo: ${GEN_DEMO}
+	$(CC) ${GEN_DEMO} ${LDFLAGS} -o $@
+
 %.o: %.c
 	$(CC) ${CFLAGS} -c -MMD $<
 
 .PHONY: clean
 clean:
-	-rm -f wez-mnie-gtk test *.o *.d
+	-rm -f wez-mnie-gtk test gen-demo *.o *.d
 
 -include *.d

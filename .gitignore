@@ -3,5 +3,6 @@
 *.db
 /wez-mnie-gtk
 /test
+/gen-demo
 *~
 *.pdf
