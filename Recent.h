@@ -1,6 +1,10 @@
 #pragma once
 #define MAX_RECENT 5
-int recent_load(char **dest);
-void recent_save(char **src, int len);
-int recent_push(char **src, int len, char *path);
-int recent_del(char **src, int len, char *path);
+typedef struct {
+    char *paths[MAX_RECENT];
+    int items;
+} Recent;
+Recent* recent_load();
+void recent_close(Recent *r);
+void recent_push(Recent *r, char *path);
+void recent_del(Recent *r, char *path);

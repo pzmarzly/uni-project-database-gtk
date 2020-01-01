@@ -54,9 +54,8 @@ static void on_save_as(GtkWidget *sender, gpointer user_data) {
         strcat(title, " - WeźMnie");
         gtk_window_set_title(this->parent, title);
 
-        char *recent[MAX_RECENT];
-        int len = recent_load(recent);
-        recent_push(recent, len, path);
+        Recent *recent = recent_load();
+        recent_push(recent, path);
         free(old_path);
         free(path);
     }

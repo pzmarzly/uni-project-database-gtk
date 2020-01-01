@@ -70,12 +70,10 @@ static void load_editor(LoadEditorRequest *req) {
         return;
     }
 
-    if (req->push_to_recent)
-        req->this->recent_len = recent_push(
-            req->this->recent,
-            req->this->recent_len,
-            req->path
-        );
+    if (req->push_to_recent) {
+        Recent *recent = recent_load();
+        recent_push(recent, req->path);
+    }
 
     welcome_set_quit_on_destroy(req->this, false);
     editor_set_quit_on_destroy(editor, true);
@@ -180,10 +178,10 @@ bool welcome_run(Welcome *this) {
     g_signal_connect(G_OBJECT(btn_new), "clicked", G_CALLBACK(on_btn_new), this);
     g_signal_connect(G_OBJECT(btn_open), "clicked", G_CALLBACK(on_btn_open), this);
 
-    this->recent_len = recent_load(this->recent);
+    Recent *recent = recent_load();
     GObject *recent_box = gtk_builder_get_object(this->ui, "recent");
-    for (int i = 0; i < this->recent_len; i++) {
-        make_recent_label(this, this->recent[i], recent_box);
+    for (int i = 0; i < recent->items; i++) {
+        make_recent_label(this, recent->paths[i], recent_box);
     }
 
     this->demo = strcat(basedir(), "/demo.db");

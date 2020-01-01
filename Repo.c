@@ -227,7 +227,7 @@ void repo_del_n(Repo *repo, TableID table, ID id, unsigned n) {
     if (id + n > repo->header.table_used[table]) return;
 
     void *tmp = malloc(MAX_STRUCT_SIZE);
-    // Shift elements to the left.
+    // Shift elements left.
     for (ID i = id; i + n < repo->header.table_used[table]; i++) {
         if (!repo_get(repo, table, i + n, tmp)) bug("Nie można usunąć elementu.");
         repo_set(repo, table, i, tmp);
