@@ -21,6 +21,7 @@ static void default_header(Header *header) {
     header->table_size[TableEquipment] = TABLE_SIZE1;
     header->table_size[TablePeriodicReservation] = TABLE_SIZE1;
     header->table_size[TableOneTimeReservation] = TABLE_SIZE2;
+    header->table_size[TableStringMetadata] = TABLE_SIZE2;
     header->table_size[TableStringFragment] = TABLE_SIZE2;
     memset(header->table_used, 0, sizeof(header->table_used));
 }
