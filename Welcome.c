@@ -49,13 +49,20 @@ typedef struct {
     Welcome *this;
     char *path;
     bool overwrite;
+    bool push_to_recent;
 } LoadEditorRequest;
 
-static LoadEditorRequest* prepare_load(Welcome *this, char *path, bool overwrite) {
+static LoadEditorRequest* prepare_load(
+    Welcome *this,
+    char *path,
+    bool overwrite,
+    bool push_to_recent
+) {
     LoadEditorRequest *req = malloc(sizeof(LoadEditorRequest));
     req->this = this;
     req->path = g_strdup(path);
     req->overwrite = overwrite;
+    req->push_to_recent = push_to_recent;
     return req;
 }
 
@@ -65,7 +72,7 @@ static void load_editor(LoadEditorRequest *req) {
         return;
     }
 
-    if (strcmp(req->path, req->this->demo) != 0)
+    if (req->push_to_recent)
         req->this->recent_len = recent_push(
             req->this->recent,
             req->this->recent_len,
@@ -103,7 +110,7 @@ static void on_btn_new(GtkWidget *sender, gpointer user_data) {
     LoadEditorRequest *req = NULL;
     if (res == GTK_RESPONSE_ACCEPT) {
         char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-        req = prepare_load(this, path, true);
+        req = prepare_load(this, path, true, true);
         g_free(path);
     }
     gtk_widget_destroy(dialog);
@@ -132,7 +139,7 @@ static void on_btn_open(GtkWidget *sender, gpointer user_data) {
     LoadEditorRequest *req = NULL;
     if (res == GTK_RESPONSE_ACCEPT) {
         char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-        req = prepare_load(this, path, false);
+        req = prepare_load(this, path, false, true);
         g_free(path);
     }
     gtk_widget_destroy(dialog);
@@ -147,24 +154,21 @@ static bool on_recent_label_clicked(GtkWidget *sender, gpointer user_data) {
     return true;
 }
 
-static bool on_demo_label_clicked(GtkWidget *sender, gpointer user_data) {
+static bool on_demo_button_clicked(GtkWidget *sender, gpointer user_data) {
     LoadEditorRequest *req = (LoadEditorRequest *)user_data;
 
-    GError *error = NULL;
-    GFile *src = g_file_new_for_path(req->path);
-    GFileIOStream *stream = NULL;
-    GFile *dest = g_file_new_tmp(NULL, &stream, &error);
-    if (dest == NULL) return false;
-    if (stream != NULL) g_io_stream_close(G_IO_STREAM(stream), NULL, &error);
-    if (!g_file_copy(src, dest, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error)) return false;
-    req->path = g_file_get_path(dest);
+    char *temp = temp_file();
+    if (temp == NULL) return false;
+    if (!copy_file(req->path, temp)) return false;
+    req->path = temp;
+
     return on_recent_label_clicked(sender, user_data);
 }
 
 static void make_recent_label(Welcome *this, char* path, GObject *box) {
     GtkWidget *recent_label = gtk_link_button_new_with_label(path, path);
     g_signal_connect(G_OBJECT(recent_label), "activate-link",
-        G_CALLBACK(on_recent_label_clicked), prepare_load(this, path, false));
+        G_CALLBACK(on_recent_label_clicked), prepare_load(this, path, false, true));
     gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
 }
 
@@ -186,10 +190,10 @@ bool welcome_run(Welcome *this) {
     }
 
     this->demo = strcat(basedir(), "/demo.db");
-    GtkWidget *demo_label = gtk_link_button_new_with_label(this->demo, "demo.db");
-    g_signal_connect(G_OBJECT(demo_label), "activate-link",
-        G_CALLBACK(on_demo_label_clicked), prepare_load(this, this->demo, false));
-    gtk_box_pack_end(GTK_BOX(recent_box), GTK_WIDGET(demo_label), 0, 0, 0);
+    GtkWidget *demo_btn = gtk_button_new_with_label("Utwórz bazę demonstracyjną...");
+    g_signal_connect(G_OBJECT(demo_btn), "clicked",
+        G_CALLBACK(on_demo_button_clicked), prepare_load(this, this->demo, false, false));
+    gtk_box_pack_end(GTK_BOX(recent_box), GTK_WIDGET(demo_btn), 0, 0, 0);
 
     gtk_widget_show_all(GTK_WIDGET(this->window));
     return true;

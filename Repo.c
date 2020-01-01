@@ -99,9 +99,13 @@ static void enlarge_table(Repo *repo, TableID table) {
     save_header(repo);
     Repo *old_repo = malloc(sizeof(Repo));
     memcpy(old_repo, repo, sizeof(Repo));
-    repo->path = malloc(strlen(old_repo->path) + 2);
-    strcpy(repo->path, old_repo->path);
-    strcat(repo->path, "~");
+    repo->path = temp_file();
+    if (repo->path == NULL) {
+        printf("temp_file zwróciło błąd.\n");
+        repo->path = malloc(strlen(old_repo->path) + 2);
+        strcpy(repo->path, old_repo->path);
+        strcat(repo->path, "~");
+    }
     if (!repo_open_internal(repo, true)) goto fail;
     repo->header.semester_start = old_repo->header.semester_start;
     repo->header.semester_active = old_repo->header.semester_active;
