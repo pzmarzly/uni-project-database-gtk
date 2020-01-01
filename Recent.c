@@ -42,13 +42,13 @@ static FILE *open_recent_file(const char *mode) {
     return fp;
 }
 
-int recent_load(char **dest, int max) {
+int recent_load(char **dest) {
     FILE *fp = open_recent_file("rb");
     if (fp == NULL) return 0;
 
     int len = fgetc(fp);
     if (len == EOF) return 0;
-    if (len > max) len = max;
+    if (len > MAX_RECENT) len = MAX_RECENT;
 
     for (int i = 0; i < len; i++) {
         int len;
@@ -78,8 +78,21 @@ void recent_save(char **src, int len) {
     fclose(fp);
 }
 
-int recent_push(char **src, int len, int limit, char *path) {
+int recent_push(char **src, int len, char *path) {
     // remove duplicates
+    len = recent_del(src, len, path);
+
+    // shift right
+    for (int i = MAX_RECENT - 1; i > 0; i--)
+        src[i] = src[i - 1];
+    src[0] = path;
+    if (len < MAX_RECENT) len++;
+    recent_save(src, len);
+
+    return len;
+}
+
+int recent_del(char **src, int len, char *path) {
     for (int i = 0; i < len; i++) {
         if (strcmp(src[i], path) == 0) {
             if (i != len - 1)
@@ -87,13 +100,5 @@ int recent_push(char **src, int len, int limit, char *path) {
             len--;
         }
     }
-
-    // shift right
-    for (int i = limit - 1; i > 0; i--)
-        src[i] = src[i - 1];
-    src[0] = path;
-    if (len < limit) len++;
-    recent_save(src, len);
-
     return len;
 }

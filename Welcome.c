@@ -8,8 +8,6 @@
 #include "Editor.h"
 #include "Utils.h"
 
-#define MAX_RECENT 5
-
 struct Welcome {
     GtkBuilder *ui;
     bool quit_on_destroy;
@@ -76,7 +74,6 @@ static void load_editor(LoadEditorRequest *req) {
         req->this->recent_len = recent_push(
             req->this->recent,
             req->this->recent_len,
-            MAX_RECENT,
             req->path
         );
 
@@ -183,7 +180,7 @@ bool welcome_run(Welcome *this) {
     g_signal_connect(G_OBJECT(btn_new), "clicked", G_CALLBACK(on_btn_new), this);
     g_signal_connect(G_OBJECT(btn_open), "clicked", G_CALLBACK(on_btn_open), this);
 
-    this->recent_len = recent_load(this->recent, MAX_RECENT);
+    this->recent_len = recent_load(this->recent);
     GObject *recent_box = gtk_builder_get_object(this->ui, "recent");
     for (int i = 0; i < this->recent_len; i++) {
         make_recent_label(this, this->recent[i], recent_box);

@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <gtk/gtk.h>
 
-void bug(char *msg) {
+_Noreturn void bug(char *msg) {
     printf("BUG: %s\n", msg);
     abort();
 }
@@ -38,12 +38,17 @@ char* temp_file() {
     GFile *file = g_file_new_tmp(NULL, &stream, &error);
     if (file == NULL) return NULL;
     if (stream != NULL) g_io_stream_close(G_IO_STREAM(stream), NULL, &error);
-    return g_file_get_path(file);
+    char *path = g_file_get_path(file);
+    g_object_unref(file);
+    return path;
 }
 
 bool copy_file(char *src, char *dest) {
     GError *error = NULL;
     GFile *src_file = g_file_new_for_path(src);
     GFile *dest_file = g_file_new_for_path(dest);
-    return g_file_copy(src_file, dest_file, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
+    bool success = g_file_copy(src_file, dest_file, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
+    g_object_unref(src_file);
+    g_object_unref(dest_file);
+    return success;
 }

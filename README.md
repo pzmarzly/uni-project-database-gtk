@@ -32,7 +32,7 @@ wywołania programu, użytkownik będzie mógł pominąć to okno i od razu prze
 
 Edytor będzie zawierał kilka kart:
 
-- Semestr - wybór daty startu semestru, start i anulowanie semestru,
+- Semestr - wybór daty startu semestru, start i anulowanie semestru, tworzenie kopii bazy danych,
 - Sprzęt - edycja sprzętu dostępnego na uczelni (nazwa, typ, opis),
 - Cykliczne - edycja rezerwacji cotygodniowych,
 - Wypożyczenia - widok tygodniowy, z opcją dodania nowej rezerwacji lub pominięcia wybranej

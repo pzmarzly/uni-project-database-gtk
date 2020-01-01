@@ -51,6 +51,10 @@ static void save_header(Repo *repo) {
     fflush(repo->file);
 }
 
+char *repo_get_path(Repo *repo) {
+    return g_strdup(repo->path);
+}
+
 Timestamp repo_get_semester_start(Repo *repo) {
     return repo->header.semester_start;
 }
@@ -94,26 +98,24 @@ void repo_close(Repo *repo) {
     }
 }
 
-static void enlarge_table(Repo *repo, TableID table) {
-    // Turn repo into old_repo, new repo is a temp file.
+Repo* repo_save_as(Repo *repo, char *dest) {
     save_header(repo);
+    // Turn repo into old_repo.
     Repo *old_repo = malloc(sizeof(Repo));
     memcpy(old_repo, repo, sizeof(Repo));
-    repo->path = temp_file();
-    if (repo->path == NULL) {
-        printf("temp_file zwróciło błąd.\n");
-        repo->path = malloc(strlen(old_repo->path) + 2);
-        strcpy(repo->path, old_repo->path);
-        strcat(repo->path, "~");
-    }
+    // Load new repo in place.
+    repo->path = g_strdup(dest);
     if (!repo_open_internal(repo, true)) goto fail;
+    // Copy metadata.
     repo->header.semester_start = old_repo->header.semester_start;
     repo->header.semester_active = old_repo->header.semester_active;
 
-    // We can easily set size of an empty repo.
+    // We can easily set size of an empty repo, so we use that moment
+    // to enlarge tables if necessary.
     for (TableID i = 0; i < TABLE_NUM; i++) {
         repo->header.table_size[i] = old_repo->header.table_size[i];
-        if (i == table) repo->header.table_size[i] *= 2;
+        if (old_repo->header.table_used[i] * 2 > old_repo->header.table_size[i])
+            repo->header.table_size[i] *= 2;
     }
 
     // Copy all elements from old_repo.
@@ -125,18 +127,33 @@ static void enlarge_table(Repo *repo, TableID table) {
         }
     }
     free(tmp);
-
-    // Remove old_repo.
-    rename(repo->path, old_repo->path);
-    free(repo->path);
-    repo->path = g_strdup(old_repo->path);
-    repo_close(old_repo);
-    return;
+    return old_repo;
 
     fail:
     fclose(repo->file);
     fclose(old_repo->file);
-    bug("Nie udało się zmienić rozmiaru bazy.");
+    bug("Nie udało się przepisać bazy.");
+    return NULL;
+}
+
+static void enlarge_table(Repo *repo) {
+    char *old_path = repo->path;
+    char *temp = temp_file();
+    if (temp == NULL) {
+        printf("temp_file zwróciło błąd.\n");
+        temp = malloc(strlen(old_path) + 2);
+        strcpy(temp, old_path);
+        strcat(temp, "~");
+    }
+    Repo *old_repo = repo_save_as(repo, temp);
+
+    // Remove old repo.
+    rename(temp, old_path);
+    free(temp);
+    free(repo->path);
+    repo->path = g_strdup(old_path);
+    repo_close(old_repo);
+    return;
 }
 
 // Data types
@@ -190,7 +207,7 @@ void repo_set(Repo *repo, TableID table, ID id, void *src) {
     }
 
     if (id >= repo->header.table_size[table])
-        enlarge_table(repo, table);
+        enlarge_table(repo);
 
     Position pos = calc_position(repo, table, id);
     fseek(repo->file, pos.position, SEEK_SET);
