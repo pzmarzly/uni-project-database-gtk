@@ -3,17 +3,21 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 #include "Utils.h"
 
 typedef struct {
     Timestamp semester_start;
+    bool semester_active;
     // section sizes
     unsigned table_size[TABLE_NUM];
     unsigned table_used[TABLE_NUM];
 } Header;
 
-static void default_header(Header *header, Timestamp semester_start) {
-    header->semester_start = semester_start;
+#define DAY (3600 * 24)
+static void default_header(Header *header) {
+    header->semester_start = time(NULL) / DAY * DAY;
+    header->semester_active = false;
     header->table_size[TableEquipment] = TABLE_SIZE1;
     header->table_size[TablePeriodicReservation] = TABLE_SIZE1;
     header->table_size[TableOneTimeReservation] = TABLE_SIZE2;
@@ -26,10 +30,6 @@ struct Repo {
     FILE *file;
     Header header;
 };
-
-Timestamp repo_get_semester_start(Repo *repo) {
-    return repo->header.semester_start;
-}
 
 static bool load_header(Repo *repo) {
     fseek(repo->file, 0, SEEK_SET);
@@ -50,7 +50,16 @@ static void save_header(Repo *repo) {
     fflush(repo->file);
 }
 
-static Repo *repo_open_internal(Repo *repo, bool overwrite, Timestamp semester_start) {
+Timestamp repo_get_semester_start(Repo *repo) {
+    return repo->header.semester_start;
+}
+
+void repo_set_semester_start(Repo *repo, Timestamp semester_start) {
+    repo->header.semester_start = semester_start;
+    save_header(repo);
+}
+
+static Repo *repo_open_internal(Repo *repo, bool overwrite) {
     repo->file = fopen(repo->path, overwrite ? "w+b" : "r+b");
     if (repo->file == NULL) {
         printf("Nie udało się otworzyć %s, kod %d\n", repo->path, errno);
@@ -58,7 +67,7 @@ static Repo *repo_open_internal(Repo *repo, bool overwrite, Timestamp semester_s
         return NULL;
     }
     if (overwrite) {
-        default_header(&repo->header, semester_start);
+        default_header(&repo->header);
         save_header(repo);
     } else {
         if (!load_header(repo)) {
@@ -69,10 +78,10 @@ static Repo *repo_open_internal(Repo *repo, bool overwrite, Timestamp semester_s
     return repo;
 }
 
-Repo* repo_open(char *path, bool overwrite, Timestamp semester_start) {
+Repo* repo_open(char *path, bool overwrite) {
     Repo *repo = malloc(sizeof(Repo));
     repo->path = g_strdup(path);
-    return repo_open_internal(repo, overwrite, semester_start);
+    return repo_open_internal(repo, overwrite);
 }
 
 void repo_close(Repo *repo) {
@@ -92,7 +101,9 @@ static void enlarge_table(Repo *repo, TableID table) {
     repo->path = malloc(strlen(old_repo->path) + 2);
     strcpy(repo->path, old_repo->path);
     strcat(repo->path, "~");
-    if (!repo_open_internal(repo, true, old_repo->header.semester_start)) goto fail;
+    if (!repo_open_internal(repo, true)) goto fail;
+    repo->header.semester_start = old_repo->header.semester_start;
+    repo->header.semester_active = old_repo->header.semester_active;
 
     // We can easily set size of an empty repo.
     for (TableID i = 0; i < TABLE_NUM; i++) {

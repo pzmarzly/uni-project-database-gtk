@@ -6,7 +6,9 @@ typedef unsigned short HourAndMinute;
 
 typedef struct Repo Repo;
 Timestamp repo_get_semester_start(Repo *repo);
-Repo* repo_open(char *path, bool overwrite, Timestamp semester_start);
+void repo_set_semester_start(Repo *repo, Timestamp semester_start);
+
+Repo* repo_open(char *path, bool overwrite);
 void repo_close(Repo *repo);
 
 // Data types

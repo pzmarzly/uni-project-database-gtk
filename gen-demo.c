@@ -10,8 +10,7 @@ void clean() {
 
 void generate_demo() {
     clean();
-    Timestamp date = 1569888000; // 2019-10-01 0:00 UTC
-    Repo *r = repo_open("./demo.db", true, date);
+    Repo *r = repo_open("./demo.db", true);
 
     char *c1 = "Trochę tekstu.";
     repo_string_set(r, 0, &c1);

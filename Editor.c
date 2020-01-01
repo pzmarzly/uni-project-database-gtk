@@ -30,7 +30,7 @@ Editor* editor_new(char *path, bool overwrite) {
 
     this->quit_on_destroy = false;
     this->window = NULL;
-    this->repo = repo_open(path, overwrite, 0);
+    this->repo = repo_open(path, overwrite);
     this->repo_path = g_strdup(path);
     this->semester = editor_semester_new(this->repo, this->ui);
     this->equipment = editor_equipment_new(this->repo, this->ui);
