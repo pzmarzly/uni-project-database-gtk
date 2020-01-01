@@ -64,6 +64,15 @@ void repo_set_semester_start(Repo *repo, Timestamp semester_start) {
     save_header(repo);
 }
 
+bool repo_get_semester_active(Repo *repo) {
+    return repo->header.semester_active;
+}
+
+void repo_set_semester_active(Repo *repo, bool semester_active) {
+    repo->header.semester_active = semester_active;
+    save_header(repo);
+}
+
 static Repo *repo_open_internal(Repo *repo, bool overwrite) {
     repo->file = fopen(repo->path, overwrite ? "w+b" : "r+b");
     if (repo->file == NULL) {

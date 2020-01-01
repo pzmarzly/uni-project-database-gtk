@@ -13,14 +13,14 @@ struct EditorReports {
 };
 
 EditorReports* editor_reports_new(Repo *repo, GtkBuilder *ui) {
-    EditorReports *eq = malloc(sizeof(EditorReports));
-    eq->repo = repo;
-    eq->ui = ui;
-    return eq;
+    EditorReports *this = malloc(sizeof(EditorReports));
+    this->repo = repo;
+    this->ui = ui;
+    return this;
 }
 
-void editor_reports_show(EditorReports *eq) {
-    GObject *reports = gtk_builder_get_object(eq->ui, "reports");
+void editor_reports_show(EditorReports *this) {
+    GObject *reports = gtk_builder_get_object(this->ui, "reports");
 
     GtkWidget *week = gtk_button_new_with_label("Plan tygodnia");
     gtk_box_pack_start(GTK_BOX(reports), week, 0, 0, 0);

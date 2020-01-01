@@ -7,6 +7,7 @@ ensure all files have a signature
 static functions everywhere
 comments ending with dot
 free and unref
+styling: star in casts ((ref *)user_data) and function return types (ref* function)
 
 question-mark image-projector laptop: Icon made by Freepik from www.flaticon.com
 whiteboard: Icons made by Kiranshastry from www.flaticon.com

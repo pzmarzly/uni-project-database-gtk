@@ -8,6 +8,8 @@ typedef struct Repo Repo;
 char *repo_get_path(Repo *repo);
 Timestamp repo_get_semester_start(Repo *repo);
 void repo_set_semester_start(Repo *repo, Timestamp semester_start);
+bool repo_get_semester_active(Repo *repo);
+void repo_set_semester_active(Repo *repo, bool semester_active);
 
 Repo* repo_open(char *path, bool overwrite);
 void repo_close(Repo *repo);

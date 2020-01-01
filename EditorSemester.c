@@ -12,11 +12,11 @@ struct EditorSemester {
 };
 
 EditorSemester* editor_semester_new(Repo *repo, GtkBuilder *ui) {
-    EditorSemester *eq = malloc(sizeof(EditorSemester));
-    eq->repo = repo;
-    eq->ui = ui;
-    eq->parent = GTK_WINDOW(gtk_builder_get_object(ui, "window"));
-    return eq;
+    EditorSemester *this = malloc(sizeof(EditorSemester));
+    this->repo = repo;
+    this->ui = ui;
+    this->parent = GTK_WINDOW(gtk_builder_get_object(ui, "window"));
+    return this;
 }
 
 static void on_save_as(GtkWidget *sender, gpointer user_data) {
@@ -62,12 +62,29 @@ static void on_save_as(GtkWidget *sender, gpointer user_data) {
     gtk_widget_destroy(dialog);
 }
 
-void editor_semester_show(EditorSemester *eq) {
-    GObject *start_btn = gtk_builder_get_object(eq->ui, "semester-start");
-    GObject *active_btn = gtk_builder_get_object(eq->ui, "semester-active");
-    GObject *save_as_btn = gtk_builder_get_object(eq->ui, "semester-save-as");
-    g_signal_connect(G_OBJECT(save_as_btn), "clicked", G_CALLBACK(on_save_as), eq);
+static void update_active_btn(GtkButton *button, bool active) {
+    gtk_button_set_label(button, active ? "Zatrzymaj semestr" : "Rozpocznij semestr");
+}
+
+void on_active(GtkWidget *sender, gpointer user_data) {
+    EditorSemester *this = (EditorSemester *)user_data;
+    bool active = repo_get_semester_active(this->repo);
+    // TODO: dialog
+    active = !active;
+    repo_set_semester_active(this->repo, active);
+    update_active_btn(GTK_BUTTON(sender), active);
+}
+
+void editor_semester_show(EditorSemester *this) {
+    GObject *start_btn = gtk_builder_get_object(this->ui, "semester-start");
+
+    GObject *active_btn = gtk_builder_get_object(this->ui, "semester-active");
+    bool active = repo_get_semester_active(this->repo);
+    update_active_btn(GTK_BUTTON(active_btn), active);
+    g_signal_connect(G_OBJECT(active_btn), "clicked", G_CALLBACK(on_active), this);
+
+    GObject *save_as_btn = gtk_builder_get_object(this->ui, "semester-save-as");
+    g_signal_connect(G_OBJECT(save_as_btn), "clicked", G_CALLBACK(on_save_as), this);
 
     gtk_button_set_label(GTK_BUTTON(start_btn), "");
-    gtk_button_set_label(GTK_BUTTON(active_btn), "");
 }
