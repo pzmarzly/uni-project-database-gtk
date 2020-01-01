@@ -147,14 +147,25 @@ static bool on_recent_label_clicked(GtkWidget *sender, gpointer user_data) {
     return true;
 }
 
-static void make_recent_label(Welcome *this, char* path, GObject *box, bool pack_start) {
+static bool on_demo_label_clicked(GtkWidget *sender, gpointer user_data) {
+    LoadEditorRequest *req = (LoadEditorRequest *)user_data;
+
+    GError *error = NULL;
+    GFile *src = g_file_new_for_path(req->path);
+    GFileIOStream *stream = NULL;
+    GFile *dest = g_file_new_tmp(NULL, &stream, &error);
+    if (dest == NULL) return false;
+    if (stream != NULL) g_io_stream_close(G_IO_STREAM(stream), NULL, &error);
+    if (!g_file_copy(src, dest, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error)) return false;
+    req->path = g_file_get_path(dest);
+    return on_recent_label_clicked(sender, user_data);
+}
+
+static void make_recent_label(Welcome *this, char* path, GObject *box) {
     GtkWidget *recent_label = gtk_link_button_new_with_label(path, path);
     g_signal_connect(G_OBJECT(recent_label), "activate-link",
         G_CALLBACK(on_recent_label_clicked), prepare_load(this, path, false));
-    if (pack_start)
-        gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
-    else
-        gtk_box_pack_end(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
+    gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
 }
 
 bool welcome_run(Welcome *this) {
@@ -171,11 +182,14 @@ bool welcome_run(Welcome *this) {
     this->recent_len = recent_load(this->recent, MAX_RECENT);
     GObject *recent_box = gtk_builder_get_object(this->ui, "recent");
     for (int i = 0; i < this->recent_len; i++) {
-        make_recent_label(this, this->recent[i], recent_box, true);
+        make_recent_label(this, this->recent[i], recent_box);
     }
 
     this->demo = strcat(basedir(), "/demo.db");
-    make_recent_label(this, this->demo, recent_box, false);
+    GtkWidget *demo_label = gtk_link_button_new_with_label(this->demo, "demo.db");
+    g_signal_connect(G_OBJECT(demo_label), "activate-link",
+        G_CALLBACK(on_demo_label_clicked), prepare_load(this, this->demo, false));
+    gtk_box_pack_end(GTK_BOX(recent_box), GTK_WIDGET(demo_label), 0, 0, 0);
 
     gtk_widget_show_all(GTK_WIDGET(this->window));
     return true;
