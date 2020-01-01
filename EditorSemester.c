@@ -20,8 +20,10 @@ EditorSemester* editor_semester_new(Repo *repo, GtkBuilder *ui) {
 }
 
 void editor_semester_show(EditorSemester *eq) {
-    GObject *semester = gtk_builder_get_object(eq->ui, "semester");
+    GObject *start_btn = gtk_builder_get_object(eq->ui, "semester-start");
+    GObject *active_btn = gtk_builder_get_object(eq->ui, "semester-active");
+    GObject *save_as_btn = gtk_builder_get_object(eq->ui, "semester-save-as");
 
-    GtkWidget *week = gtk_button_new_with_label("Plan tygodnia");
-    gtk_box_pack_start(GTK_BOX(semester), week, 0, 0, 0);
+    gtk_button_set_label(GTK_BUTTON(start_btn), "");
+    gtk_button_set_label(GTK_BUTTON(active_btn), "");
 }

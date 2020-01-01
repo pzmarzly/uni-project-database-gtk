@@ -75,5 +75,7 @@ bool editor_run(Editor *this) {
     editor_reports_show(this->reports);
 
     gtk_widget_show_all(GTK_WIDGET(this->window));
+    GObject *notebook = gtk_builder_get_object(this->ui, "notebook");
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 0);
     return true;
 }
