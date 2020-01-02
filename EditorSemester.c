@@ -42,6 +42,7 @@ static void on_save_as(GtkWidget *sender, gpointer user_data) {
         char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
         char *old_path = repo_get_path(this->repo);
         if (strcmp(path, old_path) == 0) {
+            gtk_widget_destroy(dialog);
             free(old_path);
             free(path);
             return;
