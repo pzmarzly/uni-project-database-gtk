@@ -180,7 +180,7 @@ bool greeter_start(Greeter *this) {
         make_recent_list_label(this, recent_list->paths[i], recent_list_box);
     }
 
-    this->demo = strcat(basedir(), "/demo.db");
+    this->demo = strcat(program_dir(), "demo.db");
     GtkWidget *demo_btn = gtk_button_new_with_label("Utwórz bazę demonstracyjną...");
     g_signal_connect(G_OBJECT(demo_btn), "clicked",
         G_CALLBACK(on_demo_button_clicked), prepare_load(this, this->demo, false, false));

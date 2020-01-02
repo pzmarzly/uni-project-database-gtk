@@ -10,15 +10,20 @@ _Noreturn void bug(char *msg) {
     abort();
 }
 
-char* basedir() {
+char* program_dir() {
     GError* error = NULL;
+    // The line below can fail if procfs is not
+    // mounted, but in that case the user probably
+    // knows what they're doing.
     char *path = g_file_read_link("/proc/self/exe", &error);
-    *(strrchr(path, '/')) = '\0';
+    // Path to the executable contains a slash
+    // on any sane Unix system.
+    *(strrchr(path, '/') + 1) = '\0';
     return path;
 }
 
 GtkBuilder *get_builder(char *name) {
-    char *glade = strcat(strcat(basedir(), "/"), name);
+    char *glade = strcat(program_dir(), name);
     GtkBuilder *ui = gtk_builder_new_from_file(glade);
     free(glade);
     return ui;

@@ -3,7 +3,7 @@
 #include <gtk/gtk.h>
 
 _Noreturn void bug(char *msg);
-char* basedir();
+char* program_dir();
 
 GtkBuilder *get_builder(char *name);
 GtkFileFilter* file_filter();
