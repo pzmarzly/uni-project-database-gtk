@@ -8,8 +8,8 @@ default: wez-mnie-gtk
 all: wez-mnie-gtk test gen-demo
 
 WEZ_MNIE_GTK = main.o Greeter.o RecentList.o
-WEZ_MNIE_GTK += Editor.o EditorRemovalDialog.o
-WEZ_MNIE_GTK += EditorEquipment.o
+WEZ_MNIE_GTK += Editor.o EditorEditDialog.o
+WEZ_MNIE_GTK += EditorRemovalDialog.o EditorEquipment.o
 WEZ_MNIE_GTK += EditorReports.o EditorSemester.o
 WEZ_MNIE_GTK += Repo.o RepoData.o RepoString.o
 WEZ_MNIE_GTK += Utils.o

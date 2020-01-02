@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <gtk/gtk.h>
 #include "Editor.h"
+#include "EditorEditDialog.h"
 #include "EditorRemovalDialog.h"
 #include "Repo.h"
 #include "RepoData.h"
@@ -64,33 +65,47 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
         req->id = repo_len(req->this->repo, TableEquipment);
     }
 
-    GtkBuilder *ui = get_builder("EditorEquipmentEdit.glade");
-    GObject *dialog = gtk_builder_get_object(ui, "dialog");
-    gtk_dialog_add_buttons(
-        GTK_DIALOG(dialog),
-        "Anuluj", GTK_RESPONSE_CANCEL,
-        "Zapisz", GTK_RESPONSE_OK,
-        NULL
-    );
+    PreparedEditDialog d = editor_edit_dialog_prepare(TableEquipment);
+    GtkBuilder *ui = d.ui;
+    GtkDialog *dialog = d.dialog;
+    GtkGrid *grid = GTK_GRID(gtk_builder_get_object(ui, "grid"));
 
-    GObject *name = gtk_builder_get_object(ui, "name");
-    gtk_entry_set_text(GTK_ENTRY(name), e.name);
-    gtk_entry_set_max_length(GTK_ENTRY(name), 30);
+    GtkWidget *name_label = GTK_WIDGET(gtk_label_new("Nazwa:"));
+    gtk_grid_attach(grid, name_label, 0, 0, 1, 1);
+    GtkWidget *type_label = GTK_WIDGET(gtk_label_new("Typ:"));
+    gtk_grid_attach(grid, type_label, 0, 1, 1, 1);
+    GtkWidget *description_label = GTK_WIDGET(gtk_label_new("Opis:"));
+    gtk_grid_attach(grid, description_label, 0, 2, 1, 1);
 
-    GObject *type = gtk_builder_get_object(ui, "type");
-    gtk_combo_box_set_active(GTK_COMBO_BOX(type), e.type);
+    GtkEntry *name_entry = GTK_ENTRY(gtk_entry_new());
+    gtk_entry_set_text(name_entry, e.name);
+    gtk_entry_set_max_length(name_entry, 30);
+    gtk_grid_attach(grid, GTK_WIDGET(name_entry), 1, 0, 1, 1);
 
-    GObject *description = gtk_builder_get_object(ui, "description");
-    GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(description));
+    GtkComboBox *type_combo_box = GTK_COMBO_BOX(gtk_combo_box_text_new());
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(type_combo_box), NULL, "Rzutnik");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(type_combo_box), NULL, "Laptop");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(type_combo_box), NULL, "Ekran");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(type_combo_box), NULL, "Inny sprzęt");
+    gtk_combo_box_set_active(GTK_COMBO_BOX(type_combo_box), e.type);
+    gtk_grid_attach(grid, GTK_WIDGET(type_combo_box), 1, 1, 1, 1);
+
+    GtkTextView *description_text_view = GTK_TEXT_VIEW(gtk_text_view_new());
+    GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(description_text_view));
     gtk_text_buffer_insert_at_cursor(buf, desc, -1);
     free(desc);
+    gtk_grid_attach(grid, GTK_WIDGET(description_text_view), 1, 2, 1, 1);
+    gtk_widget_set_hexpand(GTK_WIDGET(description_text_view), true);
+    gtk_widget_set_vexpand(GTK_WIDGET(description_text_view), true);
 
-    int result = gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_show_all(GTK_WIDGET(dialog));
+
+    int result = gtk_dialog_run(dialog);
     if (result == GTK_RESPONSE_OK) {
-        const char *name_str = gtk_entry_get_text(GTK_ENTRY(name));
+        const char *name_str = gtk_entry_get_text(name_entry);
         strcpy(e.name, name_str);
 
-        e.type = gtk_combo_box_get_active(GTK_COMBO_BOX(type));
+        e.type = gtk_combo_box_get_active(type_combo_box);
 
         GtkTextIter start, end;
         gtk_text_buffer_get_bounds(buf, &start, &end);
