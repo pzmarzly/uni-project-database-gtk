@@ -5,6 +5,7 @@
 #include <gtk/gtk.h>
 #include <string.h>
 #include "RecentList.h"
+#include "AboutDialog.h"
 #include "Editor.h"
 #include "Utils.h"
 
@@ -139,6 +140,12 @@ static void on_btn_open(GtkWidget *sender, gpointer user_data) {
         load_editor(req);
 }
 
+static void on_btn_about(GtkWidget *sender, gpointer user_data) {
+    (void)sender;
+    (void)user_data;
+    about_dialog();
+}
+
 static bool on_recent_list_label_clicked(GtkWidget *sender, gpointer user_data) {
     (void)sender;
     load_editor((LoadEditorRequest *)user_data);
@@ -171,8 +178,10 @@ bool greeter_start(Greeter *this) {
 
     GObject *btn_new = gtk_builder_get_object(this->ui, "new");
     GObject *btn_open = gtk_builder_get_object(this->ui, "open");
+    GObject *btn_about = gtk_builder_get_object(this->ui, "about");
     g_signal_connect(G_OBJECT(btn_new), "clicked", G_CALLBACK(on_btn_new), this);
     g_signal_connect(G_OBJECT(btn_open), "clicked", G_CALLBACK(on_btn_open), this);
+    g_signal_connect(G_OBJECT(btn_about), "clicked", G_CALLBACK(on_btn_about), NULL);
 
     RecentList *recent_list = recent_list_load();
     GObject *recent_list_box = gtk_builder_get_object(this->ui, "recent_list");

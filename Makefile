@@ -12,7 +12,7 @@ WEZ_MNIE_GTK += Editor.o EditorEditDialog.o
 WEZ_MNIE_GTK += EditorRemovalDialog.o EditorEquipment.o
 WEZ_MNIE_GTK += EditorReports.o EditorSemester.o
 WEZ_MNIE_GTK += Repo.o RepoData.o RepoString.o
-WEZ_MNIE_GTK += Utils.o
+WEZ_MNIE_GTK += AboutDialog.o Utils.o
 wez-mnie-gtk: ${WEZ_MNIE_GTK}
 	$(CC) ${WEZ_MNIE_GTK} ${LDFLAGS} -o $@
 
