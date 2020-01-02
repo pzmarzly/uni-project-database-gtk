@@ -7,4 +7,4 @@ typedef struct {
 Recent* recent_load();
 void recent_close(Recent *r);
 void recent_push(Recent *r, char *path);
-void recent_del(Recent *r, char *path);
+void recent_del_all_equal(Recent *r, char *path);

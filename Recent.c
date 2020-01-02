@@ -92,22 +92,32 @@ static void recent_save(Recent *r) {
 }
 
 void recent_push(Recent *r, char *path) {
+    char *new_element = g_strdup(path);
+
     // Remove duplicates.
-    recent_del(r, path);
+    recent_del_all_equal(r, new_element);
 
     // Shift element right.
     for (int i = MAX_RECENT - 1; i > 0; i--)
         r->paths[i] = r->paths[i - 1];
-    r->paths[0] = g_strdup(path);
+    r->paths[0] = new_element;
     if (r->items < MAX_RECENT) r->items++;
     recent_save(r);
 }
 
-void recent_del(Recent *r, char *path) {
+void recent_del_all_equal(Recent *r, char *path) {
     for (int i = 0; i < r->items; i++) {
         if (strcmp(r->paths[i], path) == 0) {
-            if (i != r->items - 1)
-                r->paths[i] = r->paths[i + 1];
+            free(r->paths[i]);
+            if (i != r->items - 1) {
+                // Shift elements left.
+                for (int j = i + 1; j < r->items; j++) {
+                    r->paths[j - 1] = r->paths[j];
+                }
+                // We have to check the element
+                // that has just moved into paths[i].
+                i--;
+            }
             r->items--;
         }
     }
