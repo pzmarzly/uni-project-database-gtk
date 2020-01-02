@@ -1,14 +1,14 @@
 // Paweł Zmarzły 314569
 // Projekt, grupa MPi śr 12-14
 
-#include "Welcome.h"
+#include "Greeter.h"
 #include <gtk/gtk.h>
 #include <string.h>
 #include "RecentList.h"
 #include "Editor.h"
 #include "Utils.h"
 
-struct Welcome {
+struct Greeter {
     GtkBuilder *ui;
     bool quit_on_destroy;
     GObject *window;
@@ -18,10 +18,10 @@ struct Welcome {
     char *demo;
 };
 
-Welcome* welcome_new() {
-    Welcome *this = malloc(sizeof(Welcome));
+Greeter* greeter_new() {
+    Greeter *this = malloc(sizeof(Greeter));
 
-    char *glade = strcat(basedir(), "/Welcome.glade");
+    char *glade = strcat(basedir(), "/Greeter.glade");
     this->ui = gtk_builder_new_from_file(glade);
     free(glade);
 
@@ -31,27 +31,27 @@ Welcome* welcome_new() {
     return this;
 }
 
-void welcome_set_quit_on_destroy(Welcome *this, bool quit_on_destroy) {
+void greeter_set_quit_on_destroy(Greeter *this, bool quit_on_destroy) {
     this->quit_on_destroy = quit_on_destroy;
 }
 
 static void on_destroy(GtkWidget *sender, gpointer user_data) {
     (void)sender;
-    Welcome *this = (Welcome *)user_data;
+    Greeter *this = (Greeter *)user_data;
     if (this->quit_on_destroy)
         gtk_main_quit();
     free(this);
 }
 
 typedef struct {
-    Welcome *this;
+    Greeter *this;
     char *path;
     bool overwrite;
     bool push_to_recent_list;
 } LoadEditorRequest;
 
 static LoadEditorRequest* prepare_load(
-    Welcome *this,
+    Greeter *this,
     char *path,
     bool overwrite,
     bool push_to_recent_list
@@ -75,7 +75,7 @@ static void load_editor(LoadEditorRequest *req) {
         recent_list_push(recent_list, req->path);
     }
 
-    welcome_set_quit_on_destroy(req->this, false);
+    greeter_set_quit_on_destroy(req->this, false);
     editor_set_quit_on_destroy(editor, true);
     gtk_widget_destroy(GTK_WIDGET(req->this->window));
 
@@ -85,7 +85,7 @@ static void load_editor(LoadEditorRequest *req) {
 
 static void on_btn_new(GtkWidget *sender, gpointer user_data) {
     (void)sender;
-    Welcome *this = (Welcome *)user_data;
+    Greeter *this = (Greeter *)user_data;
 
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
         "Utwórz bazę",
@@ -116,7 +116,7 @@ static void on_btn_new(GtkWidget *sender, gpointer user_data) {
 
 static void on_btn_open(GtkWidget *sender, gpointer user_data) {
     (void)sender;
-    Welcome *this = (Welcome *)user_data;
+    Greeter *this = (Greeter *)user_data;
 
     GtkWidget *dialog = gtk_file_chooser_dialog_new(
         "Wybierz bazę",
@@ -160,14 +160,14 @@ static bool on_demo_button_clicked(GtkWidget *sender, gpointer user_data) {
     return on_recent_list_label_clicked(sender, user_data);
 }
 
-static void make_recent_list_label(Welcome *this, char* path, GObject *box) {
+static void make_recent_list_label(Greeter *this, char* path, GObject *box) {
     GtkWidget *recent_list_label = gtk_link_button_new_with_label(path, path);
     g_signal_connect(G_OBJECT(recent_list_label), "activate-link",
         G_CALLBACK(on_recent_list_label_clicked), prepare_load(this, path, false, true));
     gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_list_label), 0, 0, 0);
 }
 
-bool welcome_start(Welcome *this) {
+bool greeter_start(Greeter *this) {
     this->window = gtk_builder_get_object(this->ui, "window");
     g_signal_connect(G_OBJECT(this->window), "destroy", G_CALLBACK(on_destroy), this);
     gtk_window_set_title(GTK_WINDOW(this->window), "WeźMnie");

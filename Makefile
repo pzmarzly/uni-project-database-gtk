@@ -7,7 +7,7 @@ override LDFLAGS+=-lm `pkg-config --libs gtk+-3.0` \
 default: wez-mnie-gtk
 all: wez-mnie-gtk test gen-demo
 
-WEZ_MNIE_GTK = main.o Welcome.o RecentList.o
+WEZ_MNIE_GTK = main.o Greeter.o RecentList.o
 WEZ_MNIE_GTK += Editor.o EditorEquipment.o
 WEZ_MNIE_GTK += EditorReports.o EditorSemester.o
 WEZ_MNIE_GTK += Repo.o RepoData.o RepoString.o

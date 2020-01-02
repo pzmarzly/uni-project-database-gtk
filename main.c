@@ -3,14 +3,14 @@
 
 #include <stdlib.h>
 #include <gtk/gtk.h>
-#include "Welcome.h"
+#include "Greeter.h"
 #include "Editor.h"
 
 // No CLI options provided.
 int nothing() {
-    Welcome* welcome = welcome_new();
-    welcome_set_quit_on_destroy(welcome, true);
-    if (welcome_start(welcome))
+    Greeter* greeter = greeter_new();
+    greeter_set_quit_on_destroy(greeter, true);
+    if (greeter_start(greeter))
         gtk_main();
     return 0;
 }
