@@ -9,6 +9,7 @@
     <property name="title" translatable="yes">Usuwanie sprzętu - WeźMnie</property>
     <property name="window_position">mouse</property>
     <property name="type_hint">dialog</property>
+    <property name="icon_name">accessories-dictionary</property>
     <child>
       <placeholder/>
     </child>
