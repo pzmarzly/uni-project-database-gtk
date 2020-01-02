@@ -1,4 +1,4 @@
-#include "Recent.h"
+#include "RecentList.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -7,7 +7,7 @@
 #include <gtk/gtk.h>
 
 const char* PROGRAM_FOLDER = ".local/share/pl.pzmarzly.management";
-const char* RECENT_FILE = "recent.bin";
+const char* RECENT_FILE = "recent_list.bin";
 
 static void create_program_folder() {
     int path_len = strlen(getenv("HOME")) + 1
@@ -25,7 +25,7 @@ static void create_program_folder() {
     free(path);
 }
 
-static FILE *open_recent_file(const char *mode) {
+static FILE *open_recent_list_file(const char *mode) {
     create_program_folder();
 
     int path_len = strlen(getenv("HOME")) + 1
@@ -43,9 +43,9 @@ static FILE *open_recent_file(const char *mode) {
     return fp;
 }
 
-Recent* recent_load() {
-    Recent *r = malloc(sizeof(Recent));
-    FILE *fp = open_recent_file("rb");
+RecentList* recent_list_load() {
+    RecentList *r = malloc(sizeof(RecentList));
+    FILE *fp = open_recent_list_file("rb");
     if (fp == NULL) goto fail;
 
     int items = fgetc(fp);
@@ -68,14 +68,14 @@ Recent* recent_load() {
     return r;
 }
 
-void recent_close(Recent *r) {
+void recent_list_close(RecentList *r) {
     for (int i = 0; i < r->items; i++)
         free(r->paths[i]);
     free(r);
 }
 
-static void recent_save(Recent *r) {
-    FILE *fp = open_recent_file("wb");
+static void recent_list_save(RecentList *r) {
+    FILE *fp = open_recent_list_file("wb");
     if (fp == NULL) return;
 
     if (r->items > 255) r->items = 255;
@@ -91,21 +91,21 @@ static void recent_save(Recent *r) {
     fclose(fp);
 }
 
-void recent_push(Recent *r, char *path) {
+void recent_list_push(RecentList *r, char *path) {
     char *new_element = g_strdup(path);
 
     // Remove duplicates.
-    recent_del_all_equal(r, new_element);
+    recent_list_del_all_equal(r, new_element);
 
     // Shift element right.
     for (int i = MAX_RECENT - 1; i > 0; i--)
         r->paths[i] = r->paths[i - 1];
     r->paths[0] = new_element;
     if (r->items < MAX_RECENT) r->items++;
-    recent_save(r);
+    recent_list_save(r);
 }
 
-void recent_del_all_equal(Recent *r, char *path) {
+void recent_list_del_all_equal(RecentList *r, char *path) {
     for (int i = 0; i < r->items; i++) {
         if (strcmp(r->paths[i], path) == 0) {
             free(r->paths[i]);

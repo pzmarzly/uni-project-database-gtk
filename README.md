@@ -54,6 +54,11 @@ to przygotowanie planu na następny semestr (użytkownik będzie mógł skopiowa
 semestru, anulować w niej semestr, zmienić datę rozpoczęcia semestru i rozpocząć nowy semestr,
 nie musząc ręcznie przenosić z zakładek Sprzęt i Cykliczne).
 
+Ponieważ polecenie mówi o prostym systemie rezerwacji, dane będą prezentowane w formacie
+tabelarycznym. TODO: rozważono diagram Gantta i kalendarz podobny do systemu rejestracji.
+
+TODO: usunąć raporty.
+
 Format bazy danych:
 
 1. nagłówek - początek semestru, rozmiary sekcji,

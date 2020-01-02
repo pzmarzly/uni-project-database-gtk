@@ -4,7 +4,7 @@
 #include "Welcome.h"
 #include <gtk/gtk.h>
 #include <string.h>
-#include "Recent.h"
+#include "RecentList.h"
 #include "Editor.h"
 #include "Utils.h"
 
@@ -13,8 +13,8 @@ struct Welcome {
     bool quit_on_destroy;
     GObject *window;
 
-    char *recent[MAX_RECENT];
-    int recent_len;
+    char *recent_list[MAX_RECENT];
+    int recent_list_len;
     char *demo;
 };
 
@@ -27,7 +27,7 @@ Welcome* welcome_new() {
 
     this->quit_on_destroy = false;
     this->window = NULL;
-    this->recent_len = 0;
+    this->recent_list_len = 0;
     return this;
 }
 
@@ -47,20 +47,20 @@ typedef struct {
     Welcome *this;
     char *path;
     bool overwrite;
-    bool push_to_recent;
+    bool push_to_recent_list;
 } LoadEditorRequest;
 
 static LoadEditorRequest* prepare_load(
     Welcome *this,
     char *path,
     bool overwrite,
-    bool push_to_recent
+    bool push_to_recent_list
 ) {
     LoadEditorRequest *req = malloc(sizeof(LoadEditorRequest));
     req->this = this;
     req->path = g_strdup(path);
     req->overwrite = overwrite;
-    req->push_to_recent = push_to_recent;
+    req->push_to_recent_list = push_to_recent_list;
     return req;
 }
 
@@ -70,9 +70,9 @@ static void load_editor(LoadEditorRequest *req) {
         return;
     }
 
-    if (req->push_to_recent) {
-        Recent *recent = recent_load();
-        recent_push(recent, req->path);
+    if (req->push_to_recent_list) {
+        RecentList *recent_list = recent_list_load();
+        recent_list_push(recent_list, req->path);
     }
 
     welcome_set_quit_on_destroy(req->this, false);
@@ -143,7 +143,7 @@ static void on_btn_open(GtkWidget *sender, gpointer user_data) {
         load_editor(req);
 }
 
-static bool on_recent_label_clicked(GtkWidget *sender, gpointer user_data) {
+static bool on_recent_list_label_clicked(GtkWidget *sender, gpointer user_data) {
     (void)sender;
     load_editor((LoadEditorRequest *)user_data);
     return true;
@@ -157,14 +157,14 @@ static bool on_demo_button_clicked(GtkWidget *sender, gpointer user_data) {
     if (!copy_file(req->path, temp)) return false;
     req->path = temp;
 
-    return on_recent_label_clicked(sender, user_data);
+    return on_recent_list_label_clicked(sender, user_data);
 }
 
-static void make_recent_label(Welcome *this, char* path, GObject *box) {
-    GtkWidget *recent_label = gtk_link_button_new_with_label(path, path);
-    g_signal_connect(G_OBJECT(recent_label), "activate-link",
-        G_CALLBACK(on_recent_label_clicked), prepare_load(this, path, false, true));
-    gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
+static void make_recent_list_label(Welcome *this, char* path, GObject *box) {
+    GtkWidget *recent_list_label = gtk_link_button_new_with_label(path, path);
+    g_signal_connect(G_OBJECT(recent_list_label), "activate-link",
+        G_CALLBACK(on_recent_list_label_clicked), prepare_load(this, path, false, true));
+    gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_list_label), 0, 0, 0);
 }
 
 bool welcome_start(Welcome *this) {
@@ -178,17 +178,17 @@ bool welcome_start(Welcome *this) {
     g_signal_connect(G_OBJECT(btn_new), "clicked", G_CALLBACK(on_btn_new), this);
     g_signal_connect(G_OBJECT(btn_open), "clicked", G_CALLBACK(on_btn_open), this);
 
-    Recent *recent = recent_load();
-    GObject *recent_box = gtk_builder_get_object(this->ui, "recent");
-    for (int i = 0; i < recent->items; i++) {
-        make_recent_label(this, recent->paths[i], recent_box);
+    RecentList *recent_list = recent_list_load();
+    GObject *recent_list_box = gtk_builder_get_object(this->ui, "recent_list");
+    for (int i = 0; i < recent_list->items; i++) {
+        make_recent_list_label(this, recent_list->paths[i], recent_list_box);
     }
 
     this->demo = strcat(basedir(), "/demo.db");
     GtkWidget *demo_btn = gtk_button_new_with_label("Utwórz bazę demonstracyjną...");
     g_signal_connect(G_OBJECT(demo_btn), "clicked",
         G_CALLBACK(on_demo_button_clicked), prepare_load(this, this->demo, false, false));
-    gtk_box_pack_end(GTK_BOX(recent_box), GTK_WIDGET(demo_btn), 0, 0, 0);
+    gtk_box_pack_end(GTK_BOX(recent_list_box), GTK_WIDGET(demo_btn), 0, 0, 0);
 
     gtk_widget_show_all(GTK_WIDGET(this->window));
     return true;

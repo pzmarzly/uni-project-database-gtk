@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <gtk/gtk.h>
 #include "Repo.h"
-#include "Recent.h"
+#include "RecentList.h"
 #include "Utils.h"
 
 struct EditorSemester {
@@ -55,8 +55,8 @@ static void on_save_as(GtkWidget *sender, gpointer user_data) {
         strcat(title, " - WeźMnie");
         gtk_window_set_title(this->parent, title);
 
-        Recent *recent = recent_load();
-        recent_push(recent, path);
+        RecentList *recent_list = recent_list_load();
+        recent_list_push(recent_list, path);
         free(old_path);
         free(path);
     }

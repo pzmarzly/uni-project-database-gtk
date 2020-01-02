@@ -1,6 +1,7 @@
 proper classes https://developer.gnome.org/gtk-tutorial/stable/x2200.html
 translation https://developer.gnome.org/gtk3/stable/gtk-question-index.html
 better enlarge_table
+cross-platform support with GLib
 
 ensure all headers have pragma once
 ensure all files have a signature
