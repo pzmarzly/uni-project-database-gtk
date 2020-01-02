@@ -22,6 +22,27 @@ char* program_dir() {
     return path;
 }
 
+char* temp_file() {
+    GError *error = NULL;
+    GFileIOStream *stream = NULL;
+    GFile *file = g_file_new_tmp(NULL, &stream, &error);
+    if (file == NULL) return NULL;
+    if (stream != NULL) g_io_stream_close(G_IO_STREAM(stream), NULL, &error);
+    char *path = g_file_get_path(file);
+    g_object_unref(file);
+    return path;
+}
+
+bool copy_file(char *src, char *dest) {
+    GError *error = NULL;
+    GFile *src_file = g_file_new_for_path(src);
+    GFile *dest_file = g_file_new_for_path(dest);
+    bool success = g_file_copy(src_file, dest_file, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
+    g_object_unref(src_file);
+    g_object_unref(dest_file);
+    return success;
+}
+
 GtkBuilder *get_builder(char *name) {
     char *glade = strcat(program_dir(), name);
     GtkBuilder *ui = gtk_builder_new_from_file(glade);
@@ -44,23 +65,9 @@ void apply_css(GtkWidget *obj, char *css) {
         GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
-char* temp_file() {
-    GError *error = NULL;
-    GFileIOStream *stream = NULL;
-    GFile *file = g_file_new_tmp(NULL, &stream, &error);
-    if (file == NULL) return NULL;
-    if (stream != NULL) g_io_stream_close(G_IO_STREAM(stream), NULL, &error);
-    char *path = g_file_get_path(file);
-    g_object_unref(file);
-    return path;
-}
-
-bool copy_file(char *src, char *dest) {
-    GError *error = NULL;
-    GFile *src_file = g_file_new_for_path(src);
-    GFile *dest_file = g_file_new_for_path(dest);
-    bool success = g_file_copy(src_file, dest_file, G_FILE_COPY_OVERWRITE, NULL, NULL, NULL, &error);
-    g_object_unref(src_file);
-    g_object_unref(dest_file);
-    return success;
+void remove_all_gtk_children(GtkContainer *container) {
+    GList *children = gtk_container_get_children(container);
+    for(GList *i = children; i != NULL; i = g_list_next(i))
+        gtk_widget_destroy(GTK_WIDGET(i->data));
+    g_list_free(children);
 }

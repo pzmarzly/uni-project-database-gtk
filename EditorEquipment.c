@@ -22,11 +22,7 @@ EditorEquipment* editor_equipment_new(Repo *repo, GtkBuilder *ui) {
 
 void equipment_refresh(EditorEquipment *this) {
     GObject *equipment = gtk_builder_get_object(this->ui, "equipment");
-    GList *children = gtk_container_get_children(GTK_CONTAINER(equipment));
-    for(GList *i = children; i != NULL; i = g_list_next(i))
-        gtk_widget_destroy(GTK_WIDGET(i->data));
-    g_list_free(children);
-
+    remove_all_gtk_children(GTK_CONTAINER(equipment));
     editor_equipment_show(this);
     gtk_widget_show_all(GTK_WIDGET(equipment));
 }
