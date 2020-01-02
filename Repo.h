@@ -28,6 +28,9 @@ typedef unsigned int ID;
 //     sizeof(OneTimeReservation), sizeof(StringMetadata),
 //     sizeof(StringFragment))
 #define MAX_STRUCT_SIZE 256
+typedef struct {
+    char bytes[MAX_STRUCT_SIZE];
+} AnyTableElement;
 // Max length of a string fragment.
 #define STRING_FRAGMENT_MAX 255
 

@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <gtk/gtk.h>
 #include "Editor.h"
+#include "EditorRemovalDialog.h"
 #include "Repo.h"
 #include "RepoData.h"
 #include "RepoString.h"
@@ -130,39 +131,11 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
         printf("Cannot read %u from EditorEquipment.\n", req->id);
         return;
     }
-
-    char *glade = strcat(basedir(), "/EditorEquipmentDel.glade");
-    GtkBuilder *ui = gtk_builder_new_from_file(glade);
-    free(glade);
-
-    GObject *dialog = gtk_builder_get_object(ui, "dialog");
-    gtk_dialog_add_buttons(
-        GTK_DIALOG(dialog),
-        "Nie", GTK_RESPONSE_NO,
-        "Tak", GTK_RESPONSE_YES,
-        NULL
-    );
-
-    char title[128];
-    strcpy(title, "Usuwanie ");
-    strcat(title, removal_text(TableEquipment));
-    strcat(title, " - WeźMnie");
-    gtk_window_set_title(GTK_WINDOW(dialog), title);
-
-    GObject *label = gtk_builder_get_object(ui, "label");
-    char text[128];
-    strcpy(text, "Czy na pewno chcesz usunąć ");
-    strcat(text, e.name);
-    strcat(text, "?");
-    gtk_label_set_text(GTK_LABEL(label), text);
-
-    int result = gtk_dialog_run(GTK_DIALOG(dialog));
-    if (result == GTK_RESPONSE_YES) {
+    if (editor_removal_dialog(TableEquipment, e.name)) {
         repo_string_del(req->this->repo, e.description);
         repo_del(req->this->repo, TableEquipment, req->id);
         equipment_refresh(req->this);
     }
-    gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
 void editor_equipment_show(EditorEquipment *this) {

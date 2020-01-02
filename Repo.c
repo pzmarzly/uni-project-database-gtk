@@ -128,14 +128,13 @@ Repo* repo_save_as(Repo *repo, char *dest) {
     }
 
     // Copy all elements from old_repo.
-    void *tmp = malloc(MAX_STRUCT_SIZE);
+    AnyTableElement tmp;
     for (int i = 0; i < TABLE_NUM; i++) {
         for (unsigned j = 0; j < old_repo->header.table_used[i]; j++) {
-            if (!repo_get(old_repo, i, j, tmp)) goto fail;
-            repo_set(repo, i, j, tmp);
+            if (!repo_get(old_repo, i, j, &tmp)) goto fail;
+            repo_set(repo, i, j, &tmp);
         }
     }
-    free(tmp);
     return old_repo;
 
     fail:
@@ -235,22 +234,21 @@ void repo_del(Repo *repo, TableID table, ID id) {
 void repo_del_n(Repo *repo, TableID table, ID id, unsigned n) {
     if (id + n > repo->header.table_used[table]) return;
 
-    void *tmp = malloc(MAX_STRUCT_SIZE);
+    AnyTableElement tmp;
     // Shift elements left.
     for (ID i = id; i + n < repo->header.table_used[table]; i++) {
-        if (!repo_get(repo, table, i + n, tmp)) bug("Nie można usunąć elementu.");
-        repo_set(repo, table, i, tmp);
+        if (!repo_get(repo, table, i + n, &tmp)) bug("Nie można usunąć elementu.");
+        repo_set(repo, table, i, &tmp);
     }
     repo->header.table_used[table] -= n;
     save_header(repo);
 
     // Zero out the free space.
-    memset(tmp, 0, MAX_STRUCT_SIZE);
+    memset(tmp.bytes, 0, sizeof(tmp.bytes));
     ID start = repo->header.table_used[table];
     for (ID i = 0; i < n; i++) {
-        repo_set(repo, table, i + start, tmp);
+        repo_set(repo, table, i + start, &tmp);
     }
-    free(tmp);
 
     // repo_set just increased repo size, so we decrease it again.
     repo->header.table_used[table] -= n;
