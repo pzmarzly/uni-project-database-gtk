@@ -18,3 +18,16 @@ GtkWidget* equipment_icon(EquipmentType type, unsigned size) {
     // If pixbuf is NULL, gtk_image_new_from_pixbuf will handle it correctly.
     return gtk_image_new_from_pixbuf(pixbuf);
 }
+
+char* removal_and_editing_text(TableID type) {
+    if (type == TableEquipment) {
+        return "sprzętu";
+    } else if (type == TablePeriodicReservation) {
+        return "rezerwacji cyklicznej";
+    } else if (type == TableOneTimeReservation) {
+        return "rezerwacji jednorazowej";
+    } else {
+        printf("Reached removal_and_editing_text fallback\n");
+        return "";
+    }
+}

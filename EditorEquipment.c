@@ -143,13 +143,18 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
         NULL
     );
 
+    char title[128];
+    strcpy(title, "Usuwanie ");
+    strcat(title, removal_text(TableEquipment));
+    strcat(title, " - WeźMnie");
+    gtk_window_set_title(GTK_WINDOW(dialog), title);
+
     GObject *label = gtk_builder_get_object(ui, "label");
-    char *text = malloc(128);
+    char text[128];
     strcpy(text, "Czy na pewno chcesz usunąć ");
     strcat(text, e.name);
     strcat(text, "?");
     gtk_label_set_text(GTK_LABEL(label), text);
-    free(text);
 
     int result = gtk_dialog_run(GTK_DIALOG(dialog));
     if (result == GTK_RESPONSE_YES) {
