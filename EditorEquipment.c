@@ -68,10 +68,7 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
         req->id = repo_len(req->this->repo, TableEquipment);
     }
 
-    char *glade = strcat(basedir(), "/EditorEquipmentEdit.glade");
-    GtkBuilder *ui = gtk_builder_new_from_file(glade);
-    free(glade);
-
+    GtkBuilder *ui = get_builder("EditorEquipmentEdit.glade");
     GObject *dialog = gtk_builder_get_object(ui, "dialog");
     gtk_dialog_add_buttons(
         GTK_DIALOG(dialog),

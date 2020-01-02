@@ -23,11 +23,7 @@ struct Editor {
 
 Editor* editor_new(char *path, bool overwrite) {
     Editor *this = malloc(sizeof(Editor));
-
-    char *glade = strcat(basedir(), "/Editor.glade");
-    this->ui = gtk_builder_new_from_file(glade);
-    free(glade);
-
+    this->ui = get_builder("Editor.glade");
     this->quit_on_destroy = false;
     this->window = NULL;
     this->repo = repo_open(path, overwrite);

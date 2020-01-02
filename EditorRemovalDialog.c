@@ -4,10 +4,7 @@
 #include "Utils.h"
 
 bool editor_removal_dialog(TableID type, char *element_name) {
-    char *glade = strcat(basedir(), "/EditorRemovalDialog.glade");
-    GtkBuilder *ui = gtk_builder_new_from_file(glade);
-    free(glade);
-
+    GtkBuilder *ui = get_builder("EditorRemovalDialog.glade");
     GObject *dialog = gtk_builder_get_object(ui, "dialog");
     gtk_dialog_add_buttons(
         GTK_DIALOG(dialog),

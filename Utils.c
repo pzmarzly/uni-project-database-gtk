@@ -17,6 +17,13 @@ char* basedir() {
     return path;
 }
 
+GtkBuilder *get_builder(char *name) {
+    char *glade = strcat(strcat(basedir(), "/"), name);
+    GtkBuilder *ui = gtk_builder_new_from_file(glade);
+    free(glade);
+    return ui;
+}
+
 GtkFileFilter* file_filter() {
     GtkFileFilter *filter = gtk_file_filter_new();
     gtk_file_filter_set_name(filter, "Bazy danych (*.db)");

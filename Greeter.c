@@ -20,11 +20,7 @@ struct Greeter {
 
 Greeter* greeter_new() {
     Greeter *this = malloc(sizeof(Greeter));
-
-    char *glade = strcat(basedir(), "/Greeter.glade");
-    this->ui = gtk_builder_new_from_file(glade);
-    free(glade);
-
+    this->ui = get_builder("Greeter.glade");
     this->quit_on_destroy = false;
     this->window = NULL;
     this->recent_list_len = 0;
