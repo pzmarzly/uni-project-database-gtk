@@ -10,7 +10,7 @@
 int nothing() {
     Welcome* welcome = welcome_new();
     welcome_set_quit_on_destroy(welcome, true);
-    if (welcome_run(welcome))
+    if (welcome_start(welcome))
         gtk_main();
     return 0;
 }
@@ -40,7 +40,7 @@ int file(char *argv[]) {
     // Open the editor directly.
     Editor* editor = editor_new(argv[1], overwrite);
     editor_set_quit_on_destroy(editor, true);
-    if (editor_run(editor))
+    if (editor_start(editor))
         gtk_main();
     return 0;
 }

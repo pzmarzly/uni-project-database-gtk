@@ -66,7 +66,7 @@ static LoadEditorRequest* prepare_load(
 
 static void load_editor(LoadEditorRequest *req) {
     Editor* editor = editor_new(req->path, req->overwrite);
-    if (!editor_run(editor)) {
+    if (!editor_start(editor)) {
         return;
     }
 
@@ -167,7 +167,7 @@ static void make_recent_label(Welcome *this, char* path, GObject *box) {
     gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_label), 0, 0, 0);
 }
 
-bool welcome_run(Welcome *this) {
+bool welcome_start(Welcome *this) {
     this->window = gtk_builder_get_object(this->ui, "window");
     g_signal_connect(G_OBJECT(this->window), "destroy", G_CALLBACK(on_destroy), this);
     gtk_window_set_title(GTK_WINDOW(this->window), "WeźMnie");

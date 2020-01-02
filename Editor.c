@@ -51,7 +51,7 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
     free(this);
 }
 
-bool editor_run(Editor *this) {
+bool editor_start(Editor *this) {
     this->window = gtk_builder_get_object(this->ui, "window");
     g_signal_connect(G_OBJECT(this->window), "destroy", G_CALLBACK(on_destroy), this);
 
