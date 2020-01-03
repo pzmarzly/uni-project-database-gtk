@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include <time.h>
 #include "Utils.h"
 
 typedef struct {
@@ -14,9 +13,16 @@ typedef struct {
     unsigned table_used[TABLE_NUM];
 } Header;
 
-#define DAY (3600 * 24)
 static void default_header(Header *header) {
-    header->semester_start = time(NULL) / DAY * DAY;
+    GDateTime *time = g_date_time_new_now_utc();
+    int year, month, day;
+    g_date_time_get_ymd(time, &year, &month, &day);
+    g_date_time_unref(time);
+
+    GTimeZone *tz = g_time_zone_new_utc();
+    time = g_date_time_new(tz, year, month, day, 0, 0, 0);
+    header->semester_start = g_date_time_to_unix(time);
+
     header->semester_active = false;
     header->table_size[TableEquipment] = TABLE_SIZE1;
     header->table_size[TablePeriodicReservation] = TABLE_SIZE1;

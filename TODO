@@ -1,6 +1,5 @@
 proper classes https://developer.gnome.org/gtk-tutorial/stable/x2200.html
 better enlarge_table
-cross-platform support with GLib
 
 ensure all headers have pragma once
 ensure all files have a signature
@@ -8,6 +7,3 @@ static functions everywhere
 comments ending with dot
 free and unref
 styling: star in casts ((ref *)user_data) and function return types (ref* function)
-
-question-mark image-projector laptop: Icon made by Freepik from www.flaticon.com
-whiteboard: Icons made by Kiranshastry from www.flaticon.com

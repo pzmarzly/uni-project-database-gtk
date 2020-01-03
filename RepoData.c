@@ -27,7 +27,6 @@ char* removal_and_editing_text(TableID type) {
     } else if (type == TableOneTimeReservation) {
         return "rezerwacji jednorazowej";
     } else {
-        printf("Reached removal_and_editing_text fallback\n");
         return "";
     }
 }

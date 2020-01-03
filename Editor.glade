@@ -35,7 +35,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="semester-start">
+              <object class="GtkButton" id="semester-starting-date">
                 <property name="label" translatable="yes">BŁĄD</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
