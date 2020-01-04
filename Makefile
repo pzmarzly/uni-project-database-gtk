@@ -9,7 +9,7 @@ default: wez-mnie-gtk
 all: wez-mnie-gtk test docs
 
 WEZ_MNIE_GTK = wez-mnie-gtk.o Greeter.o RecentList.o
-WEZ_MNIE_GTK += Editor.o EditorDialogs.o
+WEZ_MNIE_GTK += Editor.o EditorDialogs.o Datepicker.o
 WEZ_MNIE_GTK += EditorSemester.o EditorEquipment.o
 WEZ_MNIE_GTK += EditorPeriodicReservation.o
 WEZ_MNIE_GTK += EditorReports.o

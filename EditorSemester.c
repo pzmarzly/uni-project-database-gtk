@@ -1,4 +1,5 @@
 #include "EditorSemester.h"
+#include "Datepicker.h"
 #include "EditorDialogs.h"
 #include "RecentList.h"
 #include "Repo.h"
@@ -19,56 +20,6 @@ EditorSemester *editor_semester_new(Repo *repo, GtkBuilder *ui) {
   this->ui = ui;
   this->parent = GTK_WINDOW(gtk_builder_get_object(ui, "window"));
   return this;
-}
-
-static void update_starting_date_btn(GtkButton *button, Repo *repo) {
-  char *date = timestamp_day_str(repo_get_semester_start(repo));
-  gtk_button_set_label(button, date);
-  free(date);
-}
-
-static void on_starting_date(GtkWidget *sender, gpointer user_data) {
-  EditorSemester *this = (EditorSemester *)user_data;
-
-  PreparedEditDialog d = editor_edit_dialog_prepare(TableEquipment);
-  GtkBuilder *ui = d.ui;
-  GtkDialog *dialog = d.dialog;
-  GtkGrid *grid = GTK_GRID(gtk_builder_get_object(ui, "grid"));
-
-  GtkWidget *calendar_label =
-      GTK_WIDGET(gtk_label_new("Data rozpoczęcia semestru:"));
-  gtk_grid_attach(grid, calendar_label, 0, 0, 1, 1);
-
-  GDateTime *time =
-      g_date_time_new_from_unix_utc(repo_get_semester_start(this->repo));
-  if (time == NULL) {
-    printf("Niepoprawna data rozpoczęcia semestru\n");
-    return;
-  }
-  int year, month, day;
-  g_date_time_get_ymd(time, &year, &month, &day);
-
-  GtkCalendar *calendar = GTK_CALENDAR(gtk_calendar_new());
-  gtk_calendar_select_month(calendar, month - 1, year);
-  gtk_calendar_select_day(calendar, day);
-  g_date_time_unref(time);
-  gtk_grid_attach(grid, GTK_WIDGET(calendar), 0, 1, 1, 1);
-  gtk_widget_set_hexpand(GTK_WIDGET(calendar), true);
-  gtk_widget_set_vexpand(GTK_WIDGET(calendar), true);
-
-  gtk_widget_show_all(GTK_WIDGET(dialog));
-
-  int result = gtk_dialog_run(dialog);
-  if (result == GTK_RESPONSE_OK) {
-    gtk_calendar_get_date(calendar, (unsigned *)&year, (unsigned *)&month,
-                          (unsigned *)&day);
-    GTimeZone *tz = g_time_zone_new_utc();
-    time = g_date_time_new(tz, year, month + 1, day, 0, 0, 0);
-
-    repo_set_semester_start(this->repo, g_date_time_to_unix(time));
-    update_starting_date_btn(GTK_BUTTON(sender), this->repo);
-  }
-  gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
 static void on_save_as(GtkWidget *sender, gpointer user_data) {
@@ -123,12 +74,16 @@ void on_active(GtkWidget *sender, gpointer user_data) {
   update_active_btn(GTK_BUTTON(sender), active);
 }
 
+static void on_starting_date(Timestamp time, void *user_data) {
+  EditorSemester *this = (EditorSemester *)user_data;
+  repo_set_semester_start(this->repo, time);
+}
+
 void editor_semester_show(EditorSemester *this) {
   GObject *starting_date_btn =
       gtk_builder_get_object(this->ui, "semester-starting-date");
-  update_starting_date_btn(GTK_BUTTON(starting_date_btn), this->repo);
-  g_signal_connect(G_OBJECT(starting_date_btn), "clicked",
-                   G_CALLBACK(on_starting_date), this);
+  datepicker_new(GTK_BUTTON(starting_date_btn),
+                 repo_get_semester_start(this->repo), on_starting_date, this);
 
   GObject *active_btn = gtk_builder_get_object(this->ui, "semester-active");
   bool active = repo_get_semester_active(this->repo);
