@@ -38,28 +38,25 @@ static void on_destroy(GtkWidget *sender, gpointer user_data) {
 typedef struct {
   Greeter *this;
   char *path;
-  bool overwrite;
-  bool push_to_recent_list;
+  RepoType repo_type;
 } LoadEditorRequest;
 
 static LoadEditorRequest *prepare_load(Greeter *this, char *path,
-                                       bool overwrite,
-                                       bool push_to_recent_list) {
+                                       RepoType repo_type) {
   LoadEditorRequest *req = malloc(sizeof(LoadEditorRequest));
   req->this = this;
   req->path = g_strdup(path);
-  req->overwrite = overwrite;
-  req->push_to_recent_list = push_to_recent_list;
+  req->repo_type = repo_type;
   return req;
 }
 
 static void load_editor(LoadEditorRequest *req) {
-  Editor *editor = editor_new(req->path, req->overwrite, 0, 1); // TODO: fix
+  Editor *editor = editor_new(req->path, req->repo_type, 0, 1); // TODO: fix
   if (!editor_start(editor)) {
     return;
   }
 
-  if (req->push_to_recent_list) {
+  if (req->repo_type != RepoDemo) {
     RecentList *recent_list = recent_list_load();
     recent_list_push(recent_list, req->path);
   }
@@ -88,7 +85,7 @@ static void on_btn_new(GtkWidget *sender, gpointer user_data) {
   LoadEditorRequest *req = NULL;
   if (res == GTK_RESPONSE_ACCEPT) {
     char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-    req = prepare_load(this, path, true, true);
+    req = prepare_load(this, path, RepoNew);
     g_free(path);
   }
   gtk_widget_destroy(dialog);
@@ -110,7 +107,7 @@ static void on_btn_open(GtkWidget *sender, gpointer user_data) {
   LoadEditorRequest *req = NULL;
   if (res == GTK_RESPONSE_ACCEPT) {
     char *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-    req = prepare_load(this, path, false, true);
+    req = prepare_load(this, path, RepoOpen);
     g_free(path);
   }
   gtk_widget_destroy(dialog);
@@ -149,7 +146,7 @@ static void make_recent_list_label(Greeter *this, char *path, GObject *box) {
   GtkWidget *recent_list_label = gtk_link_button_new_with_label(path, path);
   g_signal_connect(G_OBJECT(recent_list_label), "activate-link",
                    G_CALLBACK(on_recent_list_label_clicked),
-                   prepare_load(this, path, false, true));
+                   prepare_load(this, path, RepoOpen));
   gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(recent_list_label), 0, 0, 0);
 }
 
@@ -181,7 +178,7 @@ bool greeter_start(Greeter *this) {
       gtk_button_new_with_label("Utwórz bazę demonstracyjną...");
   g_signal_connect(G_OBJECT(demo_btn), "clicked",
                    G_CALLBACK(on_demo_button_clicked),
-                   prepare_load(this, demo_path, false, false));
+                   prepare_load(this, demo_path, RepoDemo));
   gtk_box_pack_end(GTK_BOX(recent_list_box), GTK_WIDGET(demo_btn), 0, 0, 0);
   free(demo_path);
 

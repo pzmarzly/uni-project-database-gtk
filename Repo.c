@@ -1,4 +1,5 @@
 #include "Repo.h"
+#include "RepoData.h"
 #include "Utils.h"
 #include <errno.h>
 #include <stdio.h>
@@ -64,14 +65,14 @@ Timestamp repo_get_semester_end(Repo *repo) {
   return repo->header.semester_end;
 }
 
-static Repo *repo_open_internal(Repo *repo, bool overwrite, Timestamp start, Timestamp end) {
-  repo->file = fopen(repo->path, overwrite ? "w+b" : "r+b");
+static Repo *repo_open_internal(Repo *repo, RepoType type, Timestamp start, Timestamp end) {
+  repo->file = fopen(repo->path, type == RepoNew ? "w+b" : "r+b");
   if (repo->file == NULL) {
     printf("Nie udało się otworzyć %s, kod %d\n", repo->path, errno);
     free(repo);
     return NULL;
   }
-  if (overwrite) {
+  if (type == RepoNew) {
     default_header(&repo->header, start, end);
     save_header(repo);
   } else {
@@ -79,14 +80,19 @@ static Repo *repo_open_internal(Repo *repo, bool overwrite, Timestamp start, Tim
       free(repo);
       return NULL;
     }
+    if (type == RepoDemo) {
+      repo->header.semester_start = timestamp_today();
+      repo->header.semester_end = repo->header.semester_start + 3600 * 24 * 365;
+      save_header(repo);
+    }
   }
   return repo;
 }
 
-Repo *repo_open(char *path, bool overwrite, Timestamp start, Timestamp end) {
+Repo *repo_open(char *path, RepoType type, Timestamp start, Timestamp end) {
   Repo *repo = malloc(sizeof(Repo));
   repo->path = g_strdup(path);
-  return repo_open_internal(repo, overwrite, start, end);
+  return repo_open_internal(repo, type, start, end);
 }
 
 void repo_close(Repo *repo) {

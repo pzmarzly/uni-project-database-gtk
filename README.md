@@ -34,7 +34,7 @@ Do utrzymania stylu kodu użyty został `clang-format`.
 make # buduje główny program `wez-mnie-gtk` i bazę `demo.db`
 ./wez-mnie-gtk # uruchamia program
 make fmt # uruchamia `clang-format`
-make all # równoważne `make wez-mnie-gtk test docs`
+make all # równoważne `make wez-mnie-gtk test`
 make clean # usuwa pliki utworzone przez `make all`
 
 make test # buduje program test

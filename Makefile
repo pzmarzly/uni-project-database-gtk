@@ -6,7 +6,7 @@ override LDFLAGS+=-lm `pkg-config --libs gtk+-3.0` \
 	-fsanitize=address -fno-omit-frame-pointer
 
 default: wez-mnie-gtk
-all: wez-mnie-gtk test docs
+all: wez-mnie-gtk test
 
 WEZ_MNIE_GTK = wez-mnie-gtk.o Greeter.o RecentList.o
 WEZ_MNIE_GTK += Editor.o EditorDialogs.o Datepicker.o
@@ -18,11 +18,11 @@ WEZ_MNIE_GTK += About.o Utils.o dialog/Dialogs.o
 wez-mnie-gtk: ${WEZ_MNIE_GTK} demo.db
 	$(CC) ${WEZ_MNIE_GTK} ${LDFLAGS} -o $@
 
-TEST = test.o Repo.o RepoString.o Utils.o
+TEST = test.o Repo.o RepoData.o RepoString.o Utils.o
 test: ${TEST}
 	$(CC) ${TEST} ${LDFLAGS} -o $@
 
-GEN_DEMO = gen-demo.o Repo.o RepoString.o Utils.o
+GEN_DEMO = gen-demo.o Repo.o RepoData.o RepoString.o Utils.o
 gen-demo: ${GEN_DEMO}
 	$(CC) ${GEN_DEMO} ${LDFLAGS} -o $@
 demo.db: gen-demo

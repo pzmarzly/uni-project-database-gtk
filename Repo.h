@@ -6,12 +6,18 @@ typedef unsigned short HourAndMinutes;
 // HourAndMinutes that signalises an error.
 #define HM_INVALID 3000
 
+typedef enum {
+  RepoOpen = 0,
+  RepoNew,
+  RepoDemo,
+} RepoType;
+
 typedef struct Repo Repo;
 char *repo_get_path(Repo *repo);
 Timestamp repo_get_semester_start(Repo *repo);
 Timestamp repo_get_semester_end(Repo *repo);
 
-Repo *repo_open(char *path, bool overwrite, Timestamp start, Timestamp end);
+Repo *repo_open(char *path, RepoType type, Timestamp start, Timestamp end);
 void repo_close(Repo *repo);
 Repo *repo_save_as(Repo *repo, char *dest);
 
