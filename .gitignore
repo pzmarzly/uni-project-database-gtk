@@ -1,8 +1,7 @@
 *.o
 *.d
 *.db
-/wez-mnie-gtk
-/test
-/gen-demo
 *~
 *.pdf
+
+/_install

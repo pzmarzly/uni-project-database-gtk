@@ -20,59 +20,57 @@ wcześniej wprowadzonych informacji.
 
 ## Opis interakcji użytkownika z programem oraz realizowanych przez program funkcji
 
-Program będzie operował na bazach danych będących reprezentacją rezerwacji w danym semestrze.
-Podział "1 semestr = 1 plik" pozwoli na łatwe przygotowanie następnego semestru (kopiując poprzedni
-lub kopiując szablon) oraz równoczesną pracę na wielu semestrach. Program będzie korzystał z GTK+
-w wersji co najmniej 3.18 (zawarte w Ubuntu 16.04) oraz oczekiwał środowiska uniksowego (`/`
-rozdziela katalogi, `/proc/self/exe` prowadzi do programu, itd.).
+Zawarty w pliku [DESIGN.md](./DESIGN.md).
 
-Po uruchomieniu programu pojawi się okno pozwalające na stworzenie nowej bazy danych
-(nowego semestru) lub wczytanie już istniejącej. Podając ścieżkę do pliku jako parametr
-wywołania programu, użytkownik będzie mógł pominąć to okno i od razu przejść do edytora bazy.
+## Budowanie
 
-Edytor będzie zawierał kilka kart:
+Wymagania: GTK+ 3.18 wzwyż, GNU `make`, GNU `gcc`, `pkg-config`.
 
-- Semestr - wybór daty startu semestru, start i anulowanie semestru, tworzenie kopii bazy danych,
-- Sprzęt - edycja sprzętu dostępnego na uczelni (nazwa, typ, opis),
-- Cykliczne - edycja rezerwacji cotygodniowych,
-- Wypożyczenia - widok tygodniowy, z opcją dodania nowej rezerwacji lub pominięcia wybranej
-rezerwacji cyklicznej w danym tygodniu,
-- Raporty - zawiera przyciski do generowania raportów (plan danego tygodnia, wolny sprzęt
-w danym terminie, ranking sprzętu według dostępności).
+Dla budowania plików `.pdf` także: `pandoc`, `xelatex`.
 
-Przed startem semestru będzie można zmieniać datę startu semestru, dodawać i usuwać sprzęt,
-a także dodawać i usuwać wypożyczenia cykliczne. Po starcie semestru będzie można dodawać
-sprzęt, dodawać i anulować wypożyczenia cykliczne (zaczynając od danej daty), pomijać
-wypożyczenia cykliczne w danych dniach, a także dodawać i usuwać rezerwacje pojedyncze.
+Do utrzymania stylu kodu użyty został `clang-format`.
 
-W przypadku awarii sprzętu dostępnego na uczelni użytkownik będzie mógł utworzyć rezerwację
-na okres naprawy (np. na kilka dni).
+```bash
+make # buduje główny program `wez-mnie-gtk` i bazę `demo.db`
+./wez-mnie-gtk # uruchamia program
+make fmt # uruchamia `clang-format`
+make all # równoważne `make wez-mnie-gtk test docs`
+make clean # usuwa pliki utworzone przez `make all`
 
-Anulowanie semestru spowoduje usunięcie wszystkich jednorazowych wypożyczeń, wszystkich
-anulowanych cyklicznych wypożyczeń oraz wszystkich pominięć cyklicznych wypożyczeń. Ułatwi
-to przygotowanie planu na następny semestr (użytkownik będzie mógł skopiować bazę obecnego
-semestru, anulować w niej semestr, zmienić datę rozpoczęcia semestru i rozpocząć nowy semestr,
-nie musząc ręcznie przenosić z zakładek Sprzęt i Cykliczne).
+make test # buduje program test
+./test # próbuje wykonać wszystkie testy
 
-Ponieważ polecenie mówi o prostym systemie rezerwacji, dane będą prezentowane w formacie
-tabelarycznym. TODO: rozważono diagram Gantta i kalendarz podobny do systemu rejestracji.
+# buduje pliki `.pdf` na podstawie plików `.md`, używając `pandoc` i `xelatex`
+make docs
 
-TODO: usunąć raporty.
+# kopiuje `wez-mnie-gtk` i używane przez niego pliki
+# do `DESTDIR` (domyślnie `./_install`)
+make install DESTDIR=./_install
+_install/wez-mnie-gtk # uruchamia program
+```
 
-Format bazy danych:
+## Struktura projektu
 
-1. nagłówek - początek semestru, rozmiary sekcji,
-2. rosnąca tablica TableEquipment - informacje o sprzęcie,
-3. rosnąca tablica TablePeriodicReservation - informacje o rezerwacjach cyklicznych,
-4. rosnąca tablica TableOneTimeReservation - informacje o rezerwacjach jednorazowych,
-5. rosnąca tablica TableStringMetadata - sekcja przeznaczona na metadane tekstu,
-6. rosnąca tablica TableStringFragment - sekcja przeznaczona na tekst o nieznanej, nieograniczonej
-długości (będzie on dzielony na fragmenty po maksymalnie 255 znaków).
-
-Nagłówek będzie trzymany w pamięci, z pozostałych części bazy dane będą wczytywane fragmentami
-na żądanie. Zmiany będą zapisywane na dysk na bieżąco. Format bazy danych pozwoli na odczyt
-danych w czasie $O(1)$, ich zapis w czasie $O(n)$ w zależności od całkowitego rozmiaru bazy,
-a także ich usuwanie w czasie $O(n)$ w zależności od rozmiaru segmentu, w którym są dane.
-Tablice 2. - 4. będą zawierały odniesienia do tablicy 5., więc usuwanie tekstu będzie pozostawiać
-w tablicy 5. informacje o usuwanym elemencie (aby identyfikatory pozostałych elementów nie uległy
-zmianie), usuwając jednak jego zawartość z tablicy 6.
+```text
+programy:
+- wez-mnie-gtk - główny program
+- test - program używany do szukania błędów w implementacji bazy
+- gen-demo - program tworzący bazę z przykładowymi danymi `demo.db`
+okna GTK+:
+- AboutDialog
+- Editor (i jego zakładki w EditorSemester, EditorEquipment, itd.)
+- EditorEditDialog
+- EditorRemovalDialog
+- Greeter
+pozostałe:
+- Repo - implementacja wczytania/zapisania bazy, definicje tabel
+- RepoString - konwersja między tekstem zapisanym w bazie a `char *`
+- RepoData - funkcje operujące na danych w tabelach
+- Utils - funkcje pomocnicze
+ikony:
+- question-mark.png image-projector.png laptop.png:
+  Icon made by Freepik from www.flaticon.com
+- whiteboard.png:
+  Icons made by Kiranshastry from www.flaticon.com
+Licencja ikon znajduje się również w AboutDialog.
+```
