@@ -14,7 +14,8 @@ struct EditorPeriodicReservation {
   GtkBuilder *ui;
 };
 
-EditorPeriodicReservation *editor_periodic_reservation_new(Repo *repo, GtkBuilder *ui) {
+EditorPeriodicReservation *editor_periodic_reservation_new(Repo *repo,
+                                                           GtkBuilder *ui) {
   EditorPeriodicReservation *this = malloc(sizeof(EditorPeriodicReservation));
   this->repo = repo;
   this->ui = ui;
@@ -22,7 +23,8 @@ EditorPeriodicReservation *editor_periodic_reservation_new(Repo *repo, GtkBuilde
 }
 
 void periodic_reservation_refresh(EditorPeriodicReservation *this) {
-  GObject *periodic_reservation = gtk_builder_get_object(this->ui, "periodic_reservation");
+  GObject *periodic_reservation =
+      gtk_builder_get_object(this->ui, "periodic_reservation");
   remove_all_gtk_children(GTK_CONTAINER(periodic_reservation));
   editor_periodic_reservation_show(this);
   gtk_widget_show_all(GTK_WIDGET(periodic_reservation));
@@ -34,7 +36,8 @@ typedef struct {
   ID id;
 } EditRequest;
 
-static EditRequest *prepare_edit(EditorPeriodicReservation *this, bool empty, ID id) {
+static EditRequest *prepare_edit(EditorPeriodicReservation *this, bool empty,
+                                 ID id) {
   EditRequest *req = malloc(sizeof(EditRequest));
   req->this = this;
   req->empty = empty;
@@ -77,9 +80,11 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
   GtkWidget *day_label = GTK_WIDGET(gtk_label_new("Dzień:"));
   gtk_grid_attach(grid, day_label, 0, 0, 1, 1);
-  GtkWidget *start_label = GTK_WIDGET(gtk_label_new("Godzina rozpoczęcia [HH:MM]:"));
+  GtkWidget *start_label =
+      GTK_WIDGET(gtk_label_new("Godzina rozpoczęcia [HH:MM]:"));
   gtk_grid_attach(grid, start_label, 0, 1, 1, 1);
-  GtkWidget *end_label = GTK_WIDGET(gtk_label_new("Godzina zakończenia [HH:MM]:"));
+  GtkWidget *end_label =
+      GTK_WIDGET(gtk_label_new("Godzina zakończenia [HH:MM]:"));
   gtk_grid_attach(grid, end_label, 0, 2, 1, 1);
   GtkWidget *active_since_label = GTK_WIDGET(gtk_label_new("Aktywne od:"));
   gtk_grid_attach(grid, active_since_label, 0, 3, 1, 1);
@@ -91,7 +96,7 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   GtkComboBox *day_combo_box = GTK_COMBO_BOX(gtk_combo_box_text_new());
   for (int i = 0; i < 7; i++)
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(day_combo_box), NULL,
-                            day_str(i));
+                              day_str(i));
   gtk_combo_box_set_active(GTK_COMBO_BOX(day_combo_box), r.day);
   gtk_grid_attach(grid, GTK_WIDGET(day_combo_box), 1, 0, 1, 1);
 
@@ -172,7 +177,8 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
 }
 
 void editor_periodic_reservation_show(EditorPeriodicReservation *this) {
-  GObject *periodic_reservation = gtk_builder_get_object(this->ui, "periodic-reservation");
+  GObject *periodic_reservation =
+      gtk_builder_get_object(this->ui, "periodic-reservation");
 
   GtkWidget *new = gtk_button_new_with_label("Nowy");
   g_signal_connect(G_OBJECT(new), "clicked", G_CALLBACK(on_edit),

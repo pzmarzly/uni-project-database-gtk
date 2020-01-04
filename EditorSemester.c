@@ -2,6 +2,7 @@
 #include "EditorEditDialog.h"
 #include "RecentList.h"
 #include "Repo.h"
+#include "RepoData.h"
 #include "Utils.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>

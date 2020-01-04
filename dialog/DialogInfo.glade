@@ -35,18 +35,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkLabel" id="label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">WeźMnie - system rezerwacji sprzętu
-
-(c) 2020 Paweł Zmarzły
-
-question-mark.png image-projector.png laptop.png:
-Icon made by Freepik from www.flaticon.com
-
-whiteboard.png:
-Icons made by Kiranshastry from www.flaticon.com</property>
+            <property name="label" translatable="yes">label</property>
             <property name="justify">center</property>
           </object>
           <packing>

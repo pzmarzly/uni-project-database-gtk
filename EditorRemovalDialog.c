@@ -9,11 +9,7 @@ bool editor_removal_dialog(TableID type, char *element_name) {
   gtk_dialog_add_buttons(GTK_DIALOG(dialog), "Nie", GTK_RESPONSE_NO, "Tak",
                          GTK_RESPONSE_YES, NULL);
 
-  char title[128];
-  strcpy(title, "Usuwanie ");
-  strcat(title, removal_and_editing_text(type));
-  strcat(title, " - WeźMnie");
-  gtk_window_set_title(GTK_WINDOW(dialog), title);
+  gtk_window_set_title(GTK_WINDOW(dialog), removal_window_title(type));
 
   GObject *label = gtk_builder_get_object(ui, "label");
   char text[128];

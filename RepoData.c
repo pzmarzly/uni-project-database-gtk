@@ -20,26 +20,41 @@ GtkWidget *equipment_icon(EquipmentType type, unsigned size) {
   return gtk_image_new_from_pixbuf(pixbuf);
 }
 
-char *removal_and_editing_text(TableID type) {
-  if (type == TableEquipment) {
-    return "sprzętu";
-  } else if (type == TablePeriodicReservation) {
-    return "rezerwacji cyklicznej";
-  } else if (type == TableOneTimeReservation) {
-    return "rezerwacji jednorazowej";
-  } else {
-    return "";
-  }
+char *removal_window_title(TableID type) {
+  if (type == TableEquipment)
+    return "Usuwanie sprzętu - WeźMnie";
+  if (type == TablePeriodicReservation)
+    return "Usuwanie rezerwacji cyklicznej - WeźMnie";
+  if (type == TableOneTimeReservation)
+    return "Usuwanie rezerwacji jednorazowej - WeźMnie";
+  return "Usuwanie - WeźMnie";
+}
+
+char *editing_window_title(TableID type) {
+  if (type == TableEquipment)
+    return "Edycja sprzętu - WeźMnie";
+  if (type == TablePeriodicReservation)
+    return "Edycja rezerwacji cyklicznej - WeźMnie";
+  if (type == TableOneTimeReservation)
+    return "Edycja rezerwacji jednorazowej - WeźMnie";
+  return "Edycja - WeźMnie";
 }
 
 char *day_str(Day day) {
-  if (day == Monday) return "pon";
-  if (day == Tuesday) return "wt";
-  if (day == Wednesday) return "śr";
-  if (day == Thursday) return "czw";
-  if (day == Friday) return "pt";
-  if (day == Saturday) return "sob";
-  if (day == Sunday) return "nie";
+  if (day == Monday)
+    return "pon";
+  if (day == Tuesday)
+    return "wt";
+  if (day == Wednesday)
+    return "śr";
+  if (day == Thursday)
+    return "czw";
+  if (day == Friday)
+    return "pt";
+  if (day == Saturday)
+    return "sob";
+  if (day == Sunday)
+    return "nie";
   return "BŁĄD";
 }
 
@@ -51,13 +66,13 @@ char *hm_str(HourAndMinutes hm) {
 
 HourAndMinutes hm_parse(const char *str) {
   unsigned char h, m;
-  if (sscanf(str, "%hhu:%hhu", &h, &m) != 2) return HM_INVALID;
+  if (sscanf(str, "%hhu:%hhu", &h, &m) != 2)
+    return HM_INVALID;
   return h * 60 + m;
 }
 
 char *timestamp_day_str(Timestamp timestamp) {
-  GDateTime *time =
-      g_date_time_new_from_unix_utc(timestamp);
+  GDateTime *time = g_date_time_new_from_unix_utc(timestamp);
   if (time == NULL) {
     printf("Niepoprawna data\n");
     return g_strdup("BŁĄD");

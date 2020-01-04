@@ -2,7 +2,7 @@
 // Projekt, grupa MPi śr 12-14
 
 #include "Greeter.h"
-#include "AboutDialog.h"
+#include "About.h"
 #include "Editor.h"
 #include "RecentList.h"
 #include "Utils.h"
@@ -127,7 +127,7 @@ static void on_btn_open(GtkWidget *sender, gpointer user_data) {
 static void on_btn_about(GtkWidget *sender, gpointer user_data) {
   (void)sender;
   (void)user_data;
-  about_dialog();
+  about();
 }
 
 static bool on_recent_list_label_clicked(GtkWidget *sender,

@@ -3,7 +3,8 @@
 #include <gtk/gtk.h>
 
 GtkWidget *equipment_icon(EquipmentType type, unsigned size);
-char *removal_and_editing_text(TableID type);
+char *removal_window_title(TableID type);
+char *editing_window_title(TableID type);
 
 char *day_str(Day day);
 char *hm_str(HourAndMinutes hm);

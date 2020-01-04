@@ -14,7 +14,7 @@ WEZ_MNIE_GTK += EditorRemovalDialog.o EditorEquipment.o
 WEZ_MNIE_GTK += EditorPeriodicReservation.o
 WEZ_MNIE_GTK += EditorReports.o EditorSemester.o
 WEZ_MNIE_GTK += Repo.o RepoData.o RepoString.o
-WEZ_MNIE_GTK += AboutDialog.o Utils.o
+WEZ_MNIE_GTK += About.o Utils.o dialog/Dialogs.o
 wez-mnie-gtk: ${WEZ_MNIE_GTK} demo.db
 	$(CC) ${WEZ_MNIE_GTK} ${LDFLAGS} -o $@
 
@@ -29,7 +29,7 @@ demo.db: gen-demo
 	./gen-demo
 
 %.o: %.c
-	$(CC) ${CFLAGS} -c -MMD $<
+	$(CC) ${CFLAGS} -c -MMD $< -o $@
 
 %.pdf: %.md
 	pandoc --pdf-engine=xelatex $< -o $@ \
