@@ -65,9 +65,10 @@ void apply_css(GtkWidget *obj, char *css) {
         GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 }
 
+// Source: https://stackoverflow.com/a/9193176
 void remove_all_gtk_children(GtkContainer *container) {
     GList *children = gtk_container_get_children(container);
-    for(GList *i = children; i != NULL; i = g_list_next(i))
+    for (GList *i = children; i != NULL; i = g_list_next(i))
         gtk_widget_destroy(GTK_WIDGET(i->data));
     g_list_free(children);
 }
