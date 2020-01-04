@@ -1,5 +1,4 @@
 #include "Utils.h"
-#include <assert.h>
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,7 +6,7 @@
 
 _Noreturn void bug(char *msg) {
   printf("BUG: %s\n", msg);
-  abort();
+  exit(1);
 }
 
 char *program_dir() {
