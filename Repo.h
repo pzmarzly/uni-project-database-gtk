@@ -2,7 +2,7 @@
 #include <stdbool.h>
 
 typedef unsigned long long int Timestamp;
-typedef unsigned short HourAndMinute;
+typedef unsigned short HourAndMinutes;
 
 typedef struct Repo Repo;
 char *repo_get_path(Repo *repo);
@@ -20,10 +20,10 @@ typedef unsigned int ID;
 
 // Number of vector-like tables.
 #define TABLE_NUM 5
-// Amount of rows preallocated in an empty database
-#define TABLE_SIZE1 64
-#define TABLE_SIZE2 1024
-// Max size of a table row
+// Amount of rows preallocated in an empty database.
+#define TABLE_SIZE_DEFAULT 64
+#define TABLE_SIZE_LARGE 1024
+// Max size of a table row.
 // max(sizeof(Equipment), sizeof(PeriodicReservation),
 //     sizeof(OneTimeReservation), sizeof(StringMetadata),
 //     sizeof(StringFragment))
@@ -37,10 +37,10 @@ typedef struct {
 // Compile with `make clean test CFLAGS=-DDEBUG_REPO=1`
 // to test reallocations.
 #ifdef DEBUG_REPO
-#undef TABLE_SIZE1
-#define TABLE_SIZE1 DEBUG_REPO
-#undef TABLE_SIZE2
-#define TABLE_SIZE2 DEBUG_REPO
+#undef TABLE_SIZE_DEFAULT
+#define TABLE_SIZE_DEFAULT DEBUG_REPO
+#undef TABLE_SIZE_LARGE
+#define TABLE_SIZE_LARGE DEBUG_REPO
 #undef STRING_FRAGMENT_MAX
 #define STRING_FRAGMENT_MAX DEBUG_REPO
 #endif
@@ -85,8 +85,8 @@ typedef enum {
 typedef struct {
   PeriodicReservationType type;
   Day day;
-  HourAndMinute start;
-  HourAndMinute end;
+  HourAndMinutes start;
+  HourAndMinutes end;
   Timestamp active_since;
   Timestamp active_until;
 } PeriodicReservation;

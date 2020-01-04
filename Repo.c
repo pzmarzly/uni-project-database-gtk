@@ -24,11 +24,11 @@ static void default_header(Header *header) {
   header->semester_start = g_date_time_to_unix(time);
 
   header->semester_active = false;
-  header->table_size[TableEquipment] = TABLE_SIZE1;
-  header->table_size[TablePeriodicReservation] = TABLE_SIZE1;
-  header->table_size[TableOneTimeReservation] = TABLE_SIZE2;
-  header->table_size[TableStringMetadata] = TABLE_SIZE2;
-  header->table_size[TableStringFragment] = TABLE_SIZE2;
+  header->table_size[TableEquipment] = TABLE_SIZE_DEFAULT;
+  header->table_size[TablePeriodicReservation] = TABLE_SIZE_DEFAULT;
+  header->table_size[TableOneTimeReservation] = TABLE_SIZE_LARGE;
+  header->table_size[TableStringMetadata] = TABLE_SIZE_LARGE;
+  header->table_size[TableStringFragment] = TABLE_SIZE_LARGE;
   memset(header->table_used, 0, sizeof(header->table_used));
 }
 
