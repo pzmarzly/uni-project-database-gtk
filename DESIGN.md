@@ -1,6 +1,7 @@
 ---
 lang: pl
 papersize: a4
+pagestyle: empty
 ---
 
 # Projekt końcowy WdPwjC: WeźMnie, autor: Paweł Zmarzły
@@ -21,10 +22,9 @@ wcześniej wprowadzonych informacji.
 ## Opis interakcji użytkownika z programem oraz realizowanych przez program funkcji
 
 Program będzie operował na bazach danych będących reprezentacją rezerwacji w danym semestrze.
-Podział "1 semestr = 1 plik" pozwoli na łatwe przygotowanie następnego semestru (kopiując poprzedni
-lub kopiując szablon) oraz równoczesną pracę na wielu semestrach. Program będzie korzystał z GTK+
-w wersji co najmniej 3.18 (zawartej w Ubuntu 16.04) oraz oczekiwał środowiska uniksowego (`/`
-rozdziela katalogi, `/proc/self/exe` prowadzi do programu, itd.).
+Podział „1 semestr = 1 plik” pozwoli na łatwe przygotowanie następnego semestru (kopiując poprzedni
+lub kopiując szablon) oraz równoczesną pracę na wielu semestrach. Program będzie przeznaczony
+dla Ubuntu 16.04.
 
 Po uruchomieniu programu pojawi się okno pozwalające na stworzenie nowej bazy danych
 (nowego semestru) lub wczytanie już istniejącej. Podając ścieżkę do pliku jako parametr
@@ -37,13 +37,13 @@ Edytor będzie zawierał kilka kart:
 - **Cykliczne** - edycja rezerwacji cotygodniowych,
 - **Wypożyczenia** - widok tygodniowy, z opcją dodania nowej rezerwacji lub pominięcia wybranej
 rezerwacji cyklicznej w danym tygodniu,
-- **Raporty** - zawiera przyciski do generowania raportów w formacie tekstowym (plan danego tygodnia,
-wolny sprzęt w danym terminie, ranking sprzętu według dostępności).
+- **Raporty** - zawiera przyciski do generowania raportów w formacie tekstowym (plan danego
+tygodnia, wolny sprzęt w danym terminie, ranking sprzętu według dostępności).
 
 Przed startem semestru będzie można zmieniać datę startu semestru, dodawać i usuwać sprzęt,
 a także dodawać i usuwać rezerwacje cykliczne. Po starcie semestru będzie można dodawać
-sprzęt, dodawać i anulować rezerwacje cykliczne (zaczynając od danej daty), pomijać
-rezerwacje cykliczne w danych dniach, a także dodawać i usuwać rezerwacje pojedyncze.
+sprzęt, dodawać i anulować rezerwacje cykliczne (jednorazowo lub zaczynając od danej daty),
+a także dodawać i usuwać rezerwacje pojedyncze.
 
 W przypadku awarii sprzętu dostępnego na uczelni użytkownik będzie mógł utworzyć rezerwację
 na okres naprawy (np. na kilka dni).
@@ -54,19 +54,19 @@ to przygotowanie planu na następny semestr (użytkownik będzie mógł skopiowa
 semestru, usunąć w niej semestr, zmienić datę rozpoczęcia semestru i rozpocząć nowy semestr,
 nie musząc ręcznie przenosić danych z zakładek Sprzęt i Cykliczne między bazami).
 
-Ponieważ polecenie mówi o prostym systemie rezerwacji, dane będą prezentowane w formie
-tabelarycznych list. Rozważyłem użycie diagramów Gantta lub kalendarzy podobnych do planu zajęć w
-[Systemie Zapisów II UWr](https://zapisy.ii.uni.wroc.pl/), ale odrzuciłem te pomysły ze względu
-na złożoność implementacji i/lub ich wątpliwą ergonomiczną przewagę nad prostą listą rezerwacji.
+Dane będą prezentowane w formie tabelarycznych list. Rozważyłem użycie diagramów Gantta lub
+kalendarzy podobnych do planu zajęć w [Systemie Zapisów II UWr](https://zapisy.ii.uni.wroc.pl/),
+ale odrzuciłem te pomysły ze względu na złożoność implementacji i/lub ich wątpliwą ergonomiczną
+przewagę nad prostą listą rezerwacji.
 
 Format bazy danych:
 
 1. nagłówek - początek semestru, rozmiary sekcji,
-2. rosnąca tablica TableEquipment - informacje o sprzęcie,
-3. rosnąca tablica TablePeriodicReservation - informacje o rezerwacjach cyklicznych,
-4. rosnąca tablica TableOneTimeReservation - informacje o rezerwacjach jednorazowych,
-5. rosnąca tablica TableStringMetadata - sekcja przeznaczona na metadane tekstu,
-6. rosnąca tablica TableStringFragment - sekcja przeznaczona na tekst o nieznanej, nieograniczonej
+2. tablica `TableEquipment` - informacje o sprzęcie,
+3. tablica `TablePeriodicReservation` - informacje o rezerwacjach cyklicznych,
+4. tablica `TableOneTimeReservation` - informacje o rezerwacjach jednorazowych,
+5. tablica `TableStringMetadata` - sekcja przeznaczona na metadane tekstu,
+6. tablica `TableStringFragment` - sekcja przeznaczona na tekst o nieznanej, nieograniczonej
 długości (będzie on dzielony na fragmenty po maksymalnie 255 znaków).
 
 Nagłówek będzie trzymany w pamięci, z pozostałych części bazy dane będą wczytywane fragmentami

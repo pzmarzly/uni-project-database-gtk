@@ -32,13 +32,13 @@ demo.db: gen-demo
 
 %.pdf: %.md
 	pandoc --pdf-engine=xelatex $< -o $@ \
-		-V geometry:"top=2cm, bottom=1.5cm, left=2cm, right=2cm"
+		-V geometry:"top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm"
 
 .PHONY: fmt clean docs install
 fmt:
 	clang-format -i *.c *.h
 clean:
-	-rm -f wez-mnie-gtk test gen-demo *.o *.d
+	-rm -f wez-mnie-gtk test gen-demo *.o *.d *.pdf demo.db
 docs: DESIGN.pdf README.pdf
 install: wez-mnie-gtk demo.db
 	install -d $(DESTDIR)/
