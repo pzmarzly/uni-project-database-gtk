@@ -33,8 +33,8 @@ int flags(char *argv[]) {
 // Something else was provided - treat it as a file path.
 int file(char *argv[]) {
   // Open the editor directly.
-  bool overwrite = !file_exists(argv[1]);
-  Editor *editor = editor_new(argv[1], overwrite, 0, 1); // TODO: fix
+  RepoType repo_type = file_exists(argv[1]) ? RepoOpen : RepoNew;
+  Editor *editor = editor_new(argv[1], repo_type);
   editor_set_quit_on_destroy(editor, true);
   if (editor_start(editor))
     gtk_main();

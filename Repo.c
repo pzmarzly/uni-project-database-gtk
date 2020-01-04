@@ -65,7 +65,8 @@ Timestamp repo_get_semester_end(Repo *repo) {
   return repo->header.semester_end;
 }
 
-static Repo *repo_open_internal(Repo *repo, RepoType type, Timestamp start, Timestamp end) {
+static Repo *repo_open_internal(Repo *repo, RepoType type, Timestamp start,
+                                Timestamp end) {
   repo->file = fopen(repo->path, type == RepoNew ? "w+b" : "r+b");
   if (repo->file == NULL) {
     printf("Nie udało się otworzyć %s, kod %d\n", repo->path, errno);
@@ -111,7 +112,8 @@ Repo *repo_save_as(Repo *repo, char *dest) {
   memcpy(old_repo, repo, sizeof(Repo));
   // Load new repo in place.
   repo->path = g_strdup(dest);
-  if (!repo_open_internal(repo, true, repo->header.semester_start, repo->header.semester_end))
+  if (!repo_open_internal(repo, RepoNew, repo->header.semester_start,
+                          repo->header.semester_end))
     goto fail;
 
   // We can easily set size of an empty repo, so we use that moment

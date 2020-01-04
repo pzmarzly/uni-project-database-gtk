@@ -51,7 +51,7 @@ static LoadEditorRequest *prepare_load(Greeter *this, char *path,
 }
 
 static void load_editor(LoadEditorRequest *req) {
-  Editor *editor = editor_new(req->path, req->repo_type, 0, 1); // TODO: fix
+  Editor *editor = editor_new(req->path, req->repo_type);
   if (!editor_start(editor)) {
     return;
   }

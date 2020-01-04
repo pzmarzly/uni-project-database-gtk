@@ -54,18 +54,23 @@ static void on_click(GtkWidget *sender, gpointer user_data) {
     time = g_date_time_new(tz, year, month + 1, day, 0, 0, 0);
 
     Timestamp ts = g_date_time_to_unix(time);
-    this->update(ts, user_data);
+    this->current = ts;
+    if (this->update != NULL)
+      this->update(ts, user_data);
     update_text(GTK_BUTTON(sender), ts);
   }
   gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
-void datepicker_new(GtkButton *button, Timestamp initial, callback update,
-                    void *user_data) {
+Datepicker *datepicker_new(GtkButton *button, Timestamp initial,
+                           callback update, void *user_data) {
   update_text(button, initial);
   Datepicker *this = malloc(sizeof(Datepicker));
   this->update = update;
   this->current = initial;
   this->user_data = user_data;
   g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(on_click), this);
+  return this;
 }
+
+Timestamp datepicker_read(Datepicker *this) { return this->current; }

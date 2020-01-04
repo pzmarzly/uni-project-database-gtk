@@ -2,5 +2,6 @@
 #include <gtk/gtk.h>
 
 typedef struct Datepicker Datepicker;
-void datepicker_new(GtkButton *button, Timestamp initial,
-                    void (*update)(Timestamp, void *), void *user_data);
+Datepicker *datepicker_new(GtkButton *button, Timestamp initial,
+                           void (*update)(Timestamp, void *), void *user_data);
+Timestamp datepicker_read(Datepicker *this);
