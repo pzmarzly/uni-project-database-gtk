@@ -40,7 +40,7 @@ rezerwacji cyklicznej w danym tygodniu,
 - **Raporty** - zawiera przyciski do generowania raportów w formacie tekstowym (plan danego
 tygodnia, wolny sprzęt w danym terminie, ranking sprzętu według dostępności).
 
-Funkcja tworzenia kopii semestru („Zapisz jako...”) będzie ułatwiać przygotowanie planu na
+Funkcja tworzenia kopii semestru będzie ułatwiać przygotowanie planu na
 następny semestr (umożliwi skopiowanie całości lub części danych, np. tylko opisów sprzętu).
 
 Dane będą prezentowane w formie tabelarycznych list. Rozważyłem użycie diagramów Gantta lub

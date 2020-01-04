@@ -4,6 +4,11 @@
 #include <string.h>
 #include <unistd.h>
 
+void error(char *msg) {
+  // TODO: dialog
+  printf("ERROR: %s\n", msg);
+}
+
 _Noreturn void bug(char *msg) {
   printf("BUG: %s\n", msg);
   exit(1);

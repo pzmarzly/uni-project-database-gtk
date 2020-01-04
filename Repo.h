@@ -19,7 +19,6 @@ Timestamp repo_get_semester_end(Repo *repo);
 
 Repo *repo_open(char *path, RepoType type, Timestamp start, Timestamp end);
 void repo_close(Repo *repo);
-Repo *repo_save_as(Repo *repo, char *dest);
 
 // Data types
 typedef unsigned int ID;

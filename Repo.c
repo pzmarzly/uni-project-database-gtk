@@ -105,7 +105,7 @@ void repo_close(Repo *repo) {
   }
 }
 
-Repo *repo_save_as(Repo *repo, char *dest) {
+static Repo *repo_save_as(Repo *repo, char *dest) {
   save_header(repo);
   // Turn repo into old_repo.
   Repo *old_repo = malloc(sizeof(Repo));
@@ -116,7 +116,7 @@ Repo *repo_save_as(Repo *repo, char *dest) {
                           repo->header.semester_end))
     goto fail;
 
-  // We can easily set size of an empty repo, so we use that moment
+  // We can easily set size of an empty repo, so we use that opportunity
   // to enlarge tables if necessary.
   for (TableID i = 0; i < TABLE_NUM; i++) {
     repo->header.table_size[i] = old_repo->header.table_size[i];
