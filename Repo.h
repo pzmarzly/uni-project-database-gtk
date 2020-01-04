@@ -3,6 +3,8 @@
 
 typedef unsigned long long int Timestamp;
 typedef unsigned short HourAndMinutes;
+// HourAndMinutes that signalises an error.
+#define HM_INVALID 3000
 
 typedef struct Repo Repo;
 char *repo_get_path(Repo *repo);
@@ -76,19 +78,13 @@ typedef enum {
   Sunday,
 } Day;
 
-typedef enum {
-  DefinedBeforeSemester = 0,
-  DefinedDuringSemester,
-  CanceledDuringSemester,
-} PeriodicReservationType;
-
 typedef struct {
-  PeriodicReservationType type;
   Day day;
   HourAndMinutes start;
   HourAndMinutes end;
   Timestamp active_since;
   Timestamp active_until;
+  ID description;
 } PeriodicReservation;
 
 typedef enum {

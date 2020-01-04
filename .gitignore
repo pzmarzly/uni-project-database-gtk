@@ -4,4 +4,8 @@
 *~
 *.pdf
 
+/wez-mnie-gtk
+/test
+/gen-demo
+
 /_install

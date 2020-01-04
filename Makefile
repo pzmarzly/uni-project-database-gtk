@@ -11,6 +11,7 @@ all: wez-mnie-gtk test docs
 WEZ_MNIE_GTK = wez-mnie-gtk.o Greeter.o RecentList.o
 WEZ_MNIE_GTK += Editor.o EditorEditDialog.o
 WEZ_MNIE_GTK += EditorRemovalDialog.o EditorEquipment.o
+WEZ_MNIE_GTK += EditorPeriodicReservation.o
 WEZ_MNIE_GTK += EditorReports.o EditorSemester.o
 WEZ_MNIE_GTK += Repo.o RepoData.o RepoString.o
 WEZ_MNIE_GTK += AboutDialog.o Utils.o

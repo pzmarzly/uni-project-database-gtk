@@ -65,7 +65,7 @@ okna GTK+:
 pozostałe:
 - Repo - implementacja wczytania/zapisania bazy, definicje tabel
 - RepoString - konwersja między tekstem zapisanym w bazie a `char *`
-- RepoData - funkcje operujące na danych w tabelach
+- RepoData - funkcje operujące na typach zdefiniowanych w Repo
 - Utils - funkcje pomocnicze
 ikony:
 - question-mark.png image-projector.png laptop.png:

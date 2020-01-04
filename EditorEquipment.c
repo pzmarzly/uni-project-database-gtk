@@ -51,10 +51,10 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
       .type = Other,
       .description = 0,
   };
-  char *desc = g_strdup("");
+  char *desc;
   if (!req->empty) {
     if (!repo_get(req->this->repo, TableEquipment, req->id, &e)) {
-      printf("Cannot read %u from EditorEquipment.\n", req->id);
+      printf("Cannot read %u from TableEquipment.\n", req->id);
       return;
     }
     if (!repo_string_get(req->this->repo, e.description, &desc)) {
@@ -63,6 +63,8 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
     }
   } else {
     req->id = repo_len(req->this->repo, TableEquipment);
+    desc = g_strdup("");
+    e.description = repo_string_len(req->this->repo);
   }
 
   PreparedEditDialog d = editor_edit_dialog_prepare(TableEquipment);
@@ -139,7 +141,7 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
 
   Equipment e;
   if (!repo_get(req->this->repo, TableEquipment, req->id, &e)) {
-    printf("Cannot read %u from EditorEquipment.\n", req->id);
+    printf("Cannot read %u from TableEquipment.\n", req->id);
     return;
   }
   if (editor_removal_dialog(TableEquipment, e.name)) {
@@ -161,7 +163,7 @@ void editor_equipment_show(EditorEquipment *this) {
   for (ID i = 0; i < max; i++) {
     Equipment e;
     if (!repo_get(this->repo, TableEquipment, i, &e)) {
-      printf("Cannot read %u from EditorEquipment.\n", i);
+      printf("Cannot read %u from TableEquipment.\n", i);
       continue;
     }
 

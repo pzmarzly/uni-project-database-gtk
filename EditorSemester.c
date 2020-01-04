@@ -21,13 +21,7 @@ EditorSemester *editor_semester_new(Repo *repo, GtkBuilder *ui) {
 }
 
 static void update_starting_date_btn(GtkButton *button, Repo *repo) {
-  GDateTime *time =
-      g_date_time_new_from_unix_utc(repo_get_semester_start(repo));
-  if (time == NULL) {
-    printf("Niepoprawna data rozpoczęcia semestru\n");
-    return;
-  }
-  char *date = g_date_time_format(time, "%d. %b %Y");
+  char *date = timestamp_day_str(repo_get_semester_start(repo));
   gtk_button_set_label(button, date);
   free(date);
 }
