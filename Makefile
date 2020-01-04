@@ -27,7 +27,9 @@ gen-demo: ${GEN_DEMO}
 %.o: %.c
 	$(CC) ${CFLAGS} -c -MMD $<
 
-.PHONY: clean
+.PHONY: clean fmt
+fmt:
+	clang-format -i *.c *.h
 clean:
 	-rm -f wez-mnie-gtk test gen-demo *.o *.d
 

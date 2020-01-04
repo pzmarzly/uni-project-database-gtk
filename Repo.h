@@ -11,9 +11,9 @@ void repo_set_semester_start(Repo *repo, Timestamp semester_start);
 bool repo_get_semester_active(Repo *repo);
 void repo_set_semester_active(Repo *repo, bool semester_active);
 
-Repo* repo_open(char *path, bool overwrite);
+Repo *repo_open(char *path, bool overwrite);
 void repo_close(Repo *repo);
-Repo* repo_save_as(Repo *repo, char *dest);
+Repo *repo_save_as(Repo *repo, char *dest);
 
 // Data types
 typedef unsigned int ID;
@@ -29,7 +29,7 @@ typedef unsigned int ID;
 //     sizeof(StringFragment))
 #define MAX_STRUCT_SIZE 256
 typedef struct {
-    char bytes[MAX_STRUCT_SIZE];
+  char bytes[MAX_STRUCT_SIZE];
 } AnyTableElement;
 // Max length of a string fragment.
 #define STRING_FRAGMENT_MAX 255
@@ -37,80 +37,80 @@ typedef struct {
 // Compile with `make clean test CFLAGS=-DDEBUG_REPO=1`
 // to test reallocations.
 #ifdef DEBUG_REPO
-    #undef TABLE_SIZE1
-    #define TABLE_SIZE1 DEBUG_REPO
-    #undef TABLE_SIZE2
-    #define TABLE_SIZE2 DEBUG_REPO
-    #undef STRING_FRAGMENT_MAX
-    #define STRING_FRAGMENT_MAX DEBUG_REPO
+#undef TABLE_SIZE1
+#define TABLE_SIZE1 DEBUG_REPO
+#undef TABLE_SIZE2
+#define TABLE_SIZE2 DEBUG_REPO
+#undef STRING_FRAGMENT_MAX
+#define STRING_FRAGMENT_MAX DEBUG_REPO
 #endif
 
 typedef enum {
-    TableEquipment = 0,
-    TablePeriodicReservation,
-    TableOneTimeReservation,
-    TableStringMetadata,
-    TableStringFragment,
+  TableEquipment = 0,
+  TablePeriodicReservation,
+  TableOneTimeReservation,
+  TableStringMetadata,
+  TableStringFragment,
 } TableID;
 
 typedef enum {
-    Projector = 0,
-    Laptop,
-    Whiteboard,
-    Other,
+  Projector = 0,
+  Laptop,
+  Whiteboard,
+  Other,
 } EquipmentType;
 
 typedef struct {
-    EquipmentType type;
-    char name[32];
-    ID description;
+  EquipmentType type;
+  char name[32];
+  ID description;
 } Equipment;
 
 typedef enum {
-    Monday = 0,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday,
-    Sunday,
+  Monday = 0,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday,
 } Day;
 
 typedef enum {
-    DefinedBeforeSemester = 0,
-    DefinedDuringSemester,
-    CanceledDuringSemester,
+  DefinedBeforeSemester = 0,
+  DefinedDuringSemester,
+  CanceledDuringSemester,
 } PeriodicReservationType;
 
 typedef struct {
-    PeriodicReservationType type;
-    Day day;
-    HourAndMinute start;
-    HourAndMinute end;
-    Timestamp active_since;
-    Timestamp active_until;
+  PeriodicReservationType type;
+  Day day;
+  HourAndMinute start;
+  HourAndMinute end;
+  Timestamp active_since;
+  Timestamp active_until;
 } PeriodicReservation;
 
 typedef enum {
-    Reservation = 0,
-    ShadowingFree,
-    ShadowingReservation,
+  Reservation = 0,
+  ShadowingFree,
+  ShadowingReservation,
 } OneTimeReservationType;
 
 typedef struct {
-    OneTimeReservationType type;
-    Timestamp start;
-    Timestamp end;
-    ID description;
+  OneTimeReservationType type;
+  Timestamp start;
+  Timestamp end;
+  ID description;
 } OneTimeReservation;
 
 typedef struct {
-    ID start;
-    unsigned len;
+  ID start;
+  unsigned len;
 } StringMetadata;
 
 typedef struct {
-    char data[STRING_FRAGMENT_MAX];
+  char data[STRING_FRAGMENT_MAX];
 } StringFragment;
 
 bool repo_get(Repo *repo, TableID table, ID id, void *dest);
