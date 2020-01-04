@@ -9,11 +9,9 @@ typedef unsigned short HourAndMinutes;
 typedef struct Repo Repo;
 char *repo_get_path(Repo *repo);
 Timestamp repo_get_semester_start(Repo *repo);
-void repo_set_semester_start(Repo *repo, Timestamp semester_start);
-bool repo_get_semester_active(Repo *repo);
-void repo_set_semester_active(Repo *repo, bool semester_active);
+Timestamp repo_get_semester_end(Repo *repo);
 
-Repo *repo_open(char *path, bool overwrite);
+Repo *repo_open(char *path, bool overwrite, Timestamp start, Timestamp end);
 void repo_close(Repo *repo);
 Repo *repo_save_as(Repo *repo, char *dest);
 

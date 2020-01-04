@@ -60,36 +60,18 @@ static void on_save_as(GtkWidget *sender, gpointer user_data) {
   gtk_widget_destroy(dialog);
 }
 
-static void update_active_btn(GtkButton *button, bool active) {
-  gtk_button_set_label(button,
-                       active ? "Zatrzymaj semestr" : "Rozpocznij semestr");
-}
-
-void on_active(GtkWidget *sender, gpointer user_data) {
-  EditorSemester *this = (EditorSemester *)user_data;
-  bool active = repo_get_semester_active(this->repo);
-  // TODO: dialog
-  active = !active;
-  repo_set_semester_active(this->repo, active);
-  update_active_btn(GTK_BUTTON(sender), active);
-}
-
-static void on_starting_date(Timestamp time, void *user_data) {
-  EditorSemester *this = (EditorSemester *)user_data;
-  repo_set_semester_start(this->repo, time);
-}
-
 void editor_semester_show(EditorSemester *this) {
-  GObject *starting_date_btn =
-      gtk_builder_get_object(this->ui, "semester-starting-date");
-  datepicker_new(GTK_BUTTON(starting_date_btn),
-                 repo_get_semester_start(this->repo), on_starting_date, this);
+  char *text;
 
-  GObject *active_btn = gtk_builder_get_object(this->ui, "semester-active");
-  bool active = repo_get_semester_active(this->repo);
-  update_active_btn(GTK_BUTTON(active_btn), active);
-  g_signal_connect(G_OBJECT(active_btn), "clicked", G_CALLBACK(on_active),
-                   this);
+  GObject *start = gtk_builder_get_object(this->ui, "semester-start");
+  text = timestamp_day_str(repo_get_semester_start(this->repo));
+  gtk_label_set_text(GTK_LABEL(start), text);
+  free(text);
+
+  GObject *end = gtk_builder_get_object(this->ui, "semester-end");
+  text = timestamp_day_str(repo_get_semester_end(this->repo));
+  gtk_label_set_text(GTK_LABEL(end), text);
+  free(text);
 
   GObject *save_as_btn = gtk_builder_get_object(this->ui, "semester-save-as");
   g_signal_connect(G_OBJECT(save_as_btn), "clicked", G_CALLBACK(on_save_as),

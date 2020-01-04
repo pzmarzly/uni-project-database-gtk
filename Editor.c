@@ -5,9 +5,7 @@
 #include "EditorEquipment.h"
 #include "EditorReports.h"
 #include "EditorSemester.h"
-#include "Repo.h"
 #include "Utils.h"
-#include <gtk/gtk.h>
 
 struct Editor {
   GtkBuilder *ui;
@@ -21,12 +19,12 @@ struct Editor {
   EditorReports *reports;
 };
 
-Editor *editor_new(char *path, bool overwrite) {
+Editor *editor_new(char *path, bool overwrite, Timestamp start, Timestamp end) {
   Editor *this = malloc(sizeof(Editor));
   this->ui = get_builder("Editor.glade");
   this->quit_on_destroy = false;
   this->window = NULL;
-  this->repo = repo_open(path, overwrite);
+  this->repo = repo_open(path, overwrite, start, end);
   this->repo_path = g_strdup(path);
   this->semester = editor_semester_new(this->repo, this->ui);
   this->equipment = editor_equipment_new(this->repo, this->ui);

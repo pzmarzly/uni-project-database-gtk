@@ -3,8 +3,7 @@
 
 #include "Editor.h"
 #include "Greeter.h"
-#include <gtk/gtk.h>
-#include <stdlib.h>
+#include "Utils.h"
 
 // No CLI options provided.
 int nothing() {
@@ -33,13 +32,9 @@ int flags(char *argv[]) {
 
 // Something else was provided - treat it as a file path.
 int file(char *argv[]) {
-  // Check if file exists.
-  FILE *f = fopen(argv[1], "rb");
-  bool overwrite = f == NULL;
-  if (f != NULL)
-    fclose(f);
   // Open the editor directly.
-  Editor *editor = editor_new(argv[1], overwrite);
+  bool overwrite = !file_exists(argv[1]);
+  Editor *editor = editor_new(argv[1], overwrite, 0, 1); // TODO: fix
   editor_set_quit_on_destroy(editor, true);
   if (editor_start(editor))
     gtk_main();

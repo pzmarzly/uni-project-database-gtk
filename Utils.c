@@ -9,6 +9,14 @@ _Noreturn void bug(char *msg) {
   exit(1);
 }
 
+bool file_exists(const char *path) {
+  FILE *f = fopen(path, "rb");
+  bool exists = f != NULL;
+  if (exists)
+    fclose(f);
+  return exists;
+}
+
 char *program_dir() {
   GError *error = NULL;
   // The line below can fail if procfs is not

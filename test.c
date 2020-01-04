@@ -9,24 +9,23 @@ void clean() { system("rm -f test-repo.db || true"); }
 
 void opens_and_overwrites() {
   clean();
-  Repo *r = repo_open("./test-repo.db", true);
-  repo_set_semester_start(r, 1);
+  Repo *r = repo_open("./test-repo.db", true, 1, 2);
   assert(r != NULL);
   assert(repo_get_semester_start(r) == 1);
   repo_close(r);
-  r = repo_open("./test-repo.db", false);
+  r = repo_open("./test-repo.db", false, 0, 1);
   assert(r != NULL);
   assert(repo_get_semester_start(r) == 1);
   repo_close(r);
-  r = repo_open("./test-repo.db", true);
+  r = repo_open("./test-repo.db", true, 0, 1);
   assert(r != NULL);
-  assert(repo_get_semester_start(r) != 1);
+  assert(repo_get_semester_start(r) == 0);
   repo_close(r);
 }
 
 void handles_data() {
   clean();
-  Repo *r = repo_open("./test-repo.db", true);
+  Repo *r = repo_open("./test-repo.db", true, 0, 1);
   Equipment eq = {1, {0}, 3};
   repo_set(r, TableEquipment, 0, &eq);
   StringMetadata str = {3, 5};
@@ -41,7 +40,7 @@ void handles_data() {
   assert(str.len == 5);
   repo_close(r);
 
-  r = repo_open("./test-repo.db", false);
+  r = repo_open("./test-repo.db", false, 0, 1);
   assert(repo_len(r, TableStringMetadata) == 1);
   str.len = 1;
   assert(repo_get(r, TableStringMetadata, 0, &str) == true);
@@ -60,7 +59,7 @@ void handles_data() {
 
 void handles_strings() {
   clean();
-  Repo *r = repo_open("./test-repo.db", true);
+  Repo *r = repo_open("./test-repo.db", true, 0, 1);
   char *c1 = "Troche tekstu.", *c2 = "Drugi tekst.", *c3 = "Trzeci tekst.";
   char *str = c1;
 
@@ -100,7 +99,7 @@ void handles_strings() {
 
 void handles_data_large() {
   clean();
-  Repo *r = repo_open("./test-repo.db", true);
+  Repo *r = repo_open("./test-repo.db", true, 0, 1);
   Equipment eq = {1, {0}, 3};
 
   for (ID i = 0; i < 1000; i++) {
@@ -122,7 +121,7 @@ void handles_data_large() {
 
   assert(repo_len(r, TableEquipment) == 500);
   repo_close(r);
-  r = repo_open("./test-repo.db", false);
+  r = repo_open("./test-repo.db", false, 0, 1);
   assert(repo_len(r, TableEquipment) == 500);
 
   for (ID i = 0; i < 500; i++) {
@@ -134,7 +133,7 @@ void handles_data_large() {
   repo_del_n(r, TableEquipment, 100, 100);
   assert(repo_len(r, TableEquipment) == 400);
   repo_close(r);
-  r = repo_open("./test-repo.db", false);
+  r = repo_open("./test-repo.db", false, 0, 1);
   assert(repo_len(r, TableEquipment) == 400);
   assert(repo_get(r, TableEquipment, 0, &eq) == true);
   assert(eq.description == 1);

@@ -21,7 +21,7 @@ void equipment(Repo *repo, EquipmentType type, char *name, char *description) {
 
 void generate_demo() {
   clean();
-  Repo *r = repo_open("./demo.db", true);
+  Repo *r = repo_open("./demo.db", true, 0, 1);
 
   equipment(r, Laptop, "Laptop HP", "Opis laptopa HP.");
   equipment(r, Projector, "Rzutnik HP", "Opis rzutnika HP.");

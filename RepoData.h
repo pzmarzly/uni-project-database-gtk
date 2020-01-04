@@ -2,6 +2,9 @@
 #include "Repo.h"
 #include <gtk/gtk.h>
 
+Timestamp timestamp_now();
+Timestamp timestamp_today();
+
 GtkWidget *equipment_icon(EquipmentType type, unsigned size);
 char *removal_window_title(TableID type);
 char *editing_window_title(TableID type);

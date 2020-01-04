@@ -2,8 +2,10 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
-// File handling helper functions
 _Noreturn void bug(char *msg);
+
+// File handling helper functions
+bool file_exists(const char *path);
 char *program_dir();
 char *temp_file();
 bool copy_file(char *src, char *dest);

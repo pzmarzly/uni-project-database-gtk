@@ -1,6 +1,27 @@
 #include "RepoData.h"
 #include "Utils.h"
 
+Timestamp timestamp_now() {
+  GDateTime *time = g_date_time_new_now_utc();
+  Timestamp ret = g_date_time_to_unix(time);
+  g_date_time_unref(time);
+  return ret;
+}
+
+Timestamp timestamp_today() {
+  GDateTime *time = g_date_time_new_now_utc();
+  int year, month, day;
+  g_date_time_get_ymd(time, &year, &month, &day);
+  g_date_time_unref(time);
+
+  GTimeZone *tz = g_time_zone_new_utc();
+  time = g_date_time_new(tz, year, month, day, 0, 0, 0);
+  Timestamp ret = g_date_time_to_unix(time);
+  g_date_time_unref(time);
+
+  return ret;
+}
+
 GtkWidget *equipment_icon(EquipmentType type, unsigned size) {
   char *path = program_dir();
   if (type == Projector) {

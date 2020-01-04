@@ -59,7 +59,7 @@ static LoadEditorRequest *prepare_load(Greeter *this, char *path,
 }
 
 static void load_editor(LoadEditorRequest *req) {
-  Editor *editor = editor_new(req->path, req->overwrite);
+  Editor *editor = editor_new(req->path, req->overwrite, 0, 1); // TODO: fix
   if (!editor_start(editor)) {
     return;
   }
