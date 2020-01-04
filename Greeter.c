@@ -13,10 +13,6 @@ struct Greeter {
   GtkBuilder *ui;
   bool quit_on_destroy;
   GObject *window;
-
-  char *recent_list[MAX_RECENT];
-  int recent_list_len;
-  char *demo;
 };
 
 Greeter *greeter_new() {
@@ -24,7 +20,6 @@ Greeter *greeter_new() {
   this->ui = get_builder("Greeter.glade");
   this->quit_on_destroy = false;
   this->window = NULL;
-  this->recent_list_len = 0;
   return this;
 }
 
@@ -180,13 +175,15 @@ bool greeter_start(Greeter *this) {
     make_recent_list_label(this, recent_list->paths[i], recent_list_box);
   }
 
-  this->demo = strcat(program_dir(), "demo.db");
+  char *demo_path = program_dir(8);
+  strcat(demo_path, "/demo.db");
   GtkWidget *demo_btn =
       gtk_button_new_with_label("Utwórz bazę demonstracyjną...");
   g_signal_connect(G_OBJECT(demo_btn), "clicked",
                    G_CALLBACK(on_demo_button_clicked),
-                   prepare_load(this, this->demo, false, false));
+                   prepare_load(this, demo_path, false, false));
   gtk_box_pack_end(GTK_BOX(recent_list_box), GTK_WIDGET(demo_btn), 0, 0, 0);
+  free(demo_path);
 
   gtk_widget_show_all(GTK_WIDGET(this->window));
   return true;

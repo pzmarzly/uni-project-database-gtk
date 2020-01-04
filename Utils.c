@@ -17,7 +17,7 @@ bool file_exists(const char *path) {
   return exists;
 }
 
-char *program_dir() {
+char *program_dir(int extra_bytes) {
   GError *error = NULL;
   // The line below can fail if procfs is not
   // mounted, but in that case the user probably
@@ -26,7 +26,11 @@ char *program_dir() {
   // Path to the executable contains a slash
   // on any sane Unix system.
   *(strrchr(path, '/') + 1) = '\0';
-  return path;
+  // Make a copy.
+  char *ret = malloc(strlen(path) + extra_bytes + 1);
+  strcpy(ret, path);
+  free(path);
+  return ret;
 }
 
 char *temp_file() {
@@ -54,7 +58,7 @@ bool copy_file(char *src, char *dest) {
 }
 
 GtkBuilder *get_builder(char *name) {
-  char *glade = strcat(program_dir(), name);
+  char *glade = strcat(program_dir(strlen(name) + 1), name);
   GtkBuilder *ui = gtk_builder_new_from_file(glade);
   free(glade);
   return ui;

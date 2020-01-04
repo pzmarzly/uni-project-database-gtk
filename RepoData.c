@@ -23,7 +23,7 @@ Timestamp timestamp_today() {
 }
 
 GtkWidget *equipment_icon(EquipmentType type, unsigned size) {
-  char *path = program_dir();
+  char *path = program_dir(32);
   if (type == Projector) {
     strcat(path, "icons/image-projector.png");
   } else if (type == Laptop) {
