@@ -1,5 +1,5 @@
 #include "EditorSemester.h"
-#include "EditorEditDialog.h"
+#include "EditorDialogs.h"
 #include "RecentList.h"
 #include "Repo.h"
 #include "RepoData.h"

@@ -9,10 +9,10 @@ default: wez-mnie-gtk
 all: wez-mnie-gtk test docs
 
 WEZ_MNIE_GTK = wez-mnie-gtk.o Greeter.o RecentList.o
-WEZ_MNIE_GTK += Editor.o EditorEditDialog.o
-WEZ_MNIE_GTK += EditorRemovalDialog.o EditorEquipment.o
+WEZ_MNIE_GTK += Editor.o EditorDialogs.o
+WEZ_MNIE_GTK += EditorSemester.o EditorEquipment.o
 WEZ_MNIE_GTK += EditorPeriodicReservation.o
-WEZ_MNIE_GTK += EditorReports.o EditorSemester.o
+WEZ_MNIE_GTK += EditorReports.o
 WEZ_MNIE_GTK += Repo.o RepoData.o RepoString.o
 WEZ_MNIE_GTK += About.o Utils.o dialog/Dialogs.o
 wez-mnie-gtk: ${WEZ_MNIE_GTK} demo.db
@@ -47,5 +47,7 @@ install: wez-mnie-gtk demo.db
 	install -m 644 demo.db $(DESTDIR)/
 	cp -a icons $(DESTDIR)/icons
 	cp *.glade $(DESTDIR)/
+	install -d $(DESTDIR)/dialog/
+	cp dialog/*.glade $(DESTDIR)/dialog/
 
 -include *.d

@@ -2,7 +2,8 @@
 #include "dialog/Dialogs.h"
 
 void about() {
-  dialog_info("WeźMnie - system rezerwacji sprzętu\n"
+  dialog_info("O programie - WeŹMnie",
+              "WeźMnie - system rezerwacji sprzętu\n"
               "\n"
               "(c) 2020 Paweł Zmarzły\n"
               "\n"

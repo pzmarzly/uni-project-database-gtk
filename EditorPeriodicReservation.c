@@ -1,7 +1,6 @@
 #include "EditorPeriodicReservation.h"
 #include "Editor.h"
-#include "EditorEditDialog.h"
-#include "EditorRemovalDialog.h"
+#include "EditorDialogs.h"
 #include "Repo.h"
 #include "RepoData.h"
 #include "RepoString.h"
