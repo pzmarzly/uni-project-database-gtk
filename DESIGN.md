@@ -41,7 +41,7 @@ rezerwacji cyklicznej w danym tygodniu,
 tygodnia, wolny sprzęt w danym terminie, ranking sprzętu według dostępności).
 
 Funkcja tworzenia kopii semestru będzie ułatwiać przygotowanie planu na
-następny semestr (umożliwi skopiowanie całości lub części danych, np. tylko opisów sprzętu).
+następny semestr (umożliwi skopiowanie całości danych lub samej karty Sprzęt).
 
 Dane będą prezentowane w formie tabelarycznych list. Rozważyłem użycie diagramów Gantta lub
 kalendarzy podobnych do planu zajęć w [Systemie Zapisów II UWr](https://zapisy.ii.uni.wroc.pl/),

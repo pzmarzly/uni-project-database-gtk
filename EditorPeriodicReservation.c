@@ -4,6 +4,7 @@
 #include "Repo.h"
 #include "RepoData.h"
 #include "RepoString.h"
+#include "Datepicker.h"
 #include "Utils.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>
@@ -70,6 +71,9 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
     req->id = repo_len(req->this->repo, TablePeriodicReservation);
     desc = g_strdup("");
     r.description = repo_string_len(req->this->repo);
+    r.active_since = repo_get_semester_start(req->this->repo);
+    if (timestamp_now() > r.active_since) r.active_since = timestamp_now();
+    r.active_until = repo_get_semester_end(req->this->repo);
   }
 
   PreparedEditDialog d = editor_edit_dialog_prepare(TablePeriodicReservation);
@@ -87,7 +91,7 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   gtk_grid_attach(grid, end_label, 0, 2, 1, 1);
   GtkWidget *active_since_label = GTK_WIDGET(gtk_label_new("Aktywne od:"));
   gtk_grid_attach(grid, active_since_label, 0, 3, 1, 1);
-  GtkWidget *active_until_label = GTK_WIDGET(gtk_label_new("Zakończ dnia:"));
+  GtkWidget *active_until_label = GTK_WIDGET(gtk_label_new("Aktywne do:"));
   gtk_grid_attach(grid, active_until_label, 0, 4, 1, 1);
   GtkWidget *description_label = GTK_WIDGET(gtk_label_new("Opis:"));
   gtk_grid_attach(grid, description_label, 0, 5, 1, 1);
@@ -109,6 +113,14 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   gtk_entry_set_max_length(end_entry, 5);
   gtk_grid_attach(grid, GTK_WIDGET(end_entry), 1, 2, 1, 1);
 
+  GtkButton *active_since_button = GTK_BUTTON(gtk_button_new_with_label(""));
+  Datepicker *active_since = datepicker_new(active_since_button, r.active_since, NULL, NULL);
+  gtk_grid_attach(grid, GTK_WIDGET(active_since_button), 1, 3, 1, 1);
+
+  GtkButton *active_until_button = GTK_BUTTON(gtk_button_new_with_label(""));
+  Datepicker *active_until = datepicker_new(active_until_button, r.active_until, NULL, NULL);
+  gtk_grid_attach(grid, GTK_WIDGET(active_until_button), 1, 4, 1, 1);
+
   GtkTextView *description_text_view = GTK_TEXT_VIEW(gtk_text_view_new());
   GtkTextBuffer *buf =
       gtk_text_view_get_buffer(GTK_TEXT_VIEW(description_text_view));
@@ -122,6 +134,8 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
   int result = gtk_dialog_run(dialog);
   if (result == GTK_RESPONSE_OK) {
+    r.day = gtk_combo_box_get_active(day_combo_box);
+
     const char *start_str = gtk_entry_get_text(start_entry);
     r.start = hm_parse(start_str);
     const char *end_str = gtk_entry_get_text(end_entry);
@@ -132,7 +146,8 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
       return;
     }
 
-    r.day = gtk_combo_box_get_active(day_combo_box);
+    r.active_since = datepicker_read(active_since);
+    r.active_until = datepicker_read(active_until);
 
     GtkTextIter start, end;
     gtk_text_buffer_get_bounds(buf, &start, &end);
