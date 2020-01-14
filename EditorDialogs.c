@@ -46,3 +46,41 @@ bool ask_for_semester_dates(Timestamp *start, Timestamp *end) {
   gtk_widget_destroy(GTK_WIDGET(dialog));
   return true;
 }
+
+bool ask_for_item_periodic(PeriodicReservation *r, ID r_id) {
+  PreparedEditDialog d = dialog_edit("Wybierz przedmiot");
+  GtkBuilder *ui = d.ui;
+  GtkDialog *dialog = d.dialog;
+  GtkGrid *grid = GTK_GRID(gtk_builder_get_object(ui, "grid"));
+
+  GtkWidget *item_label = gtk_label_new("Przedmiot: ");
+  gtk_grid_attach(grid, item_label, 0, 0, 1, 1);
+
+  GtkComboBox *item_combo_box = GTK_COMBO_BOX(gtk_combo_box_text_new());
+
+  ID eq_len = repo_len(repo, TableEquipment);
+  ID *mappings = malloc(eq_len * sizeof(ID));
+  ID mapping_len = 0;
+  for (int i = 0; i < eq_len; i++) {
+    if (i != r->used && !available(i, r)) continue;
+    Equipment e;
+    if (!repo_get(repo, i, &e)) continue; // TODO: crash
+    mappings[mapping_len++] = i;
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(item_combo_box), NULL,
+                            e.name);
+  }
+  gtk_combo_box_set_active(GTK_COMBO_BOX(item_combo_box), r->item);
+  gtk_grid_attach(grid, GTK_WIDGET(item_combo_box), 0, 1, 1, 1);
+
+  gtk_widget_show_all(GTK_WIDGET(dialog));
+
+  int result = gtk_dialog_run(dialog);
+  if (result != GTK_RESPONSE_OK) {
+    gtk_widget_destroy(GTK_WIDGET(dialog));
+    return false;
+  }
+
+  r->item = gtk_combo_box_get_active(item_combo_box);
+  gtk_widget_destroy(GTK_WIDGET(dialog));
+  return true;
+}

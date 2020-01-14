@@ -82,6 +82,7 @@ typedef enum {
 } Day;
 
 typedef struct {
+  ID item;
   Day day;
   HourAndMinutes start;
   HourAndMinutes end;
@@ -92,11 +93,11 @@ typedef struct {
 
 typedef enum {
   Reservation = 0,
-  ShadowingFree,
-  ShadowingReservation,
+  Cancellation,
 } OneTimeReservationType;
 
 typedef struct {
+  ID item;
   OneTimeReservationType type;
   Timestamp start;
   Timestamp end;

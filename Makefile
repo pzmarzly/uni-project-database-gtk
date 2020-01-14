@@ -35,7 +35,7 @@ demo.db: gen-demo
 	pandoc --pdf-engine=xelatex $< -o $@ \
 		-V geometry:"top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm"
 
-.PHONY: fmt clean docs install
+.PHONY: all fmt clean docs install
 fmt:
 	clang-format -i *.c *.h
 clean:
