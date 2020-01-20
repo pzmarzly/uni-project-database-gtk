@@ -5,6 +5,9 @@ typedef unsigned long long int Timestamp;
 typedef unsigned short HourAndMinutes;
 // HourAndMinutes that signalises an error.
 #define HM_INVALID 3000
+typedef unsigned int ID;
+// UINT_MAX
+#define INVALID_ID 4294967295
 
 typedef enum {
   RepoOpen = 0,
@@ -19,9 +22,6 @@ Timestamp repo_get_semester_end(Repo *repo);
 
 Repo *repo_open(char *path, RepoType type, Timestamp start, Timestamp end);
 void repo_close(Repo *repo);
-
-// Data types
-typedef unsigned int ID;
 
 // Number of vector-like tables.
 #define TABLE_NUM 5
