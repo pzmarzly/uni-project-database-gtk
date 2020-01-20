@@ -22,9 +22,7 @@ Timestamp timestamp_midnight(Timestamp timestamp) {
   return ret;
 }
 
-Timestamp timestamp_today() {
-  return timestamp_midnight(timestamp_now());
-}
+Timestamp timestamp_today() { return timestamp_midnight(timestamp_now()); }
 
 GtkWidget *equipment_icon(EquipmentType type, unsigned size) {
   char *path = program_dir(32);

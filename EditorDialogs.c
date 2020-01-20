@@ -70,7 +70,7 @@ bool ask_for_item_periodic(PeriodicReservation *res, ID res_id, Repo *repo) {
     Equipment eq;
     repo_get(repo, TableEquipment, i, &eq);
     if (i != INVALID_ID && i != res->item)
-      if (!available_periodic_slot(repo, res, res_id, i))
+      if (!periodic_slot_is_available(repo, res, res_id, i))
         continue;
     mappings[mapping_len++] = i;
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(item_combo_box), NULL,
