@@ -52,14 +52,8 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   };
   char *desc;
   if (!req->empty) {
-    if (!repo_get(req->this->repo, TableEquipment, req->id, &e)) {
-      printf("Cannot read %u from TableEquipment.\n", req->id);
-      return;
-    }
-    if (!repo_string_get(req->this->repo, e.description, &desc)) {
-      printf("Cannot read string %u.\n", e.description); // TODO: PL
-      return;
-    }
+    repo_get(req->this->repo, TableEquipment, req->id, &e);
+    repo_string_get(req->this->repo, e.description, &desc);
   } else {
     req->id = repo_len(req->this->repo, TableEquipment);
     desc = g_strdup("");
@@ -139,10 +133,7 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   DelRequest *req = (DelRequest *)user_data;
 
   Equipment e;
-  if (!repo_get(req->this->repo, TableEquipment, req->id, &e)) {
-    printf("Cannot read %u from TableEquipment.\n", req->id);
-    return;
-  }
+  repo_get(req->this->repo, TableEquipment, req->id, &e);
   if (editor_removal_dialog(TableEquipment, e.name)) {
     repo_string_del(req->this->repo, e.description);
     repo_del(req->this->repo, TableEquipment, req->id);
@@ -161,10 +152,7 @@ void editor_equipment_show(EditorEquipment *this) {
   ID max = repo_len(this->repo, TableEquipment);
   for (ID i = 0; i < max; i++) {
     Equipment e;
-    if (!repo_get(this->repo, TableEquipment, i, &e)) {
-      printf("Cannot read %u from TableEquipment.\n", i);
-      continue;
-    }
+    repo_get(this->repo, TableEquipment, i, &e);
 
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 

@@ -3,21 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool repo_string_get(Repo *repo, ID id, char **dest) {
+void repo_string_get(Repo *repo, ID id, char **dest) {
   StringMetadata metadata;
-  if (!repo_get(repo, TableStringMetadata, id, &metadata))
-    return false;
-  if (metadata.len == 0)
-    return false;
+  repo_get(repo, TableStringMetadata, id, &metadata);
+  if (metadata.len == 0) error("Błąd odczytu - tekst usunięty");
 
   *dest = malloc(metadata.len * STRING_FRAGMENT_MAX);
   for (ID i = 0; i < metadata.len; i++) {
     StringFragment fragment;
-    if (!repo_get(repo, TableStringFragment, metadata.start + i, &fragment))
-      return false;
+    repo_get(repo, TableStringFragment, metadata.start + i, &fragment);
     memcpy(*dest + i * STRING_FRAGMENT_MAX, fragment.data, STRING_FRAGMENT_MAX);
   }
-  return true;
 }
 
 void repo_string_set(Repo *repo, ID id, char **src) {
@@ -47,20 +43,14 @@ void repo_string_del(Repo *repo, ID id) {
   if (id < repo_string_len(repo)) {
     // Remove string content.
     StringMetadata metadata;
-    if (!repo_get(repo, TableStringMetadata, id, &metadata))
-      return;
-    if (metadata.len == 0)
-      return;
+    repo_get(repo, TableStringMetadata, id, &metadata);
+    if (metadata.len == 0) error("Błąd usuwania - tekst już usunięty.");
     repo_del_n(repo, TableStringFragment, metadata.start, metadata.len);
 
     // Fix references to the moved area.
     for (ID i = 0; i < repo_string_len(repo); i++) {
       StringMetadata other;
-      if (!repo_get(repo, TableStringMetadata, i, &other)) {
-        printf("Nie można naprawić odniesienia %d (podczas usuwania %d).\n", i,
-               id);
-        continue;
-      }
+      repo_get(repo, TableStringMetadata, i, &other);
       if (other.start > metadata.start) {
         other.start -= metadata.len;
         repo_set(repo, TableStringMetadata, i, &other);

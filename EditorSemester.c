@@ -53,11 +53,9 @@ static void do_save_as(EditorSemester *this, bool start_fresh) {
       for (ID i = 0; i < max; i++) {
         // Copy just the equipment (and its description).
         Equipment e;
-        if (!repo_get(this->repo, TableEquipment, i, &e))
-          error("Nie udało się utworzyć kopii");
+        repo_get(this->repo, TableEquipment, i, &e);
         char *s;
-        if (!repo_string_get(this->repo, e.description, &s))
-          error("Nie udało się utworzyć kopii");
+        repo_string_get(this->repo, e.description, &s);
         // We don't want unnecessary gaps in TableStringMetadata.
         e.description = repo_string_len(new_repo);
         repo_string_set(new_repo, e.description, &s);

@@ -60,14 +60,8 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   };
   char *desc;
   if (!req->empty) {
-    if (!repo_get(req->this->repo, TablePeriodicReservation, req->id, &r)) {
-      printf("Cannot read %u from TablePeriodicReservation.\n", req->id);
-      return;
-    }
-    if (!repo_string_get(req->this->repo, r.description, &desc)) {
-      printf("Cannot read string %u.\n", r.description);
-      return;
-    }
+    repo_get(req->this->repo, TablePeriodicReservation, req->id, &r);
+    repo_string_get(req->this->repo, r.description, &desc);
   } else {
     req->id = repo_len(req->this->repo, TablePeriodicReservation);
     desc = g_strdup("");
@@ -180,10 +174,7 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   DelRequest *req = (DelRequest *)user_data;
 
   PeriodicReservation r;
-  if (!repo_get(req->this->repo, TablePeriodicReservation, req->id, &r)) {
-    printf("Cannot read %u from TablePeriodicReservation.\n", req->id);
-    return;
-  }
+  repo_get(req->this->repo, TablePeriodicReservation, req->id, &r);
   char *name = describe_periodic_reservation(r);
   if (editor_removal_dialog(TablePeriodicReservation, name)) {
     repo_string_del(req->this->repo, r.description);
@@ -194,11 +185,8 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
 }
 
 void editor_periodic_reservation_show(EditorPeriodicReservation *this) {
-  printf("%llu\n", this);
-  printf(" %llu\n", this->ui);
   GObject *periodic_reservation =
       gtk_builder_get_object(this->ui, "periodic-reservation");
-  printf("  %llu\n", periodic_reservation);
 
   GtkWidget *new = gtk_button_new_with_label("Nowy");
   g_signal_connect(G_OBJECT(new), "clicked", G_CALLBACK(on_edit),
@@ -208,10 +196,7 @@ void editor_periodic_reservation_show(EditorPeriodicReservation *this) {
   ID max = repo_len(this->repo, TablePeriodicReservation);
   for (ID i = 0; i < max; i++) {
     PeriodicReservation r;
-    if (!repo_get(this->repo, TablePeriodicReservation, i, &r)) {
-      printf("Cannot read %u from TablePeriodicReservation.\n", i);
-      continue;
-    }
+    repo_get(this->repo, TablePeriodicReservation, i, &r);
 
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 

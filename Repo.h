@@ -113,7 +113,7 @@ typedef struct {
   char data[STRING_FRAGMENT_MAX];
 } StringFragment;
 
-bool repo_get(Repo *repo, TableID table, ID id, void *dest);
+void repo_get(Repo *repo, TableID table, ID id, void *dest);
 void repo_set(Repo *repo, TableID table, ID id, void *src);
 void repo_del(Repo *repo, TableID table, ID id);
 void repo_del_n(Repo *repo, TableID table, ID id, unsigned n);

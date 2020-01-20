@@ -113,8 +113,11 @@ static Repo *repo_save_as(Repo *repo, char *dest) {
   // Load new repo in place.
   repo->path = g_strdup(dest);
   if (!repo_open_internal(repo, RepoNew, repo->header.semester_start,
-                          repo->header.semester_end))
-    goto fail;
+                          repo->header.semester_end)) {
+                            fclose(repo->file);
+  fclose(old_repo->file);
+  bug("Nie udało się przepisać bazy.");
+  }
 
   // We can easily set size of an empty repo, so we use that opportunity
   // to enlarge tables if necessary.
@@ -128,18 +131,11 @@ static Repo *repo_save_as(Repo *repo, char *dest) {
   AnyTableElement tmp;
   for (int i = 0; i < TABLE_NUM; i++) {
     for (unsigned j = 0; j < old_repo->header.table_used[i]; j++) {
-      if (!repo_get(old_repo, i, j, &tmp))
-        goto fail;
+      repo_get(old_repo, i, j, &tmp);
       repo_set(repo, i, j, &tmp);
     }
   }
   return old_repo;
-
-fail:
-  fclose(repo->file);
-  fclose(old_repo->file);
-  bug("Nie udało się przepisać bazy.");
-  return NULL;
 }
 
 static void enlarge_table(Repo *repo) {
@@ -205,20 +201,20 @@ static Position calc_position(Repo *repo, TableID table, ID id) {
   return ret;
 }
 
-bool repo_get(Repo *repo, TableID table, ID id, void *dest) {
+void repo_get(Repo *repo, TableID table, ID id, void *dest) {
   if (id >= repo->header.table_used[table])
-    return false;
+    error("Błąd wczytywania - indeks poza tablicą.");
 
   Position pos = calc_position(repo, table, id);
   fseek(repo->file, pos.position, SEEK_SET);
   int read = fread(dest, pos.size, 1, repo->file);
-  return read == 1;
+  if (read != 1) error("Błąd odczytu.");
 }
 
 void repo_set(Repo *repo, TableID table, ID id, void *src) {
   if (id > repo->header.table_used[table]) {
     fclose(repo->file);
-    bug("Dziura w tablicy.");
+    error("Błąd zapisu: dziura w tablicy.");
   }
 
   if (id >= repo->header.table_size[table])
@@ -226,8 +222,9 @@ void repo_set(Repo *repo, TableID table, ID id, void *src) {
 
   Position pos = calc_position(repo, table, id);
   fseek(repo->file, pos.position, SEEK_SET);
-  fwrite(src, pos.size, 1, repo->file);
+  int written = fwrite(src, pos.size, 1, repo->file);
   fflush(repo->file);
+  if (written != 1) error("Błąd zapisu.");
   if (id == repo->header.table_used[table]) {
     repo->header.table_used[table] = id + 1;
     save_header(repo);
@@ -240,13 +237,12 @@ void repo_del(Repo *repo, TableID table, ID id) {
 
 void repo_del_n(Repo *repo, TableID table, ID id, unsigned n) {
   if (id + n > repo->header.table_used[table])
-    return;
+    error("Błąd usuwania - indeks poza tablicą.");
 
   AnyTableElement tmp;
   // Shift elements left.
   for (ID i = id; i + n < repo->header.table_used[table]; i++) {
-    if (!repo_get(repo, table, i + n, &tmp))
-      bug("Nie można usunąć elementu.");
+    repo_get(repo, table, i + n, &tmp);
     repo_set(repo, table, i, &tmp);
   }
   repo->header.table_used[table] -= n;

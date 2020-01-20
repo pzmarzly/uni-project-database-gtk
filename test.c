@@ -31,28 +31,28 @@ void handles_data() {
   StringMetadata str = {3, 5};
 
   assert(repo_len(r, TableStringMetadata) == 0);
-  assert(repo_get(r, TableStringMetadata, 0, &str) == false);
+  repo_get(r, TableStringMetadata, 0, &str);
   repo_set(r, TableStringMetadata, 0, &str);
   assert(repo_len(r, TableStringMetadata) == 1);
 
   str.len = 1;
-  assert(repo_get(r, TableStringMetadata, 0, &str) == true);
+  repo_get(r, TableStringMetadata, 0, &str);
   assert(str.len == 5);
   repo_close(r);
 
   r = repo_open("./test-repo.db", false, 0, 1);
   assert(repo_len(r, TableStringMetadata) == 1);
   str.len = 1;
-  assert(repo_get(r, TableStringMetadata, 0, &str) == true);
+  repo_get(r, TableStringMetadata, 0, &str);
   assert(str.len == 5);
 
   repo_del(r, TableStringMetadata, 0);
   assert(repo_len(r, TableStringMetadata) == 0);
-  assert(repo_get(r, TableStringMetadata, 0, &str) == false);
+  repo_get(r, TableStringMetadata, 0, &str);
 
   assert(repo_len(r, TableEquipment) == 1);
   eq.description = 5;
-  assert(repo_get(r, TableEquipment, 0, &eq) == true);
+  repo_get(r, TableEquipment, 0, &eq);
   assert(eq.description == 3);
   repo_close(r);
 }
@@ -63,10 +63,10 @@ void handles_strings() {
   char *c1 = "Troche tekstu.", *c2 = "Drugi tekst.", *c3 = "Trzeci tekst.";
   char *str = c1;
 
-  assert(repo_string_get(r, 0, &str) == false);
+  repo_string_get(r, 0, &str);
   repo_string_set(r, 0, &str);
   str = NULL;
-  assert(repo_string_get(r, 0, &str) == true);
+  repo_string_get(r, 0, &str);
   assert(strcmp(str, c1) == 0);
   free(str);
 
@@ -77,20 +77,20 @@ void handles_strings() {
   repo_string_set(r, 2, &str);
 
   str = NULL;
-  assert(repo_string_get(r, 0, &str) == true);
+  repo_string_get(r, 0, &str);
   assert(strcmp(str, c1) == 0);
   free(str);
   str = NULL;
-  assert(repo_string_get(r, 1, &str) == false);
-  assert(repo_string_get(r, 2, &str) == true);
+  repo_string_get(r, 1, &str);
+  repo_string_get(r, 2, &str);
   assert(strcmp(str, c3) == 0);
   free(str);
 
   repo_string_del(r, 0);
   str = NULL;
-  assert(repo_string_get(r, 0, &str) == false);
-  assert(repo_string_get(r, 1, &str) == false);
-  assert(repo_string_get(r, 2, &str) == true);
+  repo_string_get(r, 0, &str);
+  repo_string_get(r, 1, &str);
+  repo_string_get(r, 2, &str);
   assert(strcmp(str, c3) == 0);
   free(str);
 
@@ -115,7 +115,7 @@ void handles_data_large() {
   assert(repo_len(r, TableEquipment) == 500);
 
   for (ID i = 0; i < 500; i++) {
-    assert(repo_get(r, TableEquipment, i, &eq) == true);
+    repo_get(r, TableEquipment, i, &eq);
     assert(eq.description == 2 * i + 1);
   }
 
@@ -135,13 +135,13 @@ void handles_data_large() {
   repo_close(r);
   r = repo_open("./test-repo.db", false, 0, 1);
   assert(repo_len(r, TableEquipment) == 400);
-  assert(repo_get(r, TableEquipment, 0, &eq) == true);
+  repo_get(r, TableEquipment, 0, &eq);
   assert(eq.description == 1);
-  assert(repo_get(r, TableEquipment, 99, &eq) == true);
+  repo_get(r, TableEquipment, 99, &eq);
   assert(eq.description == 2 * 99 + 1);
-  assert(repo_get(r, TableEquipment, 100, &eq) == true);
+  repo_get(r, TableEquipment, 100, &eq);
   assert(eq.description == 2 * 200 + 1);
-  assert(repo_get(r, TableEquipment, 101, &eq) == true);
+  repo_get(r, TableEquipment, 101, &eq);
   assert(eq.description == 2 * 201 + 1);
   repo_close(r);
 }
