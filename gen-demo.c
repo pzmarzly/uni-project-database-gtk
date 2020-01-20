@@ -26,6 +26,7 @@ void periodic(Repo *repo, Day day, HourAndMinutes start, HourAndMinutes end,
   ID string_id = repo_string_len(repo);
   repo_string_set(repo, string_id, &description);
   PeriodicReservation r = {
+      .item = 0,
       .day = day,
       .start = start,
       .end = end,

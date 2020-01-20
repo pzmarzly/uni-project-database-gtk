@@ -50,7 +50,7 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   EditRequest *req = (EditRequest *)user_data;
 
   PeriodicReservation r = {
-      .item = 0,
+      .item = 7000000, // TODO: is_new
       .day = Monday,
       .start = 0,
       .end = 0,
