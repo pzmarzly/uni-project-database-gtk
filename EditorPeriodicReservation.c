@@ -1,10 +1,10 @@
 #include "EditorPeriodicReservation.h"
+#include "Datepicker.h"
 #include "Editor.h"
 #include "EditorDialogs.h"
 #include "Repo.h"
 #include "RepoData.h"
 #include "RepoString.h"
-#include "Datepicker.h"
 #include "Utils.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>
@@ -67,7 +67,8 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
     desc = g_strdup("");
     r.description = repo_string_len(req->this->repo);
     r.active_since = repo_get_semester_start(req->this->repo);
-    if (timestamp_now() > r.active_since) r.active_since = timestamp_now();
+    if (timestamp_now() > r.active_since)
+      r.active_since = timestamp_now();
     r.active_until = repo_get_semester_end(req->this->repo);
   }
 
@@ -109,11 +110,13 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   gtk_grid_attach(grid, GTK_WIDGET(end_entry), 1, 2, 1, 1);
 
   GtkButton *active_since_button = GTK_BUTTON(gtk_button_new_with_label(""));
-  Datepicker *active_since = datepicker_new(active_since_button, r.active_since, NULL, NULL);
+  Datepicker *active_since =
+      datepicker_new(active_since_button, r.active_since, NULL, NULL);
   gtk_grid_attach(grid, GTK_WIDGET(active_since_button), 1, 3, 1, 1);
 
   GtkButton *active_until_button = GTK_BUTTON(gtk_button_new_with_label(""));
-  Datepicker *active_until = datepicker_new(active_until_button, r.active_until, NULL, NULL);
+  Datepicker *active_until =
+      datepicker_new(active_until_button, r.active_until, NULL, NULL);
   gtk_grid_attach(grid, GTK_WIDGET(active_until_button), 1, 4, 1, 1);
 
   GtkTextView *description_text_view = GTK_TEXT_VIEW(gtk_text_view_new());

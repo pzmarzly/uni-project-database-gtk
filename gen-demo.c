@@ -19,7 +19,9 @@ void equipment(Repo *repo, EquipmentType type, char *name, char *description) {
   repo_set(repo, TableEquipment, id, &eq);
 }
 
-void periodic(Repo *repo, Day day, HourAndMinutes start, HourAndMinutes end, Timestamp active_since, Timestamp active_until, char *description) {
+void periodic(Repo *repo, Day day, HourAndMinutes start, HourAndMinutes end,
+              Timestamp active_since, Timestamp active_until,
+              char *description) {
   ID id = repo_len(repo, TablePeriodicReservation);
   ID string_id = repo_string_len(repo);
   repo_string_set(repo, string_id, &description);
@@ -46,8 +48,10 @@ void generate_demo() {
   equipment(r, Projector, "Ekran 51'", "Opis ekranu 51'.");
   equipment(r, Other, "Żółty pisak", "Opis żółtego pisaka.");
 
-  periodic(r, Monday, 9*60, 12*60, 0, 10000, "Rezerwacja poniedziałek 9-12.");
-  periodic(r, Wednesday, 12*60+15, 14*60, 0, 10000, "Rezerwacja środa 12:15-14:00.");
+  periodic(r, Monday, 9 * 60, 12 * 60, 0, 10000,
+           "Rezerwacja poniedziałek 9-12.");
+  periodic(r, Wednesday, 12 * 60 + 15, 14 * 60, 0, 10000,
+           "Rezerwacja środa 12:15-14:00.");
 
   repo_close(r);
 }

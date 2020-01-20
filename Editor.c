@@ -32,12 +32,14 @@ Editor *editor_new(char *path, RepoType repo_type) {
   if (repo_type == RepoNew)
     // If users cancels creation of a new repository,
     // we just exit for now.
-    if (!ask_for_semester_dates(&start, &end)) exit(0);
+    if (!ask_for_semester_dates(&start, &end))
+      exit(0);
   this->repo = repo_open(path, repo_type, start, end);
   this->repo_path = g_strdup(path);
   this->semester = editor_semester_new(this->repo, this->ui, this);
   this->equipment = editor_equipment_new(this->repo, this->ui);
-  this->periodic_reservation = editor_periodic_reservation_new(this->repo, this->ui);
+  this->periodic_reservation =
+      editor_periodic_reservation_new(this->repo, this->ui);
   this->reports = editor_reports_new(this->repo, this->ui);
   return this;
 }

@@ -13,7 +13,8 @@ struct EditorSemester {
   Editor *editor;
 };
 
-EditorSemester *editor_semester_new(Repo *repo, GtkBuilder *ui, Editor *editor) {
+EditorSemester *editor_semester_new(Repo *repo, GtkBuilder *ui,
+                                    Editor *editor) {
   EditorSemester *this = malloc(sizeof(EditorSemester));
   this->repo = repo;
   this->ui = ui;
@@ -25,7 +26,8 @@ EditorSemester *editor_semester_new(Repo *repo, GtkBuilder *ui, Editor *editor) 
 static void do_save_as(EditorSemester *this, bool start_fresh) {
   Timestamp new_start, new_end;
   if (start_fresh)
-    if (!ask_for_semester_dates(&new_start, &new_end)) return;
+    if (!ask_for_semester_dates(&new_start, &new_end))
+      return;
 
   GtkWidget *dialog = gtk_file_chooser_dialog_new(
       "Zapisz bazę", GTK_WINDOW(this->parent), GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -47,8 +49,7 @@ static void do_save_as(EditorSemester *this, bool start_fresh) {
     }
 
     if (start_fresh) {
-      Repo *new_repo =
-          repo_open(path, RepoNew, new_start, new_end);
+      Repo *new_repo = repo_open(path, RepoNew, new_start, new_end);
       ID max = repo_len(this->repo, TableEquipment);
       for (ID i = 0; i < max; i++) {
         // Copy just the equipment (and its description).

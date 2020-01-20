@@ -108,7 +108,8 @@ char *describe_periodic_reservation(PeriodicReservation r) {
   char *end = hm_str(r.end);
   char *since = timestamp_day_str(r.active_since);
   char *until = timestamp_day_str(r.active_until);
-  sprintf(ret, "%s %s-%s (od %s do %s)", day_str(r.day), start, end, since, until);
+  sprintf(ret, "%s %s-%s (od %s do %s)", day_str(r.day), start, end, since,
+          until);
   free(until);
   free(since);
   free(end);

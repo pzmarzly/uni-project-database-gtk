@@ -1,7 +1,7 @@
 #include "EditorDialogs.h"
+#include "Datepicker.h"
 #include "RepoData.h"
 #include "RepoLogic.h"
-#include "Datepicker.h"
 
 PreparedEditDialog editor_edit_dialog_prepare(TableID type) {
   return dialog_edit(editing_window_title(type));
@@ -65,10 +65,11 @@ bool ask_for_item_periodic(PeriodicReservation *res, ID res_id, Repo *repo) {
   for (ID i = 0; i < eq_len; i++) {
     Equipment eq;
     repo_get(repo, TableEquipment, i, &eq);
-    if (i != res->item && !available_periodic_slot(repo, res, res_id, &eq)) continue;
+    if (i != res->item && !available_periodic_slot(repo, res, res_id, &eq))
+      continue;
     mappings[mapping_len++] = i;
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(item_combo_box), NULL,
-                            eq.name);
+                              eq.name);
   }
   gtk_combo_box_set_active(GTK_COMBO_BOX(item_combo_box), res->item);
   gtk_grid_attach(grid, GTK_WIDGET(item_combo_box), 0, 1, 1, 1);

@@ -6,7 +6,8 @@
 void repo_string_get(Repo *repo, ID id, char **dest) {
   StringMetadata metadata;
   repo_get(repo, TableStringMetadata, id, &metadata);
-  if (metadata.len == 0) error("Błąd odczytu - tekst usunięty");
+  if (metadata.len == 0)
+    error("Błąd odczytu - tekst usunięty");
 
   *dest = malloc(metadata.len * STRING_FRAGMENT_MAX);
   for (ID i = 0; i < metadata.len; i++) {
@@ -44,7 +45,8 @@ void repo_string_del(Repo *repo, ID id) {
     // Remove string content.
     StringMetadata metadata;
     repo_get(repo, TableStringMetadata, id, &metadata);
-    if (metadata.len == 0) error("Błąd usuwania - tekst już usunięty.");
+    if (metadata.len == 0)
+      error("Błąd usuwania - tekst już usunięty.");
     repo_del_n(repo, TableStringFragment, metadata.start, metadata.len);
 
     // Fix references to the moved area.

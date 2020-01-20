@@ -114,9 +114,9 @@ static Repo *repo_save_as(Repo *repo, char *dest) {
   repo->path = g_strdup(dest);
   if (!repo_open_internal(repo, RepoNew, repo->header.semester_start,
                           repo->header.semester_end)) {
-                            fclose(repo->file);
-  fclose(old_repo->file);
-  bug("Nie udało się przepisać bazy.");
+    fclose(repo->file);
+    fclose(old_repo->file);
+    bug("Nie udało się przepisać bazy.");
   }
 
   // We can easily set size of an empty repo, so we use that opportunity
@@ -208,7 +208,8 @@ void repo_get(Repo *repo, TableID table, ID id, void *dest) {
   Position pos = calc_position(repo, table, id);
   fseek(repo->file, pos.position, SEEK_SET);
   int read = fread(dest, pos.size, 1, repo->file);
-  if (read != 1) error("Błąd odczytu.");
+  if (read != 1)
+    error("Błąd odczytu.");
 }
 
 void repo_set(Repo *repo, TableID table, ID id, void *src) {
@@ -224,7 +225,8 @@ void repo_set(Repo *repo, TableID table, ID id, void *src) {
   fseek(repo->file, pos.position, SEEK_SET);
   int written = fwrite(src, pos.size, 1, repo->file);
   fflush(repo->file);
-  if (written != 1) error("Błąd zapisu.");
+  if (written != 1)
+    error("Błąd zapisu.");
   if (id == repo->header.table_used[table]) {
     repo->header.table_used[table] = id + 1;
     save_header(repo);
