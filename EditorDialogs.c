@@ -11,6 +11,10 @@ bool editor_removal_dialog(TableID type, char *element_name) {
   return dialog_remove(removal_window_title(type), element_name);
 }
 
+void validation_error(char *text) {
+  return dialog_info("Błąd walidacji", text);
+}
+
 bool ask_for_semester_dates(Timestamp *start, Timestamp *end) {
   PreparedEditDialog d = dialog_edit("Wybierz datę");
   GtkBuilder *ui = d.ui;

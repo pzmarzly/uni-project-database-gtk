@@ -100,11 +100,12 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
   while (true) {
     int result = gtk_dialog_run(dialog);
-    if (result != GTK_RESPONSE_OK) break;
+    if (result != GTK_RESPONSE_OK)
+      break;
 
     const char *name_str = gtk_entry_get_text(name_entry);
     if (strlen(name_str) == 0) {
-      dialog_info("Błąd walidacji", "Pole nazwy nie może być puste");
+      validation_error("Pole nazwy nie może być puste");
       continue;
     }
     strcpy(e.name, name_str);
