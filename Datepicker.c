@@ -28,11 +28,8 @@ static void on_click(GtkWidget *sender, gpointer user_data) {
   gtk_grid_attach(grid, calendar_label, 0, 0, 1, 1);
 
   GDateTime *time = g_date_time_new_from_unix_utc(this->current);
-  if (time == NULL) {
-    printf("Niepoprawna data\n"); // TODO: dialog
-    gtk_widget_destroy(GTK_WIDGET(dialog));
-    return;
-  }
+  if (time == NULL)
+    time = g_date_time_new_from_unix_utc(timestamp_now());
   int year, month, day;
   g_date_time_get_ymd(time, &year, &month, &day);
 

@@ -1,12 +1,13 @@
 #include "Utils.h"
+#include "dialog/Dialogs.h"
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 void error(char *msg) {
-  // TODO: dialog
   printf("ERROR: %s\n", msg);
+  dialog_info("Błąd krytyczny", msg);
 }
 
 _Noreturn void bug(char *msg) {

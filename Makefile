@@ -8,24 +8,23 @@ override LDFLAGS+=-lm `pkg-config --libs gtk+-3.0` \
 default: wez-mnie-gtk
 all: wez-mnie-gtk test
 
-WEZ_MNIE_GTK = wez-mnie-gtk.o Greeter.o RecentList.o
-WEZ_MNIE_GTK += Editor.o EditorDialogs.o Datepicker.o
-WEZ_MNIE_GTK += EditorSemester.o EditorEquipment.o
-WEZ_MNIE_GTK += EditorPeriodicReservation.o
-WEZ_MNIE_GTK += EditorReports.o
-WEZ_MNIE_GTK += Repo.o RepoData.o RepoString.o
-WEZ_MNIE_GTK += RepoLogic.o
-WEZ_MNIE_GTK += About.o Utils.o dialog/Dialogs.o
-wez-mnie-gtk: ${WEZ_MNIE_GTK} demo.db
-	$(CC) ${WEZ_MNIE_GTK} ${LDFLAGS} -o $@
+COMMON = Greeter.o RecentList.o
+COMMON += Editor.o EditorDialogs.o Datepicker.o
+COMMON += EditorSemester.o EditorEquipment.o
+COMMON += EditorPeriodicReservation.o
+COMMON += EditorReports.o
+COMMON += Repo.o RepoData.o RepoString.o
+COMMON += RepoLogic.o
+COMMON += About.o Utils.o dialog/Dialogs.o
 
-TEST = test.o Repo.o RepoData.o RepoString.o Utils.o
-test: ${TEST}
-	$(CC) ${TEST} ${LDFLAGS} -o $@
+wez-mnie-gtk: wez-mnie-gtk.o ${COMMON} demo.db
+	$(CC) $< ${COMMON} ${LDFLAGS} -o $@
 
-GEN_DEMO = gen-demo.o Repo.o RepoData.o RepoString.o Utils.o
-gen-demo: ${GEN_DEMO}
-	$(CC) ${GEN_DEMO} ${LDFLAGS} -o $@
+test: test.o ${COMMON}
+	$(CC) $< ${COMMON} ${LDFLAGS} -o $@
+
+gen-demo: gen-demo.o ${COMMON}
+	$(CC) $< ${COMMON} ${LDFLAGS} -o $@
 demo.db: gen-demo
 	./gen-demo
 
