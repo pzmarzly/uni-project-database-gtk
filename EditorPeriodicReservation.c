@@ -130,8 +130,10 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
 
-  int result = gtk_dialog_run(dialog);
-  if (result == GTK_RESPONSE_OK) {
+  while (true) {
+    int result = gtk_dialog_run(dialog);
+    if (result != GTK_RESPONSE_OK) break;
+
     r.day = gtk_combo_box_get_active(day_combo_box);
 
     const char *start_str = gtk_entry_get_text(start_entry);
@@ -139,23 +141,27 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
     const char *end_str = gtk_entry_get_text(end_entry);
     r.end = hm_parse(end_str);
     if (r.start == HM_INVALID || r.end == HM_INVALID) {
-      printf("HM invalid.\n"); // TODO: dialog
-      gtk_widget_destroy(GTK_WIDGET(dialog));
-      return;
+      dialog_info("Błąd walidacji", "Niepoprawny format godziny!");
+      continue;
     }
 
     r.active_since = datepicker_read(active_since);
     r.active_until = datepicker_read(active_until);
+    if (r.active_since >= r.active_until) {
+      dialog_info("Błąd walidacji", "Data startu nie może być wcześniejsza niż data końca!");
+      continue;
+    }
 
     GtkTextIter start, end;
     gtk_text_buffer_get_bounds(buf, &start, &end);
     desc = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
 
-    if (ask_for_item_periodic(&r, req->id, req->this->repo)) {
-      repo_string_set(req->this->repo, r.description, &desc);
-      repo_set(req->this->repo, TablePeriodicReservation, req->id, &r);
-      periodic_reservation_refresh(req->this);
-    }
+    if (!ask_for_item_periodic(&r, req->id, req->this->repo)) continue;
+
+    repo_string_set(req->this->repo, r.description, &desc);
+    repo_set(req->this->repo, TablePeriodicReservation, req->id, &r);
+    periodic_reservation_refresh(req->this);
+    break;
   }
   gtk_widget_destroy(GTK_WIDGET(dialog));
 }
