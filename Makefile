@@ -14,6 +14,7 @@ WEZ_MNIE_GTK += EditorSemester.o EditorEquipment.o
 WEZ_MNIE_GTK += EditorPeriodicReservation.o
 WEZ_MNIE_GTK += EditorReports.o
 WEZ_MNIE_GTK += Repo.o RepoData.o RepoString.o
+WEZ_MNIE_GTK += RepoLogic.o
 WEZ_MNIE_GTK += About.o Utils.o dialog/Dialogs.o
 wez-mnie-gtk: ${WEZ_MNIE_GTK} demo.db
 	$(CC) ${WEZ_MNIE_GTK} ${LDFLAGS} -o $@

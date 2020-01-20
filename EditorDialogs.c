@@ -1,5 +1,6 @@
 #include "EditorDialogs.h"
 #include "RepoData.h"
+#include "RepoLogic.h"
 #include "Datepicker.h"
 
 PreparedEditDialog editor_edit_dialog_prepare(TableID type) {
@@ -47,7 +48,7 @@ bool ask_for_semester_dates(Timestamp *start, Timestamp *end) {
   return true;
 }
 
-bool ask_for_item_periodic(PeriodicReservation *r, ID r_id) {
+bool ask_for_item_periodic(PeriodicReservation *res, ID res_id, Repo *repo) {
   PreparedEditDialog d = dialog_edit("Wybierz przedmiot");
   GtkBuilder *ui = d.ui;
   GtkDialog *dialog = d.dialog;
@@ -61,15 +62,15 @@ bool ask_for_item_periodic(PeriodicReservation *r, ID r_id) {
   ID eq_len = repo_len(repo, TableEquipment);
   ID *mappings = malloc(eq_len * sizeof(ID));
   ID mapping_len = 0;
-  for (int i = 0; i < eq_len; i++) {
-    if (i != r->used && !available(i, r)) continue;
-    Equipment e;
-    if (!repo_get(repo, i, &e)) continue; // TODO: crash
+  for (ID i = 0; i < eq_len; i++) {
+    Equipment eq;
+    if (!repo_get(repo, TableEquipment, i, &eq)) continue; // TODO: crash
+    if (i != res->item && !available_periodic_slot(repo, res, res_id, &eq)) continue;
     mappings[mapping_len++] = i;
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(item_combo_box), NULL,
-                            e.name);
+                            eq.name);
   }
-  gtk_combo_box_set_active(GTK_COMBO_BOX(item_combo_box), r->item);
+  gtk_combo_box_set_active(GTK_COMBO_BOX(item_combo_box), res->item);
   gtk_grid_attach(grid, GTK_WIDGET(item_combo_box), 0, 1, 1, 1);
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
@@ -80,7 +81,7 @@ bool ask_for_item_periodic(PeriodicReservation *r, ID r_id) {
     return false;
   }
 
-  r->item = gtk_combo_box_get_active(item_combo_box);
+  res->item = mappings[gtk_combo_box_get_active(item_combo_box)];
   gtk_widget_destroy(GTK_WIDGET(dialog));
   return true;
 }

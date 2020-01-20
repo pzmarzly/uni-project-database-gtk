@@ -154,7 +154,7 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
     gtk_text_buffer_get_bounds(buf, &start, &end);
     desc = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
 
-    if (ask_for_item_periodic(&r, req->id)) {
+    if (ask_for_item_periodic(&r, req->id, req->this->repo)) {
       repo_string_set(req->this->repo, r.description, &desc);
       repo_set(req->this->repo, TablePeriodicReservation, req->id, &r);
       periodic_reservation_refresh(req->this);
