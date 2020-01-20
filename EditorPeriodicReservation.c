@@ -24,7 +24,7 @@ EditorPeriodicReservation *editor_periodic_reservation_new(Repo *repo,
 
 void periodic_reservation_refresh(EditorPeriodicReservation *this) {
   GObject *periodic_reservation =
-      gtk_builder_get_object(this->ui, "periodic_reservation");
+      gtk_builder_get_object(this->ui, "periodic-reservation");
   remove_all_gtk_children(GTK_CONTAINER(periodic_reservation));
   editor_periodic_reservation_show(this);
   gtk_widget_show_all(GTK_WIDGET(periodic_reservation));
@@ -194,8 +194,11 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
 }
 
 void editor_periodic_reservation_show(EditorPeriodicReservation *this) {
+  printf("%llu\n", this);
+  printf(" %llu\n", this->ui);
   GObject *periodic_reservation =
       gtk_builder_get_object(this->ui, "periodic-reservation");
+  printf("  %llu\n", periodic_reservation);
 
   GtkWidget *new = gtk_button_new_with_label("Nowy");
   g_signal_connect(G_OBJECT(new), "clicked", G_CALLBACK(on_edit),
