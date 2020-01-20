@@ -48,9 +48,12 @@ void generate_demo() {
   equipment(r, Projector, "Ekran 51'", "Opis ekranu 51'.");
   equipment(r, Other, "Żółty pisak", "Opis żółtego pisaka.");
 
-  periodic(r, Monday, 9 * 60, 12 * 60, 0, 10000,
+  Timestamp start_of_2020 = 1577836800;
+  Timestamp start_of_2021 = 1609459200;
+
+  periodic(r, Monday, 9 * 60, 12 * 60, start_of_2020, start_of_2021,
            "Rezerwacja poniedziałek 9-12.");
-  periodic(r, Wednesday, 12 * 60 + 15, 14 * 60, 0, 10000,
+  periodic(r, Wednesday, 12 * 60 + 15, 14 * 60, start_of_2020, start_of_2021,
            "Rezerwacja środa 12:15-14:00.");
 
   repo_close(r);
