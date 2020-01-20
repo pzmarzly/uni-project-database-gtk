@@ -31,9 +31,9 @@ Editor *editor_new(char *path, RepoType repo_type) {
   Timestamp start = 0, end = 10000;
   if (repo_type == RepoNew)
     // If users cancels creation of a new repository,
-    // we just exit for now.
+    // we just exit.
     if (!ask_for_semester_dates(&start, &end))
-      exit(0);
+      error("Nie wybrano daty!");
   this->repo = repo_open(path, repo_type, start, end);
   this->repo_path = g_strdup(path);
   this->semester = editor_semester_new(this->repo, this->ui, this);
