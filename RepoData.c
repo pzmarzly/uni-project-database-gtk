@@ -8,8 +8,8 @@ Timestamp timestamp_now() {
   return ret;
 }
 
-Timestamp timestamp_today() {
-  GDateTime *time = g_date_time_new_now_utc();
+Timestamp timestamp_midnight(Timestamp timestamp) {
+  GDateTime *time = g_date_time_new_from_unix_utc(timestamp);
   int year, month, day;
   g_date_time_get_ymd(time, &year, &month, &day);
   g_date_time_unref(time);
@@ -20,6 +20,10 @@ Timestamp timestamp_today() {
   g_date_time_unref(time);
 
   return ret;
+}
+
+Timestamp timestamp_today() {
+  return timestamp_midnight(timestamp_now());
 }
 
 GtkWidget *equipment_icon(EquipmentType type, unsigned size) {
