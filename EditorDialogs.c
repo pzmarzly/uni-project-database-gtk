@@ -81,13 +81,18 @@ bool ask_for_item_periodic(PeriodicReservation *res, ID res_id, Repo *repo) {
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
 
-  int result = gtk_dialog_run(dialog);
-  if (result != GTK_RESPONSE_OK) {
-    gtk_widget_destroy(GTK_WIDGET(dialog));
-    return false;
+  int item;
+  while (true) {
+    int result = gtk_dialog_run(dialog);
+    if (result != GTK_RESPONSE_OK) {
+      gtk_widget_destroy(GTK_WIDGET(dialog));
+      return false;
+    }
+    item = gtk_combo_box_get_active(item_combo_box);
+    if (item >= 0 && (ID)item < mapping_len) break;
   }
 
-  res->item = mappings[gtk_combo_box_get_active(item_combo_box)];
+  res->item = mappings[item];
   gtk_widget_destroy(GTK_WIDGET(dialog));
   return true;
 }
@@ -121,13 +126,18 @@ bool ask_for_item_one_time(OneTimeReservation *res, ID res_id, Repo *repo) {
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
 
-  int result = gtk_dialog_run(dialog);
-  if (result != GTK_RESPONSE_OK) {
-    gtk_widget_destroy(GTK_WIDGET(dialog));
-    return false;
+  int item;
+  while (true) {
+    int result = gtk_dialog_run(dialog);
+    if (result != GTK_RESPONSE_OK) {
+      gtk_widget_destroy(GTK_WIDGET(dialog));
+      return false;
+    }
+    item = gtk_combo_box_get_active(item_combo_box);
+    if (item >= 0 && (ID)item < mapping_len) break;
   }
 
-  res->item = mappings[gtk_combo_box_get_active(item_combo_box)];
+  res->item = mappings[item];
   gtk_widget_destroy(GTK_WIDGET(dialog));
   return true;
 }
