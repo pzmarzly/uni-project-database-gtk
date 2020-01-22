@@ -89,7 +89,8 @@ bool ask_for_item_periodic(PeriodicReservation *res, ID res_id, Repo *repo) {
       return false;
     }
     item = gtk_combo_box_get_active(item_combo_box);
-    if (item >= 0 && (ID)item < mapping_len) break;
+    if (item >= 0 && (ID)item < mapping_len)
+      break;
   }
 
   res->item = mappings[item];
@@ -134,7 +135,8 @@ bool ask_for_item_one_time(OneTimeReservation *res, ID res_id, Repo *repo) {
       return false;
     }
     item = gtk_combo_box_get_active(item_combo_box);
-    if (item >= 0 && (ID)item < mapping_len) break;
+    if (item >= 0 && (ID)item < mapping_len)
+      break;
   }
 
   res->item = mappings[item];

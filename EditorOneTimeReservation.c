@@ -83,7 +83,8 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   gtk_grid_attach(grid, description_label, 0, 3, 1, 1);
 
   GtkButton *date_button = GTK_BUTTON(gtk_button_new_with_label(""));
-  Datepicker *date = datepicker_new(date_button, timestamp_midnight(r.start), NULL, NULL);
+  Datepicker *date =
+      datepicker_new(date_button, timestamp_midnight(r.start), NULL, NULL);
   gtk_grid_attach(grid, GTK_WIDGET(date_button), 1, 0, 1, 1);
 
   GtkEntry *start_entry = GTK_ENTRY(gtk_entry_new());
@@ -127,7 +128,8 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
     r.end = hm_to_timestamp(day, end_hm);
 
     if (r.start >= r.end) {
-      validation_error("Godzina końcowa nie może być mniejsza niż godzina początkowa!");
+      validation_error(
+          "Godzina końcowa nie może być mniejsza niż godzina początkowa!");
       continue;
     }
 
