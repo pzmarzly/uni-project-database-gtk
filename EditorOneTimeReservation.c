@@ -15,7 +15,7 @@ struct EditorOneTimeReservation {
 };
 
 EditorOneTimeReservation *editor_one_time_reservation_new(Repo *repo,
-                                                           GtkBuilder *ui) {
+                                                          GtkBuilder *ui) {
   EditorOneTimeReservation *this = malloc(sizeof(EditorOneTimeReservation));
   this->repo = repo;
   this->ui = ui;
@@ -81,13 +81,11 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   gtk_grid_attach(grid, description_label, 0, 2, 1, 1);
 
   GtkButton *start_button = GTK_BUTTON(gtk_button_new_with_label(""));
-  Datepicker *start =
-      datepicker_new(start_button, r.start, NULL, NULL);
+  Datepicker *start = datepicker_new(start_button, r.start, NULL, NULL);
   gtk_grid_attach(grid, GTK_WIDGET(start_button), 1, 0, 1, 1);
 
   GtkButton *end_button = GTK_BUTTON(gtk_button_new_with_label(""));
-  Datepicker *end =
-      datepicker_new(end_button, r.end, NULL, NULL);
+  Datepicker *end = datepicker_new(end_button, r.end, NULL, NULL);
   gtk_grid_attach(grid, GTK_WIDGET(end_button), 1, 1, 1, 1);
 
   GtkTextView *description_text_view = GTK_TEXT_VIEW(gtk_text_view_new());

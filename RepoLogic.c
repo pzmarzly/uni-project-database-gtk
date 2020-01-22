@@ -10,8 +10,8 @@ bool periodic_active_is_within_time_range(PeriodicReservation *res,
   return true;
 }
 
-bool one_time_is_within_time_range(OneTimeReservation *res,
-                                          Timestamp start, Timestamp end) {
+bool one_time_is_within_time_range(OneTimeReservation *res, Timestamp start,
+                                   Timestamp end) {
   if (res->end <= start)
     return false;
   if (res->start >= end)
@@ -73,7 +73,8 @@ bool periodic_slot_is_available(Repo *repo, PeriodicReservation *res, ID res_id,
   for (ID i = 0; i < one_time_max; i++) {
     OneTimeReservation ot;
     repo_get(repo, TableOneTimeReservation, i, &ot);
-    if (!one_time_is_within_time_range(&ot, res->active_since, res->active_until))
+    if (!one_time_is_within_time_range(&ot, res->active_since,
+                                       res->active_until))
       continue;
     if (one_time_conflicts_with_periodic(res, eq_id, &ot))
       return false;
@@ -82,6 +83,6 @@ bool periodic_slot_is_available(Repo *repo, PeriodicReservation *res, ID res_id,
 }
 
 bool one_time_is_available(Repo *repo, OneTimeReservation *res, ID res_id,
-                                ID eq_id) {
+                           ID eq_id) {
   return true; // TODO: logic
 }
