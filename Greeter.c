@@ -155,7 +155,7 @@ bool greeter_start(Greeter *this) {
   g_signal_connect(G_OBJECT(this->window), "destroy", G_CALLBACK(on_destroy),
                    this);
   gtk_window_set_title(GTK_WINDOW(this->window), "WeźMnie");
-  apply_css(GTK_WIDGET(this->window), "label, button { margin: 5px; }");
+  apply_css(GTK_WIDGET(this->window), "label, .label { padding: 5px; }");
 
   GObject *btn_new = gtk_builder_get_object(this->ui, "new");
   GObject *btn_open = gtk_builder_get_object(this->ui, "open");
