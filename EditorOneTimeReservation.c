@@ -126,6 +126,11 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
     r.start = hm_to_timestamp(day, start_hm);
     r.end = hm_to_timestamp(day, end_hm);
 
+    if (r.start >= r.end) {
+      validation_error("Godzina końcowa nie może być mniejsza niż godzina początkowa!");
+      continue;
+    }
+
     GtkTextIter start, end;
     gtk_text_buffer_get_bounds(buf, &start, &end);
     desc = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
