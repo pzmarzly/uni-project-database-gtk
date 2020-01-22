@@ -16,7 +16,8 @@ COMMON += EditorOneTimeReservation.o
 COMMON += EditorReports.o
 COMMON += Repo.o RepoData.o RepoString.o
 COMMON += RepoLogic.o
-COMMON += About.o Utils.o dialog/Dialogs.o
+COMMON += About.o Utils.o LinkedList.o
+COMMON += dialog/Dialogs.o
 
 wez-mnie-gtk: wez-mnie-gtk.o ${COMMON} demo.db
 	$(CC) $< ${COMMON} ${LDFLAGS} -o $@

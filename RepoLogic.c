@@ -1,5 +1,6 @@
 #include "RepoLogic.h"
 #include "RepoData.h"
+#include "LinkedList.h"
 
 bool periodic_active_is_within_time_range(PeriodicReservation *res,
                                           Timestamp start, Timestamp end) {
@@ -22,14 +23,14 @@ bool one_time_is_within_time_range(OneTimeReservation *res, Timestamp start,
 int reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
                                  OneTimeReservation **output) {
   ID max = repo_len(repo, TablePeriodicReservation);
-  int output_len = 0;
+  LinkedList* list = linked_list_new();
   // for (ID i = 0; i < max; i++) {
   //   PeriodicReservation res;
   //   repo_get(repo, TablePeriodicReservation, i, &res);
   //   if (periodic_active_is_within_time_range(&res, start, end))
   //     output_len++;
   // }
-  OneTimeReservation *arr = malloc(output_len * sizeof(OneTimeReservation));
+  // OneTimeReservation *arr = malloc(output_len * sizeof(OneTimeReservation));
   // int arr_id = 0;
   // for (ID i = 0; i < max; i++) {
   //   PeriodicReservation res;
@@ -44,8 +45,7 @@ int reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
   //     arr_id++;
   //   }
   // }
-  *output = arr;
-  return output_len;
+  return linked_list_into_array(list, sizeof(OneTimeReservation), (void **)output);
 }
 
 bool periodic_conflicts_with_periodic(PeriodicReservation *res1,
