@@ -152,9 +152,10 @@ char *describe_periodic_reservation(Repo *repo, PeriodicReservation *r) {
 char *describe_one_time_reservation(Repo *repo, OneTimeReservation *r) {
   char *ret = malloc(1024);
 
-  char *start = timestamp_day_str(r->start);
-  char *end = timestamp_day_str(r->end);
-  sprintf(ret, "%s od %s do %s", equipment_str(repo, r->item), start, end);
+  char *day = timestamp_day_str(timestamp_midnight(r->start));
+  char *start = hm_str(timestamp_to_hm(r->start));
+  char *end = hm_str(timestamp_to_hm(r->end));
+  sprintf(ret, "%s, %s od %s do %s", equipment_str(repo, r->item), day, start, end);
   free(end);
   free(start);
 
