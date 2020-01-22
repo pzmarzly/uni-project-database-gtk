@@ -13,5 +13,5 @@ char *day_str(Day day);
 char *hm_str(HourAndMinutes hm);
 HourAndMinutes hm_parse(const char *str);
 char *timestamp_day_str(Timestamp timestamp);
-char *describe_periodic_reservation(PeriodicReservation *r);
-char *describe_one_time_reservation(OneTimeReservation *r);
+char *describe_periodic_reservation(Repo *repo, PeriodicReservation *r);
+char *describe_one_time_reservation(Repo *repo, OneTimeReservation *r);

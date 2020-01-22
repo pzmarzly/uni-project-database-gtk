@@ -186,7 +186,7 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
 
   PeriodicReservation r;
   repo_get(req->this->repo, TablePeriodicReservation, req->id, &r);
-  char *name = describe_periodic_reservation(&r);
+  char *name = describe_periodic_reservation(req->this->repo, &r);
   if (editor_removal_dialog(TablePeriodicReservation, name)) {
     repo_string_del(req->this->repo, r.description);
     repo_del(req->this->repo, TablePeriodicReservation, req->id);
@@ -211,7 +211,7 @@ void editor_periodic_reservation_show(EditorPeriodicReservation *this) {
 
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
-    char *name = describe_periodic_reservation(&r);
+    char *name = describe_periodic_reservation(this->repo, &r);
     GtkWidget *label = gtk_label_new(name);
     free(name);
     gtk_box_pack_start(GTK_BOX(box), label, 1, 0, 0);

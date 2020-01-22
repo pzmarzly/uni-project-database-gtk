@@ -146,7 +146,7 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
 
   OneTimeReservation r;
   repo_get(req->this->repo, TableOneTimeReservation, req->id, &r);
-  char *name = describe_one_time_reservation(&r);
+  char *name = describe_one_time_reservation(req->this->repo, &r);
   if (editor_removal_dialog(TableOneTimeReservation, name)) {
     repo_string_del(req->this->repo, r.description);
     repo_del(req->this->repo, TableOneTimeReservation, req->id);
@@ -171,7 +171,7 @@ void editor_one_time_reservation_show(EditorOneTimeReservation *this) {
 
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
-    char *name = describe_one_time_reservation(&r);
+    char *name = describe_one_time_reservation(this->repo, &r);
     GtkWidget *label = gtk_label_new(name);
     free(name);
     gtk_box_pack_start(GTK_BOX(box), label, 1, 0, 0);

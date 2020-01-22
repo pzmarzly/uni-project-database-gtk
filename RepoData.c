@@ -103,15 +103,21 @@ char *timestamp_day_str(Timestamp timestamp) {
   return g_date_time_format(time, "%d. %b %Y");
 }
 
-char *describe_periodic_reservation(PeriodicReservation *r) {
+char *equipment_str(Repo *repo, ID equipment_id) {
+  Equipment e;
+  repo_get(repo, TableEquipment, equipment_id, &e);
+  return g_strdup(e.name);
+}
+
+char *describe_periodic_reservation(Repo *repo, PeriodicReservation *r) {
   char *ret = malloc(1024);
 
   char *start = hm_str(r->start);
   char *end = hm_str(r->end);
   char *since = timestamp_day_str(r->active_since);
   char *until = timestamp_day_str(r->active_until);
-  sprintf(ret, "%s %s-%s (od %s do %s)", day_str(r->day), start, end, since,
-          until); // TODO: item
+  sprintf(ret, "%s, %s %s-%s (od %s do %s)", equipment_str(repo, r->item), day_str(r->day), start, end, since,
+          until);
   free(until);
   free(since);
   free(end);
@@ -120,12 +126,12 @@ char *describe_periodic_reservation(PeriodicReservation *r) {
   return ret;
 }
 
-char *describe_one_time_reservation(OneTimeReservation *r) {
+char *describe_one_time_reservation(Repo *repo, OneTimeReservation *r) {
   char *ret = malloc(1024);
 
   char *start = timestamp_day_str(r->start);
   char *end = timestamp_day_str(r->end);
-  sprintf(ret, "%s od %s do %s", "ITEM", start, end); // TODO: item
+  sprintf(ret, "%s od %s do %s", equipment_str(repo, r->item), start, end);
   free(end);
   free(start);
 
