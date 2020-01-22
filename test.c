@@ -31,7 +31,6 @@ void handles_data() {
   StringMetadata str = {3, 5};
 
   assert(repo_len(r, TableStringMetadata) == 0);
-  repo_get(r, TableStringMetadata, 0, &str);
   repo_set(r, TableStringMetadata, 0, &str);
   assert(repo_len(r, TableStringMetadata) == 1);
 
@@ -48,7 +47,6 @@ void handles_data() {
 
   repo_del(r, TableStringMetadata, 0);
   assert(repo_len(r, TableStringMetadata) == 0);
-  repo_get(r, TableStringMetadata, 0, &str);
 
   assert(repo_len(r, TableEquipment) == 1);
   eq.description = 5;
@@ -63,7 +61,6 @@ void handles_strings() {
   char *c1 = "Troche tekstu.", *c2 = "Drugi tekst.", *c3 = "Trzeci tekst.";
   char *str = c1;
 
-  repo_string_get(r, 0, &str);
   repo_string_set(r, 0, &str);
   str = NULL;
   repo_string_get(r, 0, &str);
@@ -81,15 +78,12 @@ void handles_strings() {
   assert(strcmp(str, c1) == 0);
   free(str);
   str = NULL;
-  repo_string_get(r, 1, &str);
   repo_string_get(r, 2, &str);
   assert(strcmp(str, c3) == 0);
   free(str);
 
   repo_string_del(r, 0);
   str = NULL;
-  repo_string_get(r, 0, &str);
-  repo_string_get(r, 1, &str);
   repo_string_get(r, 2, &str);
   assert(strcmp(str, c3) == 0);
   free(str);
