@@ -14,8 +14,8 @@ Timestamp timestamp_midnight(Timestamp timestamp) {
   g_date_time_get_ymd(time, &year, &month, &day);
   g_date_time_unref(time);
 
-  GTimeZone *tz = g_time_zone_new_utc();
-  time = g_date_time_new(tz, year, month, day, 0, 0, 0);
+  GTimeZone *tz_utc = g_time_zone_new_utc();
+  time = g_date_time_new(tz_utc, year, month, day, 0, 0, 0);
   Timestamp ret = g_date_time_to_unix(time);
   g_date_time_unref(time);
 
@@ -23,6 +23,29 @@ Timestamp timestamp_midnight(Timestamp timestamp) {
 }
 
 Timestamp timestamp_today() { return timestamp_midnight(timestamp_now()); }
+
+HourAndMinutes timestamp_to_hm(Timestamp timestamp) {
+  GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
+  GTimeZone *tz_local = g_time_zone_new_local();
+  GDateTime *time = g_date_time_to_timezone(utc_time, tz_local);
+  int hour = g_date_time_get_hour(time);
+  int minute = g_date_time_get_minute(time);
+  g_date_time_unref(time);
+  g_date_time_unref(utc_time);
+  return hour * 60 + minute;
+}
+
+Timestamp hm_to_timestamp(Timestamp midnight, HourAndMinutes hm) {
+  GDateTime *time = g_date_time_new_from_unix_utc(midnight);
+  int year, month, day;
+  g_date_time_get_ymd(time, &year, &month, &day);
+  g_date_time_unref(time);
+
+  time = g_date_time_new_local(year, month, day, hm / 60, hm % 60, 0);
+  Timestamp ret = g_date_time_to_unix(time);
+  g_date_time_unref(time);
+  return ret;
+}
 
 GtkWidget *equipment_icon(EquipmentType type, unsigned size) {
   char *path = program_dir(32);

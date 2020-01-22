@@ -73,27 +73,35 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   GtkDialog *dialog = d.dialog;
   GtkGrid *grid = GTK_GRID(gtk_builder_get_object(ui, "grid"));
 
-  GtkWidget *start_label = GTK_WIDGET(gtk_label_new("Od:"));
-  gtk_grid_attach(grid, start_label, 0, 0, 1, 1);
-  GtkWidget *end_label = GTK_WIDGET(gtk_label_new("Do:"));
-  gtk_grid_attach(grid, end_label, 0, 1, 1, 1);
+  GtkWidget *date_label = GTK_WIDGET(gtk_label_new("Dzień:"));
+  gtk_grid_attach(grid, date_label, 0, 0, 1, 1);
+  GtkWidget *start_label = GTK_WIDGET(gtk_label_new("Od [HH:MM]:"));
+  gtk_grid_attach(grid, start_label, 0, 1, 1, 1);
+  GtkWidget *end_label = GTK_WIDGET(gtk_label_new("Do [HH:MM]:"));
+  gtk_grid_attach(grid, end_label, 0, 2, 1, 1);
   GtkWidget *description_label = GTK_WIDGET(gtk_label_new("Opis:"));
-  gtk_grid_attach(grid, description_label, 0, 2, 1, 1);
+  gtk_grid_attach(grid, description_label, 0, 3, 1, 1);
 
-  GtkButton *start_button = GTK_BUTTON(gtk_button_new_with_label(""));
-  Datepicker *start = datepicker_new(start_button, r.start, NULL, NULL);
-  gtk_grid_attach(grid, GTK_WIDGET(start_button), 1, 0, 1, 1);
+  GtkButton *date_button = GTK_BUTTON(gtk_button_new_with_label(""));
+  Datepicker *date = datepicker_new(date_button, timestamp_midnight(r.start), NULL, NULL);
+  gtk_grid_attach(grid, GTK_WIDGET(date_button), 1, 0, 1, 1);
 
-  GtkButton *end_button = GTK_BUTTON(gtk_button_new_with_label(""));
-  Datepicker *end = datepicker_new(end_button, r.end, NULL, NULL);
-  gtk_grid_attach(grid, GTK_WIDGET(end_button), 1, 1, 1, 1);
+  GtkEntry *start_entry = GTK_ENTRY(gtk_entry_new());
+  gtk_entry_set_text(start_entry, hm_str(timestamp_to_hm(r.start)));
+  gtk_entry_set_max_length(start_entry, 5);
+  gtk_grid_attach(grid, GTK_WIDGET(start_entry), 1, 1, 1, 1);
+
+  GtkEntry *end_entry = GTK_ENTRY(gtk_entry_new());
+  gtk_entry_set_text(end_entry, hm_str(timestamp_to_hm(r.end)));
+  gtk_entry_set_max_length(end_entry, 5);
+  gtk_grid_attach(grid, GTK_WIDGET(end_entry), 1, 2, 1, 1);
 
   GtkTextView *description_text_view = GTK_TEXT_VIEW(gtk_text_view_new());
   GtkTextBuffer *buf =
       gtk_text_view_get_buffer(GTK_TEXT_VIEW(description_text_view));
   gtk_text_buffer_insert_at_cursor(buf, desc, -1);
   free(desc);
-  gtk_grid_attach(grid, GTK_WIDGET(description_text_view), 1, 2, 1, 1);
+  gtk_grid_attach(grid, GTK_WIDGET(description_text_view), 1, 3, 1, 1);
   gtk_widget_set_hexpand(GTK_WIDGET(description_text_view), true);
   gtk_widget_set_vexpand(GTK_WIDGET(description_text_view), true);
 
@@ -104,14 +112,19 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
     if (result != GTK_RESPONSE_OK)
       break;
 
-    // TODO: HM
+    Timestamp day = datepicker_read(date);
 
-    r.start = datepicker_read(start);
-    r.end = datepicker_read(end);
-    if (r.start >= r.end) {
-      validation_error("Data startu nie może być wcześniejsza niż data końca!");
+    const char *start_str = gtk_entry_get_text(start_entry);
+    HourAndMinutes start_hm = hm_parse(start_str);
+    const char *end_str = gtk_entry_get_text(end_entry);
+    HourAndMinutes end_hm = hm_parse(end_str);
+    if (start_hm == HM_INVALID || end_hm == HM_INVALID) {
+      validation_error("Niepoprawny format godziny!");
       continue;
     }
+
+    r.start = hm_to_timestamp(day, start_hm);
+    r.end = hm_to_timestamp(day, end_hm);
 
     GtkTextIter start, end;
     gtk_text_buffer_get_bounds(buf, &start, &end);
