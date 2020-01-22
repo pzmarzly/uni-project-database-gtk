@@ -1,0 +1,193 @@
+#include "EditorOneTimeReservation.h"
+#include "Datepicker.h"
+#include "Editor.h"
+#include "EditorDialogs.h"
+#include "Repo.h"
+#include "RepoData.h"
+#include "RepoString.h"
+#include "Utils.h"
+#include <gtk/gtk.h>
+#include <stdbool.h>
+
+struct EditorOneTimeReservation {
+  Repo *repo;
+  GtkBuilder *ui;
+};
+
+EditorOneTimeReservation *editor_one_time_reservation_new(Repo *repo,
+                                                           GtkBuilder *ui) {
+  EditorOneTimeReservation *this = malloc(sizeof(EditorOneTimeReservation));
+  this->repo = repo;
+  this->ui = ui;
+  return this;
+}
+
+void one_time_reservation_refresh(EditorOneTimeReservation *this) {
+  GObject *one_time_reservation =
+      gtk_builder_get_object(this->ui, "one-time-reservation");
+  remove_all_gtk_children(GTK_CONTAINER(one_time_reservation));
+  editor_one_time_reservation_show(this);
+  gtk_widget_show_all(GTK_WIDGET(one_time_reservation));
+}
+
+typedef struct {
+  EditorOneTimeReservation *this;
+  bool empty;
+  ID id;
+} EditRequest;
+
+static EditRequest *prepare_edit(EditorOneTimeReservation *this, bool empty,
+                                 ID id) {
+  EditRequest *req = malloc(sizeof(EditRequest));
+  req->this = this;
+  req->empty = empty;
+  req->id = id;
+  return req;
+}
+
+static void on_edit(GtkWidget *sender, gpointer user_data) {
+  (void)sender;
+  EditRequest *req = (EditRequest *)user_data;
+
+  OneTimeReservation r = {
+      .item = INVALID_ID,
+      .type = Reservation,
+      .start = 0,
+      .end = 0,
+      .description = 0,
+  };
+  char *desc;
+  if (!req->empty) {
+    repo_get(req->this->repo, TableOneTimeReservation, req->id, &r);
+    repo_string_get(req->this->repo, r.description, &desc);
+  } else {
+    req->id = repo_len(req->this->repo, TableOneTimeReservation);
+    desc = g_strdup("");
+    r.description = repo_string_len(req->this->repo);
+    r.start = timestamp_now();
+    r.end = timestamp_now();
+  }
+
+  PreparedEditDialog d = editor_edit_dialog_prepare(TableOneTimeReservation);
+  GtkBuilder *ui = d.ui;
+  GtkDialog *dialog = d.dialog;
+  GtkGrid *grid = GTK_GRID(gtk_builder_get_object(ui, "grid"));
+
+  GtkWidget *start_label = GTK_WIDGET(gtk_label_new("Od:"));
+  gtk_grid_attach(grid, start_label, 0, 0, 1, 1);
+  GtkWidget *end_label = GTK_WIDGET(gtk_label_new("Do:"));
+  gtk_grid_attach(grid, end_label, 0, 1, 1, 1);
+  GtkWidget *description_label = GTK_WIDGET(gtk_label_new("Opis:"));
+  gtk_grid_attach(grid, description_label, 0, 2, 1, 1);
+
+  GtkButton *start_button = GTK_BUTTON(gtk_button_new_with_label(""));
+  Datepicker *start =
+      datepicker_new(start_button, r.start, NULL, NULL);
+  gtk_grid_attach(grid, GTK_WIDGET(start_button), 1, 0, 1, 1);
+
+  GtkButton *end_button = GTK_BUTTON(gtk_button_new_with_label(""));
+  Datepicker *end =
+      datepicker_new(end_button, r.end, NULL, NULL);
+  gtk_grid_attach(grid, GTK_WIDGET(end_button), 1, 1, 1, 1);
+
+  GtkTextView *description_text_view = GTK_TEXT_VIEW(gtk_text_view_new());
+  GtkTextBuffer *buf =
+      gtk_text_view_get_buffer(GTK_TEXT_VIEW(description_text_view));
+  gtk_text_buffer_insert_at_cursor(buf, desc, -1);
+  free(desc);
+  gtk_grid_attach(grid, GTK_WIDGET(description_text_view), 1, 2, 1, 1);
+  gtk_widget_set_hexpand(GTK_WIDGET(description_text_view), true);
+  gtk_widget_set_vexpand(GTK_WIDGET(description_text_view), true);
+
+  gtk_widget_show_all(GTK_WIDGET(dialog));
+
+  while (true) {
+    int result = gtk_dialog_run(dialog);
+    if (result != GTK_RESPONSE_OK)
+      break;
+
+    // TODO: HM
+
+    r.start = datepicker_read(start);
+    r.end = datepicker_read(end);
+    if (r.start >= r.end) {
+      validation_error("Data startu nie może być wcześniejsza niż data końca!");
+      continue;
+    }
+
+    GtkTextIter start, end;
+    gtk_text_buffer_get_bounds(buf, &start, &end);
+    desc = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
+
+    if (!ask_for_item_one_time(&r, req->id, req->this->repo))
+      continue;
+
+    repo_string_set(req->this->repo, r.description, &desc);
+    repo_set(req->this->repo, TableOneTimeReservation, req->id, &r);
+    one_time_reservation_refresh(req->this);
+    break;
+  }
+  gtk_widget_destroy(GTK_WIDGET(dialog));
+}
+
+typedef struct {
+  EditorOneTimeReservation *this;
+  ID id;
+} DelRequest;
+
+static DelRequest *prepare_del(EditorOneTimeReservation *this, ID id) {
+  DelRequest *req = malloc(sizeof(DelRequest));
+  req->this = this;
+  req->id = id;
+  return req;
+}
+
+static void on_del(GtkWidget *sender, gpointer user_data) {
+  (void)sender;
+  DelRequest *req = (DelRequest *)user_data;
+
+  OneTimeReservation r;
+  repo_get(req->this->repo, TableOneTimeReservation, req->id, &r);
+  char *name = describe_one_time_reservation(&r);
+  if (editor_removal_dialog(TableOneTimeReservation, name)) {
+    repo_string_del(req->this->repo, r.description);
+    repo_del(req->this->repo, TableOneTimeReservation, req->id);
+    one_time_reservation_refresh(req->this);
+  }
+  free(name);
+}
+
+void editor_one_time_reservation_show(EditorOneTimeReservation *this) {
+  GObject *one_time_reservation =
+      gtk_builder_get_object(this->ui, "one-time-reservation");
+
+  GtkWidget *new = gtk_button_new_with_label("Nowy");
+  g_signal_connect(G_OBJECT(new), "clicked", G_CALLBACK(on_edit),
+                   prepare_edit(this, true, 0));
+  gtk_box_pack_end(GTK_BOX(one_time_reservation), new, 0, 0, 0);
+
+  ID max = repo_len(this->repo, TableOneTimeReservation);
+  for (ID i = 0; i < max; i++) {
+    OneTimeReservation r;
+    repo_get(this->repo, TableOneTimeReservation, i, &r);
+
+    GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+
+    char *name = describe_one_time_reservation(&r);
+    GtkWidget *label = gtk_label_new(name);
+    free(name);
+    gtk_box_pack_start(GTK_BOX(box), label, 1, 0, 0);
+
+    GtkWidget *edit = gtk_button_new_with_label("Edytuj");
+    g_signal_connect(G_OBJECT(edit), "clicked", G_CALLBACK(on_edit),
+                     prepare_edit(this, false, i));
+    gtk_box_pack_start(GTK_BOX(box), edit, 0, 0, 0);
+
+    GtkWidget *del = gtk_button_new_with_label("Usuń");
+    g_signal_connect(G_OBJECT(del), "clicked", G_CALLBACK(on_del),
+                     prepare_del(this, i));
+    gtk_box_pack_start(GTK_BOX(box), del, 0, 0, 0);
+
+    gtk_box_pack_start(GTK_BOX(one_time_reservation), box, 0, 0, 0);
+  }
+}

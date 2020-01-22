@@ -12,6 +12,7 @@ COMMON = Greeter.o RecentList.o
 COMMON += Editor.o EditorDialogs.o Datepicker.o
 COMMON += EditorSemester.o EditorEquipment.o
 COMMON += EditorPeriodicReservation.o
+COMMON += EditorOneTimeReservation.o
 COMMON += EditorReports.o
 COMMON += Repo.o RepoData.o RepoString.o
 COMMON += RepoLogic.o

@@ -5,6 +5,7 @@
 #include "EditorDialogs.h"
 #include "EditorEquipment.h"
 #include "EditorPeriodicReservation.h"
+#include "EditorOneTimeReservation.h"
 #include "EditorReports.h"
 #include "EditorSemester.h"
 #include "RepoData.h"
@@ -20,6 +21,7 @@ struct Editor {
   EditorSemester *semester;
   EditorEquipment *equipment;
   EditorPeriodicReservation *periodic_reservation;
+  EditorOneTimeReservation *one_time_reservation;
   EditorReports *reports;
 };
 
@@ -40,6 +42,8 @@ Editor *editor_new(char *path, RepoType repo_type) {
   this->equipment = editor_equipment_new(this->repo, this->ui);
   this->periodic_reservation =
       editor_periodic_reservation_new(this->repo, this->ui);
+  this->one_time_reservation =
+      editor_one_time_reservation_new(this->repo, this->ui);
   this->reports = editor_reports_new(this->repo, this->ui);
   return this;
 }
@@ -81,6 +85,7 @@ bool editor_start(Editor *this) {
   editor_semester_show(this->semester);
   editor_equipment_show(this->equipment);
   editor_periodic_reservation_show(this->periodic_reservation);
+  editor_one_time_reservation_show(this->one_time_reservation);
   editor_reports_show(this->reports);
 
   gtk_widget_show_all(GTK_WIDGET(this->window));
