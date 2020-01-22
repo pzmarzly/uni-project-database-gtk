@@ -19,7 +19,7 @@ void equipment(Repo *repo, EquipmentType type, char *name, char *description) {
   repo_set(repo, TableEquipment, id, &eq);
 }
 
-void periodic(Repo *repo, Day day, HourAndMinutes start, HourAndMinutes end,
+void periodic(Repo *repo, Day day, Hour start, Hour end,
               Timestamp active_since, Timestamp active_until,
               char *description) {
   ID id = repo_len(repo, TablePeriodicReservation);

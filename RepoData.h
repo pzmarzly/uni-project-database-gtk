@@ -6,16 +6,16 @@ Timestamp timestamp_now();
 Timestamp timestamp_midnight(Timestamp timestamp);
 Timestamp timestamp_today();
 
-HourAndMinutes timestamp_to_hm(Timestamp timestamp);
-Timestamp hm_to_timestamp(Timestamp midnight, HourAndMinutes hm);
+Hour timestamp_to_hour(Timestamp timestamp);
+Timestamp hour_to_timestamp(Timestamp midnight, Hour hour);
 
 GtkWidget *equipment_icon(EquipmentType type, unsigned size);
 char *removal_window_title(TableID type);
 char *editing_window_title(TableID type);
 
 char *day_str(Day day);
-char *hm_str(HourAndMinutes hm);
-HourAndMinutes hm_parse(const char *str);
+char *hour_str(Hour hour);
+Hour hour_parse(const char *str);
 char *timestamp_day_str(Timestamp timestamp);
 
 char *describe_periodic_reservation(Repo *repo, PeriodicReservation *r);

@@ -19,17 +19,33 @@ bool one_time_is_within_time_range(OneTimeReservation *res, Timestamp start,
   return true;
 }
 
-OneTimeReservation *reservations_for_time_period(Repo *repo, Timestamp start,
-                                                 Timestamp end) {
+int reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
+                                 OneTimeReservation **output) {
   ID max = repo_len(repo, TablePeriodicReservation);
-  for (ID i = 0; i < max; i++) {
-    PeriodicReservation res;
-    repo_get(repo, TablePeriodicReservation, i, &res);
-    if (periodic_active_is_within_time_range(&res, start, end)) {
-      // TODO: generate OneTimeReservation
-    }
-  }
-  return NULL;
+  int output_len = 0;
+  // for (ID i = 0; i < max; i++) {
+  //   PeriodicReservation res;
+  //   repo_get(repo, TablePeriodicReservation, i, &res);
+  //   if (periodic_active_is_within_time_range(&res, start, end))
+  //     output_len++;
+  // }
+  OneTimeReservation *arr = malloc(output_len * sizeof(OneTimeReservation));
+  // int arr_id = 0;
+  // for (ID i = 0; i < max; i++) {
+  //   PeriodicReservation res;
+  //   repo_get(repo, TablePeriodicReservation, i, &res);
+  //   if (periodic_active_is_within_time_range(&res, start, end)) {
+  //     // TODO: generate OneTimeReservation
+  //     arr[arr_id].item = res.item;
+  //     arr[arr_id].type = Reservation;
+  //     arr[arr_id].start = Reservation;
+  //     arr[arr_id].end = Reservation;
+  //     arr[arr_id].description = res.description;
+  //     arr_id++;
+  //   }
+  // }
+  *output = arr;
+  return output_len;
 }
 
 bool periodic_conflicts_with_periodic(PeriodicReservation *res1,
