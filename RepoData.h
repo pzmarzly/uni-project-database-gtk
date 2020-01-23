@@ -5,6 +5,7 @@
 Timestamp timestamp_now();
 Timestamp timestamp_midnight(Timestamp timestamp);
 Timestamp timestamp_today();
+Timestamp timestamp_add_week(Timestamp timestamp);
 
 Day timestamp_to_day(Timestamp timestamp);
 Hour timestamp_to_hour(Timestamp timestamp);

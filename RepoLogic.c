@@ -2,7 +2,7 @@
 #include "LinkedList.h"
 #include "RepoData.h"
 
-bool periodic_active_is_within_time_range(PeriodicReservation *per,
+bool periodic_is_active_within_time_range(PeriodicReservation *per,
                                           Timestamp start, Timestamp end) {
   if (per->active_until <= start)
     return false;
@@ -20,23 +20,41 @@ bool one_time_is_within_time_range(OneTimeReservation *ot, Timestamp start,
   return true;
 }
 
+/// Returns the timestamp of the start of the last reservation outside of the
+/// time range.
+Timestamp last_occurrence_before_time_range(PeriodicReservation *per,
+                                            Timestamp start) {
+  Timestamp last_before = start;
+  if (timestamp_to_day(start) == per->day) {
+    if (timestamp_to_hour(start) < per->end) {
+      // Reservation will happen today, so the previous one happened a week ago.
+      // We go back by 6 days.
+      last_before -= 6 * 24 * 60 * 60;
+    }
+  }
+  while (timestamp_to_day(last_before) != per->day) {
+    last_before -= 24 * 60 * 60;
+  }
+  return hour_to_timestamp(timestamp_midnight(last_before), per->start);
+}
+
 void periodic_generate_within_time_range(PeriodicReservation *per,
                                          Timestamp start, Timestamp end,
-                                         LinkedList *ot_list_destination) {
-  if (!periodic_active_is_within_time_range(per, start, end))
+                                         LinkedList *ot_list) {
+  if (!periodic_is_active_within_time_range(per, start, end))
     return;
-  Timestamp last_occurrence_before = start;
-  if (timestamp_to_day(last_occurrence_before) == per->day) {
-  }
-  // while (per->end >= last_occurrence_before)
+  Timestamp last_before = last_occurrence_before_time_range(per, start);
 
-  OneTimeReservation *ot = malloc(sizeof(OneTimeReservation));
-  ot->type = Reservation;
-  ot->item = per->item;
-  // ot->start = start;
-  // ot->end = end;
-  ot->description = per->description;
-  linked_list_add(ot_list_destination, ot);
+  for (Timestamp i = timestamp_add_week(last_before); i < end;
+       i = timestamp_add_week(i)) {
+    OneTimeReservation *ot = malloc(sizeof(OneTimeReservation));
+    ot->type = Reservation;
+    ot->item = per->item;
+    ot->start = i;
+    ot->end = hour_to_timestamp(timestamp_midnight(i), per->end);
+    ot->description = per->description;
+    linked_list_add(ot_list, ot);
+  }
 }
 
 /// You can filter the reservation by item ID by providing eq_id other than
@@ -74,12 +92,16 @@ bool one_time_conflicts_with_periodic(PeriodicReservation *per,
                                       OneTimeReservation *ot) {
   if (ot->item != per->item)
     return false;
-  // TODO: logic
-  return true;
+  LinkedList *ot_list = linked_list_new();
+  periodic_generate_within_time_range(per, ot->start, ot->end, ot_list);
+  OneTimeReservation *ots;
+  int amount = linked_list_into_array(ot_list, &ots);
+  free(ots);
+  return amount > 0;
 }
 
-bool periodic_slot_is_available(Repo *repo, PeriodicReservation *per, ID per_id,
-                                ID eq_id) {
+bool periodic_can_have_equipment_attached(Repo *repo, PeriodicReservation *per,
+                                          ID per_id, ID eq_id) {
   PeriodicReservation per1;
   memcpy(&per1, per, sizeof(PeriodicReservation));
   per1.item = eq_id;
@@ -91,7 +113,7 @@ bool periodic_slot_is_available(Repo *repo, PeriodicReservation *per, ID per_id,
 
     PeriodicReservation per2;
     repo_get(repo, TablePeriodicReservation, i, &per2);
-    if (!periodic_active_is_within_time_range(&per2, per1.active_since,
+    if (!periodic_is_active_within_time_range(&per2, per1.active_since,
                                               per1.active_until))
       continue;
 
@@ -113,7 +135,7 @@ bool periodic_slot_is_available(Repo *repo, PeriodicReservation *per, ID per_id,
   return true;
 }
 
-bool one_time_is_available(Repo *repo, OneTimeReservation *ot, ID ot_id,
-                           ID eq_id) {
+bool one_time_can_have_equipment_attached(Repo *repo, OneTimeReservation *ot,
+                                          ID ot_id, ID eq_id) {
   return true; // TODO: logic
 }

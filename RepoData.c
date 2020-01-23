@@ -4,27 +4,36 @@
 #include <string.h>
 
 Timestamp timestamp_now() {
-  GDateTime *time = g_date_time_new_now_utc();
-  Timestamp ret = g_date_time_to_unix(time);
-  g_date_time_unref(time);
+  GDateTime *utc_time = g_date_time_new_now_utc();
+  Timestamp ret = g_date_time_to_unix(utc_time);
+  g_date_time_unref(utc_time);
   return ret;
 }
 
 Timestamp timestamp_midnight(Timestamp timestamp) {
-  GDateTime *time = g_date_time_new_from_unix_utc(timestamp);
+  GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
   int year, month, day;
-  g_date_time_get_ymd(time, &year, &month, &day);
-  g_date_time_unref(time);
+  g_date_time_get_ymd(utc_time, &year, &month, &day);
+  g_date_time_unref(utc_time);
 
   GTimeZone *tz_utc = g_time_zone_new_utc();
-  time = g_date_time_new(tz_utc, year, month, day, 0, 0, 0);
-  Timestamp ret = g_date_time_to_unix(time);
-  g_date_time_unref(time);
+  utc_time = g_date_time_new(tz_utc, year, month, day, 0, 0, 0);
+  Timestamp ret = g_date_time_to_unix(utc_time);
+  g_date_time_unref(utc_time);
 
   return ret;
 }
 
 Timestamp timestamp_today() { return timestamp_midnight(timestamp_now()); }
+
+Timestamp timestamp_add_week(Timestamp timestamp) {
+  GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
+  GDateTime *utc_time_plus_week = g_date_time_add_weeks(utc_time, 1);
+  Timestamp ret = g_date_time_to_unix(utc_time_plus_week);
+  g_date_time_unref(utc_time);
+  g_date_time_unref(utc_time_plus_week);
+  return ret;
+}
 
 Day timestamp_to_day(Timestamp timestamp) {
   GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
@@ -48,6 +57,10 @@ Hour timestamp_to_hour(Timestamp timestamp) {
 }
 
 Timestamp hour_to_timestamp(Timestamp midnight, Hour hour) {
+  if (midnight != timestamp_midnight(midnight)) {
+    printf("Warning: midnight provided to hour_to_timestamp is not midnight\n");
+    midnight = timestamp_midnight(midnight);
+  }
   GDateTime *time = g_date_time_new_from_unix_utc(midnight);
   int year, month, day;
   g_date_time_get_ymd(time, &year, &month, &day);
