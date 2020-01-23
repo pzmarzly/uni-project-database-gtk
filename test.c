@@ -1,11 +1,23 @@
 #include "Repo.h"
+#include "RepoData.h"
+#include "RepoLogic.h"
 #include "RepoString.h"
+#include "RepoGenerate.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void clean() { system("rm -f test-repo.db || true"); }
+// RepoLogic.h tests
+
+void detects_conflicts() {
+  clean();
+  Repo *r =
+      repo_open("./test-repo.db", true, timestamp(2020, 1, 1, 0),
+                timestamp(2021, 1, 1, 0));
+}
+
+// Repo.h tests
 
 void opens_and_overwrites() {
   clean();
@@ -141,11 +153,13 @@ void handles_data_large() {
 }
 
 int main() {
+  detects_conflicts();
+
   opens_and_overwrites();
   handles_data();
   handles_strings();
 
-  handles_data_large();
+  // handles_data_large();
 
   printf("OK\n");
   clean();

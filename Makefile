@@ -15,7 +15,7 @@ COMMON += EditorPeriodicReservation.o
 COMMON += EditorOneTimeReservation.o
 COMMON += EditorReports.o
 COMMON += Repo.o RepoData.o RepoString.o
-COMMON += RepoLogic.o
+COMMON += RepoLogic.o RepoGenerate.o
 COMMON += About.o Utils.o LinkedList.o
 COMMON += dialog/Dialogs.o
 
