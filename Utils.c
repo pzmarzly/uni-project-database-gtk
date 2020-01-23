@@ -8,6 +8,7 @@
 void error(char *msg) {
   printf("ERROR: %s\n", msg);
   dialog_info("Błąd krytyczny", msg);
+  exit(1);
 }
 
 _Noreturn void bug(char *msg) {
