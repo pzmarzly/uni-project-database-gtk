@@ -126,6 +126,8 @@ Hour hour_parse(const char *str) {
   unsigned char h;
   if (sscanf(str, "%hhu", &h) != 1)
     return HOUR_INVALID;
+  if (h > 23)
+    return HOUR_INVALID;
   return h;
 }
 
