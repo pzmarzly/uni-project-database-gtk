@@ -151,7 +151,7 @@ char *describe_periodic_reservation(Repo *repo, PeriodicReservation *r) {
   char *end = hour_str(r->end);
   char *since = timestamp_day_str(r->active_since);
   char *until = timestamp_day_str(r->active_until);
-  sprintf(ret, "%s, %s %s-%s (od %s do %s)", equipment_str(repo, r->item),
+  sprintf(ret, "%s, %s %s:00-%s:00 (od %s do %s)", equipment_str(repo, r->item),
           day_str(r->day), start, end, since, until);
   free(until);
   free(since);
@@ -167,7 +167,7 @@ char *describe_one_time_reservation(Repo *repo, OneTimeReservation *r) {
   char *day = timestamp_day_str(timestamp_midnight(r->start));
   char *start = hour_str(timestamp_to_hour(r->start));
   char *end = hour_str(timestamp_to_hour(r->end));
-  sprintf(ret, "%s, %s od %s do %s", equipment_str(repo, r->item), day, start,
+  sprintf(ret, "%s, %s od %s:00 do %s:00", equipment_str(repo, r->item), day, start,
           end);
   free(end);
   free(start);
