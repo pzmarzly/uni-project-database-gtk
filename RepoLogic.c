@@ -27,7 +27,6 @@ void periodic_generate_within_time_range(PeriodicReservation *per,
     return;
   Timestamp last_occurrence_before = start;
   if (timestamp_to_day(last_occurrence_before) == per->day) {
-
   }
   // while (per->end >= last_occurrence_before)
 
@@ -104,7 +103,8 @@ bool periodic_slot_is_available(Repo *repo, PeriodicReservation *per, ID per_id,
   for (ID i = 0; i < one_time_max; i++) {
     OneTimeReservation ot;
     repo_get(repo, TableOneTimeReservation, i, &ot);
-    if (!one_time_is_within_time_range(&ot, per1.active_since, per1.active_until))
+    if (!one_time_is_within_time_range(&ot, per1.active_since,
+                                       per1.active_until))
       continue;
 
     if (one_time_conflicts_with_periodic(&per1, &ot))
