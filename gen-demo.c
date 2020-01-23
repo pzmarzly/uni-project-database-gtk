@@ -19,9 +19,8 @@ void equipment(Repo *repo, EquipmentType type, char *name, char *description) {
   repo_set(repo, TableEquipment, id, &eq);
 }
 
-void periodic(Repo *repo, Day day, Hour start, Hour end,
-              Timestamp active_since, Timestamp active_until,
-              char *description) {
+void periodic(Repo *repo, Day day, Hour start, Hour end, Timestamp active_since,
+              Timestamp active_until, char *description) {
   ID id = repo_len(repo, TablePeriodicReservation);
   ID string_id = repo_string_len(repo);
   repo_string_set(repo, string_id, &description);
@@ -52,10 +51,10 @@ void generate_demo() {
   Timestamp start_of_2020 = 1577836800;
   Timestamp start_of_2021 = 1609459200;
 
-  periodic(r, Monday, 9 * 60, 12 * 60, start_of_2020, start_of_2021,
+  periodic(r, Monday, 9, 12, start_of_2020, start_of_2021,
            "Rezerwacja poniedziałek 9-12.");
-  periodic(r, Wednesday, 12 * 60 + 15, 14 * 60, start_of_2020, start_of_2021,
-           "Rezerwacja środa 12:15-14:00.");
+  periodic(r, Wednesday, 12, 14, start_of_2020, start_of_2021,
+           "Rezerwacja środa 12-14.");
 
   repo_close(r);
 }
