@@ -95,7 +95,8 @@ bool one_time_conflicts_with_periodic(PeriodicReservation *per,
   LinkedList *ot_list = linked_list_new();
   periodic_generate_within_time_range(per, ot->start, ot->end, ot_list);
   OneTimeReservation *ots;
-  int amount = linked_list_into_array(ot_list, &ots);
+  int amount = linked_list_into_array(ot_list, sizeof(OneTimeReservation),
+                                      (void **)&ots);
   free(ots);
   return amount > 0;
 }
