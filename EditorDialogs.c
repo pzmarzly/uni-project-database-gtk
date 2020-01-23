@@ -2,6 +2,7 @@
 #include "Datepicker.h"
 #include "RepoData.h"
 #include "RepoLogic.h"
+#include <stdlib.h>
 
 PreparedEditDialog editor_edit_dialog_prepare(TableID type) {
   return dialog_edit(editing_window_title(type));

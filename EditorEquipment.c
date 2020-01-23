@@ -5,8 +5,8 @@
 #include "RepoData.h"
 #include "RepoString.h"
 #include "Utils.h"
-#include <gtk/gtk.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 struct EditorEquipment {
   Repo *repo;

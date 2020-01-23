@@ -173,24 +173,24 @@ static Position calc_position(Repo *repo, TableID table, ID id) {
       size = sizeof(StringFragment);
     position +=
         sizeof(StringMetadata) * repo->header.table_size[TableStringMetadata];
-    __attribute__((fallthrough));
+    /* fall through */
   case TableStringMetadata:
     if (!size)
       size = sizeof(StringMetadata);
     position += sizeof(OneTimeReservation) *
                 repo->header.table_size[TableOneTimeReservation];
-    __attribute__((fallthrough));
+    /* fall through */
   case TableOneTimeReservation:
     if (!size)
       size = sizeof(OneTimeReservation);
     position += sizeof(PeriodicReservation) *
                 repo->header.table_size[TablePeriodicReservation];
-    __attribute__((fallthrough));
+    /* fall through */
   case TablePeriodicReservation:
     if (!size)
       size = sizeof(PeriodicReservation);
     position += sizeof(Equipment) * repo->header.table_size[TableEquipment];
-    __attribute__((fallthrough));
+    /* fall through */
   case TableEquipment:
     if (!size)
       size = sizeof(Equipment);

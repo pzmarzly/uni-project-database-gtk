@@ -4,6 +4,7 @@
 #include "Editor.h"
 #include "Greeter.h"
 #include "Utils.h"
+#include <string.h>
 
 // No CLI options provided.
 int nothing() {

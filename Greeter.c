@@ -7,6 +7,7 @@
 #include "RecentList.h"
 #include "Utils.h"
 #include <gtk/gtk.h>
+#include <stdlib.h>
 #include <string.h>
 
 struct Greeter {

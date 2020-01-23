@@ -1,5 +1,7 @@
 #include "Dialogs.h"
 #include "../Utils.h"
+#include <stdlib.h>
+#include <string.h>
 
 void dialog_info(char *title, char *text) {
   GtkBuilder *ui = get_builder("dialog/Info.glade");

@@ -1,6 +1,7 @@
 #include "Datepicker.h"
 #include "RepoData.h"
 #include "dialog/Dialogs.h"
+#include <stdlib.h>
 
 typedef void (*callback)(Timestamp, void *);
 

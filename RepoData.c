@@ -1,5 +1,7 @@
 #include "RepoData.h"
 #include "Utils.h"
+#include <stdlib.h>
+#include <string.h>
 
 Timestamp timestamp_now() {
   GDateTime *time = g_date_time_new_now_utc();

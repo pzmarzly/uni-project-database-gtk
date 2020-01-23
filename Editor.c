@@ -10,6 +10,8 @@
 #include "EditorSemester.h"
 #include "RepoData.h"
 #include "Utils.h"
+#include <stdlib.h>
+#include <string.h>
 
 struct Editor {
   GtkBuilder *ui;
