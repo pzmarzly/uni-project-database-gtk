@@ -6,6 +6,7 @@ Timestamp timestamp_now();
 Timestamp timestamp_midnight(Timestamp timestamp);
 Timestamp timestamp_today();
 
+Day timestamp_to_day(Timestamp timestamp);
 Hour timestamp_to_hour(Timestamp timestamp);
 Timestamp hour_to_timestamp(Timestamp midnight, Hour hour);
 

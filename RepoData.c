@@ -26,6 +26,17 @@ Timestamp timestamp_midnight(Timestamp timestamp) {
 
 Timestamp timestamp_today() { return timestamp_midnight(timestamp_now()); }
 
+Day timestamp_to_day(Timestamp timestamp) {
+  GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
+  GTimeZone *tz_local = g_time_zone_new_local();
+  GDateTime *time = g_date_time_to_timezone(utc_time, tz_local);
+  // TODO: think about timezones
+  int ret = g_date_time_get_day_of_week(time) - 1;
+  g_date_time_unref(time);
+  g_date_time_unref(utc_time);
+  return ret;
+}
+
 Hour timestamp_to_hour(Timestamp timestamp) {
   GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
   GTimeZone *tz_local = g_time_zone_new_local();
