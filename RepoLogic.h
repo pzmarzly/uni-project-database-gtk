@@ -1,6 +1,6 @@
 #pragma once
-#include "Repo.h"
 #include "LinkedList.h"
+#include "Repo.h"
 
 Timestamp last_occurrence_before_time_range(PeriodicReservation *per,
                                             Timestamp start);

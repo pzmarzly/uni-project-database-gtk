@@ -1,5 +1,4 @@
 full text search or property search
-performance is irrelevant
 
 repo_del -> repo_force_del
 
@@ -10,6 +9,7 @@ WONT-FIXes:
 - proper classes https://developer.gnome.org/gtk-tutorial/stable/x2200.html
 - faster enlarge_table algorithm
 - faster search
+- translation via gettext
 
 Pre-release checklist:
 [ ] GTK+ 3.20 -> 3.18
