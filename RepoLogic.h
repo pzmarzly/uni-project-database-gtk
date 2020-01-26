@@ -17,4 +17,5 @@ bool one_time_conflicts_with_periodic(PeriodicReservation *per,
 
 bool periodic_can_have_equipment_attached(Repo *repo, PeriodicReservation *per,
                                           ID per_id, ID eq_id);
-bool one_time_can_have_equipment_attached(Repo *repo, OneTimeReservation *ot, ID eq_id);
+bool one_time_can_have_equipment_attached(Repo *repo, OneTimeReservation *ot,
+                                          ID eq_id);

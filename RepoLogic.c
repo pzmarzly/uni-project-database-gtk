@@ -147,9 +147,11 @@ bool periodic_can_have_equipment_attached(Repo *repo, PeriodicReservation *per,
   return true;
 }
 
-bool one_time_can_have_equipment_attached(Repo *repo, OneTimeReservation *ot, ID eq_id) {
+bool one_time_can_have_equipment_attached(Repo *repo, OneTimeReservation *ot,
+                                          ID eq_id) {
   OneTimeReservation *ots;
-  int amount = reservations_for_time_period(repo, ot->start, ot->end, &ots, eq_id);
+  int amount =
+      reservations_for_time_period(repo, ot->start, ot->end, &ots, eq_id);
   free(ots);
   // Return true if no other reservation exists.
   return amount == 0;
