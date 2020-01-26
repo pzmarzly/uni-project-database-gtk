@@ -101,6 +101,7 @@ bool ask_for_item_periodic(PeriodicReservation *per, ID per_id, Repo *repo) {
 }
 
 bool ask_for_item_one_time(OneTimeReservation *ot, ID ot_id, Repo *repo) {
+  (void)ot_id; // unused, but kept for consistency with ask_for_item_periodic
   ot->item = INVALID_ID;
 
   PreparedEditDialog d = dialog_edit("Wybierz przedmiot");
