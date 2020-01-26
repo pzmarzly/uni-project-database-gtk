@@ -79,9 +79,9 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
   GtkWidget *day_label = GTK_WIDGET(gtk_label_new("Dzień:"));
   gtk_grid_attach(grid, day_label, 0, 0, 1, 1);
-  GtkWidget *start_label = GTK_WIDGET(gtk_label_new("Godzina rozpoczęcia [HH:MM]:"));
+  GtkWidget *start_label = GTK_WIDGET(gtk_label_new("Czas rozpoczęcia [HH:MM]:"));
   gtk_grid_attach(grid, start_label, 0, 1, 1, 1);
-  GtkWidget *end_label = GTK_WIDGET(gtk_label_new("Godzina zakończenia [HH:MM]:"));
+  GtkWidget *end_label = GTK_WIDGET(gtk_label_new("Czas zakończenia [HH:MM]:"));
   gtk_grid_attach(grid, end_label, 0, 2, 1, 1);
   GtkWidget *active_since_label = GTK_WIDGET(gtk_label_new("Aktywne od:"));
   gtk_grid_attach(grid, active_since_label, 0, 3, 1, 1);
@@ -99,12 +99,12 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
   GtkEntry *start_entry = GTK_ENTRY(gtk_entry_new());
   gtk_entry_set_text(start_entry, hm_str(r.start));
-  gtk_entry_set_max_length(start_entry, 3);
+  gtk_entry_set_max_length(start_entry, 5);
   gtk_grid_attach(grid, GTK_WIDGET(start_entry), 1, 1, 1, 1);
 
   GtkEntry *end_entry = GTK_ENTRY(gtk_entry_new());
   gtk_entry_set_text(end_entry, hm_str(r.end));
-  gtk_entry_set_max_length(end_entry, 3);
+  gtk_entry_set_max_length(end_entry, 5);
   gtk_grid_attach(grid, GTK_WIDGET(end_entry), 1, 2, 1, 1);
 
   GtkButton *active_since_button = GTK_BUTTON(gtk_button_new_with_label(""));

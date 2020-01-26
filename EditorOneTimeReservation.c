@@ -89,12 +89,12 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
   GtkEntry *start_entry = GTK_ENTRY(gtk_entry_new());
   gtk_entry_set_text(start_entry, hm_str(timestamp_to_hm(r.start)));
-  gtk_entry_set_max_length(start_entry, 2);
+  gtk_entry_set_max_length(start_entry, 5);
   gtk_grid_attach(grid, GTK_WIDGET(start_entry), 1, 1, 1, 1);
 
   GtkEntry *end_entry = GTK_ENTRY(gtk_entry_new());
   gtk_entry_set_text(end_entry, hm_str(timestamp_to_hm(r.end)));
-  gtk_entry_set_max_length(end_entry, 2);
+  gtk_entry_set_max_length(end_entry, 5);
   gtk_grid_attach(grid, GTK_WIDGET(end_entry), 1, 2, 1, 1);
 
   GtkTextView *description_text_view = GTK_TEXT_VIEW(gtk_text_view_new());
