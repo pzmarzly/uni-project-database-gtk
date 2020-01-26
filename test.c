@@ -11,7 +11,7 @@
 // RepoLogic.h tests
 
 void detects_conflicts() {
-  clean();
+  rm_test();
   Repo *r =
       repo_open("./test-repo.db", true, timestamp(2020, 1, 1, 0),
                 timestamp(2021, 1, 1, 0));
@@ -20,7 +20,7 @@ void detects_conflicts() {
 // Repo.h tests
 
 void opens_and_overwrites() {
-  clean();
+  rm_test();
   Repo *r = repo_open("./test-repo.db", true, 1, 2);
   assert(r != NULL);
   assert(repo_get_semester_start(r) == 1);
@@ -36,7 +36,7 @@ void opens_and_overwrites() {
 }
 
 void handles_data() {
-  clean();
+  rm_test();
   Repo *r = repo_open("./test-repo.db", true, 0, 1);
   Equipment eq = {1, {0}, 3};
   repo_set(r, TableEquipment, 0, &eq);
@@ -68,7 +68,7 @@ void handles_data() {
 }
 
 void handles_strings() {
-  clean();
+  rm_test();
   Repo *r = repo_open("./test-repo.db", true, 0, 1);
   char *c1 = "Troche tekstu.", *c2 = "Drugi tekst.", *c3 = "Trzeci tekst.";
   char *str = c1;
@@ -104,7 +104,7 @@ void handles_strings() {
 }
 
 void handles_data_large() {
-  clean();
+  rm_test();
   Repo *r = repo_open("./test-repo.db", true, 0, 1);
   Equipment eq = {1, {0}, 3};
 
@@ -152,16 +152,25 @@ void handles_data_large() {
   repo_close(r);
 }
 
-int main() {
+void small_tests() {
   detects_conflicts();
 
   opens_and_overwrites();
   handles_data();
   handles_strings();
 
+  printf("small tests OK\n");
+}
+
+void large_tests() {
   // handles_data_large();
 
-  printf("OK\n");
-  clean();
+  printf("large tests OK\n");
+}
+
+int main() {
+  small_tests();
+  large_tests();
+  rm_test();
   return 0;
 }

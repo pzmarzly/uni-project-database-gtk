@@ -5,7 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void clean() { system("rm -f demo.db || true"); }
+void rm_test() { system("rm -f test.db || true"); }
+void rm_demo() { system("rm -f demo.db || true"); }
 
 Timestamp timestamp(int year, int month, int day, unsigned char hour) {
   GTimeZone *tz_utc = g_time_zone_new_utc();

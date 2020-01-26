@@ -1,15 +1,21 @@
 full text search or property search
 performance is irrelevant
 
+repo_del -> repo_force_del
+
 instrukcja dla uzytkownika i dokumentacja programisty
 error handling
 
-proper classes https://developer.gnome.org/gtk-tutorial/stable/x2200.html
-better enlarge_table
+WONT-FIXes:
+- proper classes https://developer.gnome.org/gtk-tutorial/stable/x2200.html
+- faster enlarge_table algorithm
+- faster search
 
-ensure all headers have pragma once
-ensure all files have a signature
-static functions everywhere
-comments ending with dot
-free and unref
-styling: star in casts ((ref *)user_data) and function return types (ref* function)
+Pre-release checklist:
+[ ] GTK+ 3.20 -> 3.18
+[ ] ensure all headers have pragma once
+[ ] ensure all files have a signature
+[ ] static functions everywhere
+[ ] comments end with a dot
+[ ] free and unref
+[ ] formatting
