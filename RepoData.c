@@ -61,7 +61,7 @@ Hour timestamp_to_hour(Timestamp timestamp) {
 
 Timestamp hour_to_timestamp(Timestamp midnight, Hour hour) {
   if (midnight != timestamp_midnight(midnight)) {
-    printf("Warning: midnight provided to hour_to_timestamp is not midnight\n");
+    warn("midnight provided to hour_to_timestamp is not midnight");
     midnight = timestamp_midnight(midnight);
   }
   GDateTime *time = g_date_time_new_from_unix_utc(midnight);
@@ -150,7 +150,7 @@ Hour hour_parse(const char *str) {
 char *timestamp_day_str(Timestamp timestamp) {
   GDateTime *time = g_date_time_new_from_unix_utc(timestamp);
   if (time == NULL) {
-    printf("Niepoprawna data\n");
+    warn("invalid date format");
     return g_strdup("BŁĄD");
   }
   return g_date_time_format(time, "%d. %b %Y");

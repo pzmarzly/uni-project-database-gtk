@@ -37,12 +37,12 @@ static bool load_header(Repo *repo) {
   if (read != 1)
     return false;
   if (repo->header.semester_start >= repo->header.semester_end) {
-    printf("Uszkodzony nagłówek\n");
+    warn("semester_start >= semester_end");
     return false;
   }
   for (size_t i = 0; i < TABLE_NUM; i++) {
     if (repo->header.table_used[i] > repo->header.table_size[i]) {
-      printf("Uszkodzony nagłówek (rozmiar sekcji)\n");
+      warn("invalid section sizes");
       return false;
     }
   }
@@ -69,7 +69,7 @@ static Repo *repo_open_internal(Repo *repo, RepoType type, Timestamp start,
                                 Timestamp end) {
   repo->file = fopen(repo->path, type == RepoNew ? "w+b" : "r+b");
   if (repo->file == NULL) {
-    printf("Nie udało się otworzyć %s, kod %d\n", repo->path, errno);
+    warn("failed to open %s, code %d", repo->path, errno);
     free(repo);
     return NULL;
   }
@@ -142,7 +142,7 @@ static void enlarge_table(Repo *repo) {
   char *old_path = repo->path;
   char *temp = temp_file();
   if (temp == NULL) {
-    printf("temp_file zwróciło błąd.\n");
+    warn("temp_file strategy failed");
     temp = malloc(strlen(old_path) + 2);
     strcpy(temp, old_path);
     strcat(temp, "~");

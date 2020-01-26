@@ -4,6 +4,7 @@
 
 _Noreturn void error(char *msg);
 _Noreturn void bug(char *msg);
+void warn(const char *format, ...);
 
 // File handling helper functions
 bool file_exists(const char *path);

@@ -1,4 +1,5 @@
 #include "RecentList.h"
+#include "Utils.h"
 #include <errno.h>
 #include <gtk/gtk.h>
 #include <stdio.h>
@@ -17,7 +18,7 @@ static void create_program_folder() {
   strcat(path, PROGRAM_FOLDER);
   if (mkdir(path, 0700) == -1) {
     if (errno != EEXIST) {
-      printf("failed to create directory %s, code %d\n", path, errno);
+      warn("failed to create directory %s, code %d", path, errno);
       return;
     }
   }

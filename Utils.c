@@ -17,6 +17,16 @@ _Noreturn void bug(char *msg) {
   exit(1);
 }
 
+// https://stackoverflow.com/q/1516370
+void warn(const char *format, ...) {
+  va_list args;
+  printf("WARNING: ");
+  va_start(args, format);
+  vprintf(format, args);
+  va_end(args);
+  printf("\n");
+}
+
 bool file_exists(const char *path) {
   FILE *f = fopen(path, "rb");
   bool exists = f != NULL;
