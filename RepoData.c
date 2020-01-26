@@ -48,20 +48,21 @@ Day timestamp_to_day(Timestamp timestamp) {
   return ret;
 }
 
-Hour timestamp_to_hour(Timestamp timestamp) {
+HourAndMinutes timestamp_to_hm(Timestamp timestamp) {
   GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
   GTimeZone *tz_local = g_time_zone_new_local();
   GDateTime *time = g_date_time_to_timezone(utc_time, tz_local);
   int hour = g_date_time_get_hour(time);
+  int minute = g_date_time_get_minute(time);
   g_date_time_unref(time);
   g_date_time_unref(utc_time);
   g_time_zone_unref(tz_local);
-  return hour;
+  return hour * 60 + minute;
 }
 
-Timestamp hour_to_timestamp(Timestamp midnight, Hour hour) {
+Timestamp hm_to_timestamp(Timestamp midnight, HourAndMinutes hm) {
   if (midnight != timestamp_midnight(midnight)) {
-    warn("midnight provided to hour_to_timestamp is not midnight");
+    warn("internal bug: midnight provided to hm_to_timestamp is not midnight");
     midnight = timestamp_midnight(midnight);
   }
   GDateTime *time = g_date_time_new_from_unix_utc(midnight);
@@ -69,7 +70,7 @@ Timestamp hour_to_timestamp(Timestamp midnight, Hour hour) {
   g_date_time_get_ymd(time, &year, &month, &day);
   g_date_time_unref(time);
 
-  time = g_date_time_new_local(year, month, day, hour, 0, 0);
+  time = g_date_time_new_local(year, month, day, hour / 60, minute % 60, 0);
   Timestamp ret = g_date_time_to_unix(time);
   g_date_time_unref(time);
   return ret;
@@ -132,19 +133,21 @@ char *day_str(Day day) {
   return "BŁĄD";
 }
 
-char *hour_str(Hour hour) {
-  char *ret = malloc(3);
-  sprintf(ret, "%02d", hour);
+char *hm_str(HourAndMinutes hm) {
+  char *ret = malloc(5);
+  sprintf(ret, "%02d:%02d", hm / 60, hm % 60);
   return ret;
 }
 
-Hour hour_parse(const char *str) {
-  unsigned char h;
-  if (sscanf(str, "%hhu", &h) != 1)
-    return HOUR_INVALID;
+HourAndMinutes hour_parse(const char *str) {
+  unsigned char h, m;
+  if (sscanf(str, "%hhu:%hhu", &h, &m) != 1)
+    return HM_INVALID;
   if (h > 23)
-    return HOUR_INVALID;
-  return h;
+    return HM_INVALID;
+  if (m > 59)
+    return HM_INVALID;
+  return h * 60 + m;
 }
 
 char *timestamp_day_str(Timestamp timestamp) {
@@ -169,7 +172,7 @@ char *describe_periodic_reservation(Repo *repo, PeriodicReservation *r) {
   char *end = hour_str(r->end);
   char *since = timestamp_day_str(r->active_since);
   char *until = timestamp_day_str(r->active_until);
-  sprintf(ret, "%s, %s %s:00-%s:00 (od %s do %s)", equipment_str(repo, r->item),
+  sprintf(ret, "%s, %s %s-%s (od %s do %s)", equipment_str(repo, r->item),
           day_str(r->day), start, end, since, until);
   free(until);
   free(since);
@@ -185,7 +188,7 @@ char *describe_one_time_reservation(Repo *repo, OneTimeReservation *r) {
   char *day = timestamp_day_str(timestamp_midnight(r->start));
   char *start = hour_str(timestamp_to_hour(r->start));
   char *end = hour_str(timestamp_to_hour(r->end));
-  sprintf(ret, "%s, %s od %s:00 do %s:00", equipment_str(repo, r->item), day,
+  sprintf(ret, "%s, %s od %s do %s", equipment_str(repo, r->item), day,
           start, end);
   free(end);
   free(start);

@@ -79,9 +79,9 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
   GtkWidget *day_label = GTK_WIDGET(gtk_label_new("Dzień:"));
   gtk_grid_attach(grid, day_label, 0, 0, 1, 1);
-  GtkWidget *start_label = GTK_WIDGET(gtk_label_new("Godzina rozpoczęcia:"));
+  GtkWidget *start_label = GTK_WIDGET(gtk_label_new("Godzina rozpoczęcia [HH:MM]:"));
   gtk_grid_attach(grid, start_label, 0, 1, 1, 1);
-  GtkWidget *end_label = GTK_WIDGET(gtk_label_new("Godzina zakończenia:"));
+  GtkWidget *end_label = GTK_WIDGET(gtk_label_new("Godzina zakończenia [HH:MM]:"));
   gtk_grid_attach(grid, end_label, 0, 2, 1, 1);
   GtkWidget *active_since_label = GTK_WIDGET(gtk_label_new("Aktywne od:"));
   gtk_grid_attach(grid, active_since_label, 0, 3, 1, 1);

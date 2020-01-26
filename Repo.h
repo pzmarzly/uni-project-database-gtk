@@ -2,9 +2,9 @@
 #include <stdbool.h>
 
 typedef unsigned long long int Timestamp;
-typedef unsigned char Hour;
-// Hour value that signalises an error.
-#define HOUR_INVALID 100
+typedef unsigned short HourAndMinutes;
+// HourAndMinutes value that signalises an error.
+#define HM_INVALID 3000
 typedef unsigned int ID;
 // UINT_MAX
 #define INVALID_ID 4294967295
