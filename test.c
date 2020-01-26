@@ -12,8 +12,8 @@
 
 void detects_conflicts() {
   rm_test();
-  Repo *r = repo_open("./test-repo.db", true, timestamp(2020, 1, 1, 0),
-                      timestamp(2021, 1, 1, 0));
+  Repo *r = repo_open("./test-repo.db", true, timestamp(2020, 1, 1, 0, 0),
+                      timestamp(2021, 1, 1, 0, 0));
 }
 
 // Repo.h tests

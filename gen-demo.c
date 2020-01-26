@@ -7,8 +7,8 @@
 
 void generate_demo() {
   rm_demo();
-  Timestamp start = timestamp(2020, 1, 1, 0);
-  Timestamp end = timestamp(2021, 1, 1, 0);
+  Timestamp start = timestamp(2020, 1, 1, 0, 0);
+  Timestamp end = timestamp(2021, 1, 1, 0, 0);
 
   Repo *r = repo_open("./demo.db", true, start, end);
 
@@ -20,8 +20,8 @@ void generate_demo() {
   add_equipment(r, Projector, "Ekran 51'", "Opis ekranu 51'.");
   add_equipment(r, Other, "Żółty pisak", "Opis żółtego pisaka.");
 
-  add_periodic(r, Monday, 9, 12, start, end, "Rezerwacja poniedziałek 9-12.");
-  add_periodic(r, Wednesday, 12, 14, start, end, "Rezerwacja środa 12-14.");
+  add_periodic(r, Monday, h(9), h(12), start, end, "Rezerwacja poniedziałek 9:00-12:00.");
+  add_periodic(r, Wednesday, h(12), h(14), start, end, "Rezerwacja środa 12:00-14:00.");
 
   repo_close(r);
 }
