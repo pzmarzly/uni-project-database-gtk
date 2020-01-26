@@ -2,7 +2,7 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
-void error(char *msg);
+_Noreturn void error(char *msg);
 _Noreturn void bug(char *msg);
 
 // File handling helper functions

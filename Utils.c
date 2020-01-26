@@ -5,7 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 
-void error(char *msg) {
+_Noreturn void error(char *msg) {
   printf("ERROR: %s\n", msg);
   dialog_info("Błąd krytyczny", msg);
   exit(1);
@@ -13,6 +13,7 @@ void error(char *msg) {
 
 _Noreturn void bug(char *msg) {
   printf("BUG: %s\n", msg);
+  dialog_info("Błąd wewnętrzny programu", msg);
   exit(1);
 }
 
