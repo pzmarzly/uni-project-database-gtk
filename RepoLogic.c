@@ -62,14 +62,25 @@ void periodic_generate_within_time_range(PeriodicReservation *per,
 int reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
                                  OneTimeReservation **ot_list_destination,
                                  ID eq_id) {
-  ID max = repo_len(repo, TablePeriodicReservation);
+  ID per_max = repo_len(repo, TablePeriodicReservation);
   LinkedList *list = linked_list_new();
-  for (ID i = 0; i < max; i++) {
+  for (ID i = 0; i < per_max; i++) {
     PeriodicReservation per;
     repo_get(repo, TablePeriodicReservation, i, &per);
     if (eq_id != INVALID_ID && eq_id != per.item)
       continue;
     periodic_generate_within_time_range(&per, start, end, list);
+  }
+  ID ot_max = repo_len(repo, TableOneTimeReservation);
+  for (ID i = 0; i < ot_max; i++) {
+    OneTimeReservation *ot = malloc(sizeof(OneTimeReservation));
+    repo_get(repo, TableOneTimeReservation, i, ot);
+    if (eq_id != INVALID_ID && eq_id != ot->item)
+      continue;
+    if (one_time_is_within_time_range(ot, start, end))
+      linked_list_add(list, ot);
+    else
+      free(ot);
   }
   return linked_list_into_array(list, sizeof(OneTimeReservation),
                                 (void **)ot_list_destination);
@@ -136,7 +147,10 @@ bool periodic_can_have_equipment_attached(Repo *repo, PeriodicReservation *per,
   return true;
 }
 
-bool one_time_can_have_equipment_attached(Repo *repo, OneTimeReservation *ot,
-                                          ID ot_id, ID eq_id) {
-  return true; // TODO: logic
+bool one_time_can_have_equipment_attached(Repo *repo, OneTimeReservation *ot, ID eq_id) {
+  OneTimeReservation *ots;
+  int amount = reservations_for_time_period(repo, ot->start, ot->end, &ots, eq_id);
+  free(ots);
+  // Return true if no other reservation exists.
+  return amount == 0;
 }

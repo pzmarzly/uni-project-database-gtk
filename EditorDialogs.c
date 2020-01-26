@@ -53,7 +53,9 @@ bool ask_for_semester_dates(Timestamp *start, Timestamp *end) {
   return true;
 }
 
-bool ask_for_item_periodic(PeriodicReservation *res, ID res_id, Repo *repo) {
+bool ask_for_item_periodic(PeriodicReservation *per, ID per_id, Repo *repo) {
+  per->item = INVALID_ID;
+
   PreparedEditDialog d = dialog_edit("Wybierz przedmiot");
   GtkBuilder *ui = d.ui;
   GtkDialog *dialog = d.dialog;
@@ -70,14 +72,13 @@ bool ask_for_item_periodic(PeriodicReservation *res, ID res_id, Repo *repo) {
   for (ID i = 0; i < eq_len; i++) {
     Equipment eq;
     repo_get(repo, TableEquipment, i, &eq);
-    if (i != INVALID_ID && i != res->item)
-      if (!periodic_can_have_equipment_attached(repo, res, res_id, i))
-        continue;
+    if (!periodic_can_have_equipment_attached(repo, per, per_id, i))
+      continue;
     mappings[mapping_len++] = i;
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(item_combo_box), NULL,
                               eq.name);
   }
-  gtk_combo_box_set_active(GTK_COMBO_BOX(item_combo_box), res->item);
+  gtk_combo_box_set_active(GTK_COMBO_BOX(item_combo_box), per->item);
   gtk_grid_attach(grid, GTK_WIDGET(item_combo_box), 0, 1, 1, 1);
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
@@ -94,12 +95,14 @@ bool ask_for_item_periodic(PeriodicReservation *res, ID res_id, Repo *repo) {
       break;
   }
 
-  res->item = mappings[item];
+  per->item = mappings[item];
   gtk_widget_destroy(GTK_WIDGET(dialog));
   return true;
 }
 
-bool ask_for_item_one_time(OneTimeReservation *res, ID res_id, Repo *repo) {
+bool ask_for_item_one_time(OneTimeReservation *ot, ID ot_id, Repo *repo) {
+  ot->item = INVALID_ID;
+
   PreparedEditDialog d = dialog_edit("Wybierz przedmiot");
   GtkBuilder *ui = d.ui;
   GtkDialog *dialog = d.dialog;
@@ -116,14 +119,13 @@ bool ask_for_item_one_time(OneTimeReservation *res, ID res_id, Repo *repo) {
   for (ID i = 0; i < eq_len; i++) {
     Equipment eq;
     repo_get(repo, TableEquipment, i, &eq);
-    if (i != INVALID_ID && i != res->item)
-      if (!one_time_can_have_equipment_attached(repo, res, res_id, i))
-        continue;
+    if (!one_time_can_have_equipment_attached(repo, ot, i))
+      continue;
     mappings[mapping_len++] = i;
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(item_combo_box), NULL,
                               eq.name);
   }
-  gtk_combo_box_set_active(GTK_COMBO_BOX(item_combo_box), res->item);
+  gtk_combo_box_set_active(GTK_COMBO_BOX(item_combo_box), ot->item);
   gtk_grid_attach(grid, GTK_WIDGET(item_combo_box), 0, 1, 1, 1);
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
@@ -140,7 +142,7 @@ bool ask_for_item_one_time(OneTimeReservation *res, ID res_id, Repo *repo) {
       break;
   }
 
-  res->item = mappings[item];
+  ot->item = mappings[item];
   gtk_widget_destroy(GTK_WIDGET(dialog));
   return true;
 }
