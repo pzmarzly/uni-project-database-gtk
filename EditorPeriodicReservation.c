@@ -98,12 +98,12 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   gtk_grid_attach(grid, GTK_WIDGET(day_combo_box), 1, 0, 1, 1);
 
   GtkEntry *start_entry = GTK_ENTRY(gtk_entry_new());
-  gtk_entry_set_text(start_entry, hour_str(r.start));
+  gtk_entry_set_text(start_entry, hm_str(r.start));
   gtk_entry_set_max_length(start_entry, 3);
   gtk_grid_attach(grid, GTK_WIDGET(start_entry), 1, 1, 1, 1);
 
   GtkEntry *end_entry = GTK_ENTRY(gtk_entry_new());
-  gtk_entry_set_text(end_entry, hour_str(r.end));
+  gtk_entry_set_text(end_entry, hm_str(r.end));
   gtk_entry_set_max_length(end_entry, 3);
   gtk_grid_attach(grid, GTK_WIDGET(end_entry), 1, 2, 1, 1);
 
@@ -136,10 +136,10 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
     r.day = gtk_combo_box_get_active(day_combo_box);
 
     const char *start_str = gtk_entry_get_text(start_entry);
-    r.start = hour_parse(start_str);
+    r.start = hm_parse(start_str);
     const char *end_str = gtk_entry_get_text(end_entry);
-    r.end = hour_parse(end_str);
-    if (r.start == HOUR_INVALID || r.end == HOUR_INVALID) {
+    r.end = hm_parse(end_str);
+    if (r.start == HM_INVALID || r.end == HM_INVALID) {
       validation_error("Niepoprawny format godziny!");
       continue;
     }

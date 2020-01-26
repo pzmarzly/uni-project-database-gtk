@@ -84,8 +84,8 @@ typedef enum {
 typedef struct {
   ID item;
   Day day;
-  Hour start;
-  Hour end;
+  HourAndMinutes start;
+  HourAndMinutes end;
   Timestamp active_since;
   Timestamp active_until;
   ID description;

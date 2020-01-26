@@ -8,9 +8,9 @@
 void rm_test() { system("rm -f test.db || true"); }
 void rm_demo() { system("rm -f demo.db || true"); }
 
-Timestamp timestamp(int year, int month, int day, unsigned char hour) {
+Timestamp timestamp(int year, int month, int day, unsigned char hm) {
   GTimeZone *tz_utc = g_time_zone_new_utc();
-  GDateTime *utc_time = g_date_time_new(tz_utc, year, month, day, hour, 0, 0);
+  GDateTime *utc_time = g_date_time_new(tz_utc, year, month, day, hm, 0, 0);
   Timestamp ret = g_date_time_to_unix(utc_time);
   g_date_time_unref(utc_time);
   return ret;
@@ -30,7 +30,7 @@ void add_equipment(Repo *repo, EquipmentType type, char *name,
   repo_set(repo, TableEquipment, id, &eq);
 }
 
-void add_periodic(Repo *repo, Day day, Hour start, Hour end,
+void add_periodic(Repo *repo, Day day, HourAndMinutes start, HourAndMinutes end,
                   Timestamp active_since, Timestamp active_until,
                   char *description) {
   ID id = repo_len(repo, TablePeriodicReservation);

@@ -26,7 +26,7 @@ Timestamp last_occurrence_before_time_range(PeriodicReservation *per,
                                             Timestamp start) {
   Timestamp last_before = start;
   if (timestamp_to_day(start) == per->day) {
-    if (timestamp_to_hour(start) < per->end) {
+    if (timestamp_to_hm(start) < per->end) {
       // Reservation will happen today, so the previous one happened a week ago.
       // We go back by 6 days.
       last_before -= 6 * 24 * 60 * 60;
@@ -35,7 +35,7 @@ Timestamp last_occurrence_before_time_range(PeriodicReservation *per,
   while (timestamp_to_day(last_before) != per->day) {
     last_before -= 24 * 60 * 60;
   }
-  return hour_to_timestamp(timestamp_midnight(last_before), per->start);
+  return hm_to_timestamp(timestamp_midnight(last_before), per->start);
 }
 
 void periodic_generate_within_time_range(PeriodicReservation *per,
@@ -51,7 +51,7 @@ void periodic_generate_within_time_range(PeriodicReservation *per,
     ot->type = Reservation;
     ot->item = per->item;
     ot->start = i;
-    ot->end = hour_to_timestamp(timestamp_midnight(i), per->end);
+    ot->end = hm_to_timestamp(timestamp_midnight(i), per->end);
     ot->description = per->description;
     linked_list_add(ot_list, ot);
   }

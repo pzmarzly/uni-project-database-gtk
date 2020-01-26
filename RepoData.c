@@ -70,7 +70,7 @@ Timestamp hm_to_timestamp(Timestamp midnight, HourAndMinutes hm) {
   g_date_time_get_ymd(time, &year, &month, &day);
   g_date_time_unref(time);
 
-  time = g_date_time_new_local(year, month, day, hour / 60, minute % 60, 0);
+  time = g_date_time_new_local(year, month, day, hm / 60, hm % 60, 0);
   Timestamp ret = g_date_time_to_unix(time);
   g_date_time_unref(time);
   return ret;
@@ -134,12 +134,12 @@ char *day_str(Day day) {
 }
 
 char *hm_str(HourAndMinutes hm) {
-  char *ret = malloc(5);
+  char *ret = malloc(6);
   sprintf(ret, "%02d:%02d", hm / 60, hm % 60);
   return ret;
 }
 
-HourAndMinutes hour_parse(const char *str) {
+HourAndMinutes hm_parse(const char *str) {
   unsigned char h, m;
   if (sscanf(str, "%hhu:%hhu", &h, &m) != 1)
     return HM_INVALID;
@@ -168,8 +168,8 @@ char *equipment_str(Repo *repo, ID equipment_id) {
 char *describe_periodic_reservation(Repo *repo, PeriodicReservation *r) {
   char *ret = malloc(1024);
 
-  char *start = hour_str(r->start);
-  char *end = hour_str(r->end);
+  char *start = hm_str(r->start);
+  char *end = hm_str(r->end);
   char *since = timestamp_day_str(r->active_since);
   char *until = timestamp_day_str(r->active_until);
   sprintf(ret, "%s, %s %s-%s (od %s do %s)", equipment_str(repo, r->item),
@@ -186,8 +186,8 @@ char *describe_one_time_reservation(Repo *repo, OneTimeReservation *r) {
   char *ret = malloc(1024);
 
   char *day = timestamp_day_str(timestamp_midnight(r->start));
-  char *start = hour_str(timestamp_to_hour(r->start));
-  char *end = hour_str(timestamp_to_hour(r->end));
+  char *start = hm_str(timestamp_to_hm(r->start));
+  char *end = hm_str(timestamp_to_hm(r->end));
   sprintf(ret, "%s, %s od %s do %s", equipment_str(repo, r->item), day,
           start, end);
   free(end);

@@ -88,12 +88,12 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   gtk_grid_attach(grid, GTK_WIDGET(date_button), 1, 0, 1, 1);
 
   GtkEntry *start_entry = GTK_ENTRY(gtk_entry_new());
-  gtk_entry_set_text(start_entry, hour_str(timestamp_to_hour(r.start)));
+  gtk_entry_set_text(start_entry, hm_str(timestamp_to_hm(r.start)));
   gtk_entry_set_max_length(start_entry, 2);
   gtk_grid_attach(grid, GTK_WIDGET(start_entry), 1, 1, 1, 1);
 
   GtkEntry *end_entry = GTK_ENTRY(gtk_entry_new());
-  gtk_entry_set_text(end_entry, hour_str(timestamp_to_hour(r.end)));
+  gtk_entry_set_text(end_entry, hm_str(timestamp_to_hm(r.end)));
   gtk_entry_set_max_length(end_entry, 2);
   gtk_grid_attach(grid, GTK_WIDGET(end_entry), 1, 2, 1, 1);
 
@@ -116,16 +116,16 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
     Timestamp day = datepicker_read(date);
 
     const char *start_str = gtk_entry_get_text(start_entry);
-    Hour start_hour = hour_parse(start_str);
+    HourAndMinutes start_hm = hm_parse(start_str);
     const char *end_str = gtk_entry_get_text(end_entry);
-    Hour end_hour = hour_parse(end_str);
-    if (start_hour == HOUR_INVALID || end_hour == HOUR_INVALID) {
+    HourAndMinutes end_hm = hm_parse(end_str);
+    if (start_hm == HM_INVALID || end_hm == HM_INVALID) {
       validation_error("Niepoprawny format godziny!");
       continue;
     }
 
-    r.start = hour_to_timestamp(day, start_hour);
-    r.end = hour_to_timestamp(day, end_hour);
+    r.start = hm_to_timestamp(day, start_hm);
+    r.end = hm_to_timestamp(day, end_hm);
 
     if (r.start >= r.end) {
       validation_error(
