@@ -20,6 +20,7 @@ Timestamp timestamp_midnight(Timestamp timestamp) {
   utc_time = g_date_time_new(tz_utc, year, month, day, 0, 0, 0);
   Timestamp ret = g_date_time_to_unix(utc_time);
   g_date_time_unref(utc_time);
+  g_time_zone_unref(tz_utc);
 
   return ret;
 }
@@ -43,6 +44,7 @@ Day timestamp_to_day(Timestamp timestamp) {
   int ret = g_date_time_get_day_of_week(time) - 1;
   g_date_time_unref(time);
   g_date_time_unref(utc_time);
+  g_time_zone_unref(tz_local);
   return ret;
 }
 
@@ -53,6 +55,7 @@ Hour timestamp_to_hour(Timestamp timestamp) {
   int hour = g_date_time_get_hour(time);
   g_date_time_unref(time);
   g_date_time_unref(utc_time);
+  g_time_zone_unref(tz_local);
   return hour;
 }
 
