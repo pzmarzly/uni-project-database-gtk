@@ -57,6 +57,18 @@ static void load_editor(LoadEditorRequest *req) {
     RecentList *recent_list = recent_list_load();
     recent_list_del_all_equal(recent_list, req->path);
     recent_list_save(recent_list);
+
+    // Re-open the greeter to refresh the recent list.
+    Greeter *greeter = greeter_new();
+    greeter_start(greeter);
+
+    // Close the current window.
+    greeter_set_quit_on_destroy(req->this, false);
+    greeter_set_quit_on_destroy(greeter, true);
+    gtk_widget_destroy(GTK_WIDGET(req->this->window));
+
+    free(req->path);
+    free(req);
     return;
   }
 
