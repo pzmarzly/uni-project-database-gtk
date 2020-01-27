@@ -54,12 +54,16 @@ static LoadEditorRequest *prepare_load(Greeter *this, char *path,
 static void load_editor(LoadEditorRequest *req) {
   Editor *editor = editor_new(req->path, req->repo_type);
   if (!editor_start(editor)) {
+    RecentList *recent_list = recent_list_load();
+    recent_list_del_all_equal(recent_list, req->path);
+    recent_list_save(recent_list);
     return;
   }
 
   if (req->repo_type != RepoDemo) {
     RecentList *recent_list = recent_list_load();
     recent_list_push(recent_list, req->path);
+    recent_list_save(recent_list);
   }
 
   greeter_set_quit_on_destroy(req->this, false);

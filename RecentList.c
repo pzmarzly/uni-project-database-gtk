@@ -78,7 +78,7 @@ void recent_list_close(RecentList *r) {
   free(r);
 }
 
-static void recent_list_save(RecentList *r) {
+void recent_list_save(RecentList *r) {
   FILE *fp = open_recent_list_file("wb");
   if (fp == NULL)
     return;
@@ -109,7 +109,6 @@ void recent_list_push(RecentList *r, char *path) {
   r->paths[0] = new_element;
   if (r->items < MAX_RECENT)
     r->items++;
-  recent_list_save(r);
 }
 
 void recent_list_del_all_equal(RecentList *r, char *path) {

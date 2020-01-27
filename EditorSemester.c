@@ -74,6 +74,7 @@ static void do_save_as(EditorSemester *this, bool start_fresh) {
 
     RecentList *recent_list = recent_list_load();
     recent_list_push(recent_list, path);
+    recent_list_save(recent_list);
 
     gtk_widget_destroy(dialog);
 
