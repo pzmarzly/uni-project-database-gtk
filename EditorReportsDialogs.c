@@ -15,6 +15,16 @@ int one_time_chronological_order(const void* ot1, const void* ot2) {
 
 void dialog_week_summary(Repo *repo, Timestamp week_start) {
     Timestamp week_end = timestamp_week_start(week_start + 8 * 24 * 60 * 60);
+
+    GtkTextBuffer *buf = gtk_text_buffer_new(NULL);
+    gtk_text_buffer_insert_at_cursor(buf, "Rezerwacje w tygodniu ", -1);
+    char *week_start_str = timestamp_day_str(week_start);
+    char *week_end_str = timestamp_day_str(week_end);
+    gtk_text_buffer_insert_at_cursor(buf, week_start_str, -1);
+    gtk_text_buffer_insert_at_cursor(buf, " - ", -1);
+    gtk_text_buffer_insert_at_cursor(buf, week_end_str, -1);
+    gtk_text_buffer_insert_at_cursor(buf, ":\n\n", -1);
+
     OneTimeReservation *ot_list;
     int ot_list_len = reservations_for_time_period(repo, week_start, week_end, &ot_list, INVALID_ID);
     qsort(ot_list, ot_list_len, sizeof(OneTimeReservation), one_time_chronological_order);
@@ -24,7 +34,6 @@ void dialog_week_summary(Repo *repo, Timestamp week_start) {
     gtk_dialog_add_buttons(GTK_DIALOG(dialog), "OK", GTK_RESPONSE_YES, NULL);
 
     GObject *list = gtk_builder_get_object(ui, "list");
-    GtkTextBuffer *buf = gtk_text_buffer_new(NULL);
     for (int i = 0; i < ot_list_len; i++) {
         char *name = describe_one_time_reservation(repo, ot_list + i);
         gtk_text_buffer_insert_at_cursor(buf, name, -1);
@@ -40,6 +49,13 @@ void dialog_week_summary(Repo *repo, Timestamp week_start) {
 
 void dialog_available_summary(Repo *repo, Timestamp moment) {
     GtkTextBuffer *buf = gtk_text_buffer_new(NULL);
+    gtk_text_buffer_insert_at_cursor(buf, "Lista przedmiotów dostępnych ", -1);
+    char *day = timestamp_day_str(moment);
+    char *hm = hm_str(timestamp_to_hm(moment));
+    gtk_text_buffer_insert_at_cursor(buf, day, -1);
+    gtk_text_buffer_insert_at_cursor(buf, " ", -1);
+    gtk_text_buffer_insert_at_cursor(buf, hm, -1);
+    gtk_text_buffer_insert_at_cursor(buf, ":\n\n", -1);
 
     // We create a fake OneTimeReservation and search
     // for available items.
@@ -112,6 +128,7 @@ void dialog_availability_ranking(Repo *repo) {
     GObject *list = gtk_builder_get_object(ui, "list");
 
     GtkTextBuffer *buf = gtk_text_buffer_new(NULL);
+    gtk_text_buffer_insert_at_cursor(buf, "Łączna ilość godzin, przez które sprzęt był rezerwowany:\n\n", -1);
     for (ID i = 0; i < eq_list_len; i++) {
         gtk_text_buffer_insert_at_cursor(buf, eq_list[i].eq.name, -1);
         gtk_text_buffer_insert_at_cursor(buf, " - ", -1);

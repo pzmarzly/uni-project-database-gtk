@@ -11,7 +11,7 @@
     <property name="window_position">mouse</property>
     <property name="type_hint">dialog</property>
     <property name="icon_name">accessories-dictionary</property>
-    <property name="title">Raport: plan tygodnia</property>
+    <property name="title">Raport</property>
     <child>
       <placeholder/>
     </child>
