@@ -13,7 +13,7 @@ Pre-release checklist:
 [ ] GTK+ 3.20 -> 3.18
 [ ] widgets in forms have hexpand/vexpand
 [ ] ensure all headers have pragma once
-[ ] ensure all files have a signature
+[ ] ensure all files have a signature (fdfind -e c -e h -x head -n 1 | grep -v Paweł)
 [ ] static functions everywhere
 [ ] comments end with a dot
 [ ] free and unref

@@ -1,6 +1,3 @@
-// Paweł Zmarzły 314569
-// Projekt, grupa MPi śr 12-14
-
 #include "Greeter.h"
 #include "About.h"
 #include "Editor.h"
