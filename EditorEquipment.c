@@ -144,7 +144,7 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   repo_get(req->this->repo, TableEquipment, req->id, &e);
   if (editor_removal_dialog(TableEquipment, e.name)) {
     repo_string_del(req->this->repo, e.description);
-    repo_del(req->this->repo, TableEquipment, req->id);
+    repo_equipment_del(req->this->repo, TableEquipment, req->id);
     equipment_refresh(req->this);
   }
 }

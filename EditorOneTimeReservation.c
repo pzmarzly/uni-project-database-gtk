@@ -168,7 +168,7 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   char *name = describe_one_time_reservation(req->this->repo, &r);
   if (editor_removal_dialog(TableOneTimeReservation, name)) {
     repo_string_del(req->this->repo, r.description);
-    repo_del(req->this->repo, TableOneTimeReservation, req->id);
+    repo_one_time_del(req->this->repo, req->id);
     one_time_reservation_refresh(req->this);
   }
   free(name);

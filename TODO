@@ -1,4 +1,3 @@
-repo_del -> repo_force_del (IDs need to stay the same)
 reports
 periodic event cancellation, and maybe better view for one time reservations
 
@@ -18,3 +17,4 @@ Pre-release checklist:
 [ ] comments end with a dot
 [ ] free and unref
 [ ] formatting
+[ ] Ubuntu 16.04 compilation without warnings (https://stackoverflow.com/q/29883211)

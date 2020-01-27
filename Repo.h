@@ -115,6 +115,12 @@ typedef struct {
 
 void repo_get(Repo *repo, TableID table, ID id, void *dest);
 void repo_set(Repo *repo, TableID table, ID id, void *src);
-void repo_del(Repo *repo, TableID table, ID id);
-void repo_del_n(Repo *repo, TableID table, ID id, unsigned n);
+void repo_raw_del(Repo *repo, TableID table, ID id);
+void repo_raw_del_n(Repo *repo, TableID table, ID id, unsigned n);
 ID repo_len(Repo *repo, TableID table);
+
+// Deletion wrappers - required because objects have relations
+// that need to be deleted or fixed (if IDs change).
+void repo_equipment_del(Repo *repo, ID id);
+void repo_one_time_del(Repo *repo, ID id);
+void repo_periodic_del(Repo *repo, ID id);

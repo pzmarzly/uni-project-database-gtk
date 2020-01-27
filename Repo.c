@@ -233,11 +233,11 @@ void repo_set(Repo *repo, TableID table, ID id, void *src) {
   }
 }
 
-void repo_del(Repo *repo, TableID table, ID id) {
-  return repo_del_n(repo, table, id, 1);
+void repo_raw_del(Repo *repo, TableID table, ID id) {
+  return repo_raw_del_n(repo, table, id, 1);
 }
 
-void repo_del_n(Repo *repo, TableID table, ID id, unsigned n) {
+void repo_raw_del_n(Repo *repo, TableID table, ID id, unsigned n) {
   if (id + n > repo->header.table_used[table])
     error("Błąd usuwania - indeks poza tablicą.");
 
@@ -264,4 +264,48 @@ void repo_del_n(Repo *repo, TableID table, ID id, unsigned n) {
 
 ID repo_len(Repo *repo, TableID table) {
   return repo->header.table_used[table];
+}
+
+// Note: cyclic dependency in the functions below could be catastrophic.
+void repo_equipment_del(Repo *repo, ID id) {
+  // Remove and fix relations in TablePeriodicReservation.
+  int per_max = repo_len(repo, TablePeriodicReservation);
+  for (ID i = 0; i < per_max; i++) {
+    PeriodicReservation per;
+    repo_get(repo, TablePeriodicReservation, i, &per);
+    if (per.item == id) {
+      // Remove periodic reservations where item=id.
+      repo_periodic_del(repo, i);
+      i--;
+    } else if (per.item > id) {
+      // Decrease item in periodic reservations where item>id.
+      per.item--;
+      repo_set(repo, TablePeriodicReservation, i, &per);
+    }
+  }
+  // Remove and fix relations in TableOneTimeReservation.
+  int ot_max = repo_len(repo, TableOneTimeReservation);
+  for (ID i = 0; i < ot_max; i++) {
+    OneTimeReservation ot;
+    repo_get(repo, TableOneTimeReservation, i, &ot);
+    if (ot.item == id) {
+      // Remove one time reservations where item=id.
+      repo_one_time_del(repo, i);
+      i--;
+    } else if (ot.item > id) {
+      // Decrease item in one time reservations where item>id.
+      ot.item--;
+      repo_set(repo, TableOneTimeReservation, i, &ot);
+    }
+  }
+  // Now remove the equipment.
+  repo_raw_del(repo, TableEquipment, id);
+}
+
+void repo_one_time_del(Repo *repo, ID id) {
+  repo_raw_del(repo, TableOneTimeReservation, id);
+}
+
+void repo_periodic_del(Repo *repo, ID id) {
+  repo_raw_del(repo, TablePeriodicReservation, id);
 }

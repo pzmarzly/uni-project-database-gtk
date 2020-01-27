@@ -48,7 +48,7 @@ void handles_data() {
   repo_get(r, TableStringMetadata, 0, &str);
   assert(str.len == 5);
 
-  repo_del(r, TableStringMetadata, 0);
+  repo_raw_del(r, TableStringMetadata, 0);
   assert(repo_len(r, TableStringMetadata) == 0);
 
   assert(repo_len(r, TableEquipment) == 1);
@@ -107,7 +107,7 @@ void handles_data_large() {
 
   // Delete every second one.
   for (ID i = 0, deleted = 0; i < 1000; i += 2, deleted++) {
-    repo_del(r, TableEquipment, i - deleted);
+    repo_raw_del(r, TableEquipment, i - deleted);
   }
   assert(repo_len(r, TableEquipment) == 500);
 
@@ -127,7 +127,7 @@ void handles_data_large() {
   }
   assert(repo_len(r, TableEquipment) == 500);
 
-  repo_del_n(r, TableEquipment, 100, 100);
+  repo_raw_del_n(r, TableEquipment, 100, 100);
   assert(repo_len(r, TableEquipment) == 400);
   repo_close(r);
   r = repo_open("./test-repo.db", false, 0, 1);

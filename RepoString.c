@@ -47,7 +47,7 @@ void repo_string_del(Repo *repo, ID id) {
     repo_get(repo, TableStringMetadata, id, &metadata);
     if (metadata.len == 0)
       error("Błąd usuwania - tekst już usunięty.");
-    repo_del_n(repo, TableStringFragment, metadata.start, metadata.len);
+    repo_raw_del_n(repo, TableStringFragment, metadata.start, metadata.len);
 
     // Fix references to the moved area.
     for (ID i = 0; i < repo_string_len(repo); i++) {
