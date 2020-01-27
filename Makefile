@@ -22,27 +22,26 @@ COMMON += dialog/Dialogs.o
 wez-mnie-gtk: wez-mnie-gtk.o ${COMMON} demo.db
 	$(CC) $< ${COMMON} ${LDFLAGS} -o $@
 
+demo.db: gen-demo
+	./gen-demo
+
 test: test.o ${COMMON}
 	$(CC) $< ${COMMON} ${LDFLAGS} -o $@
 
 gen-demo: gen-demo.o ${COMMON}
 	$(CC) $< ${COMMON} ${LDFLAGS} -o $@
-demo.db: gen-demo
-	./gen-demo
 
 %.o: %.c
 	$(CC) ${CFLAGS} -c -MMD $< -o $@
 
-%.pdf: %.md
-	pandoc --pdf-engine=xelatex $< -o $@ \
-		-V geometry:"top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm"
-
-.PHONY: all fmt clean docs install
+.PHONY: default all fmt clean docs install
 fmt:
 	clang-format -i *.c *.h
 clean:
-	-rm -f wez-mnie-gtk test gen-demo *.o *.d *.pdf demo.db
-docs: DESIGN.pdf README.pdf
+	-rm -f wez-mnie-gtk test gen-demo *.o *.d demo.db
+	$(MAKE) -C docs clean
+docs:
+	$(MAKE) -C docs
 install: wez-mnie-gtk demo.db
 	install -d $(DESTDIR)/
 	install -m 755 wez-mnie-gtk $(DESTDIR)/
