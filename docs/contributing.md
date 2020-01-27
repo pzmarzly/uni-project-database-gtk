@@ -1,6 +1,32 @@
 # Poradnik rozwoju programu
 
-Wypożyczenia są nazywane w kodzie programu rezerwacjami (`Reservation`).
+## Pełny opis Makefile
+
+Do utrzymania stylu kodu użyty został `clang-format`.
+
+```bash
+make # buduje główny program `wez-mnie-gtk` i bazę `demo.db`
+make fmt # uruchamia `clang-format`
+make all # równoważne `make wez-mnie-gtk test`
+make clean # usuwa pliki utworzone przez `make all`
+
+make test # buduje program test
+./test # próbuje wykonać wszystkie testy
+
+# buduje pliki `.pdf` na podstawie plików `.md`, używając `pandoc` i `xelatex`
+make docs
+
+# kopiuje `wez-mnie-gtk` i używane przez niego pliki
+# do `DESTDIR` (domyślnie `./_install`)
+make install DESTDIR=./_install
+_install/wez-mnie-gtk # uruchamia program
+```
+
+Są 2 flagi pomocnicze - `DEBUG_REPO` i `DEBUG_ASAN`. Pierwsza z nich powoduje częstsze
+realokacje baz danych (w celu poszukiwania błędów powodujących uszkodzenie danych). Druga
+kompiluje program z flagami ułatwiającymi znajdywanie błędów pamięci (w tym Address SANitizer).
+
+Użycie: np. `make clean && make test DEBUG_REPO=1`
 
 ## Struktura projektu
 
@@ -33,6 +59,8 @@ Licencja ikon znajduje się również w AboutDialog.
 ```
 
 ## Konwencja nazewnicza
+
+Wypożyczenia są nazywane w kodzie programu rezerwacjami (`Reservation`).
 
 Funkcje prywatne - dowolne nazwy.
 

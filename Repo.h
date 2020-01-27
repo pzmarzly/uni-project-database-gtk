@@ -39,7 +39,7 @@ typedef struct {
 // Max length of a string fragment.
 #define STRING_FRAGMENT_MAX 255
 
-// Compile with `make clean test CFLAGS=-DDEBUG_REPO=1`
+// Compile with `make clean && make test DEBUG_REPO=1`
 // to test reallocations.
 #ifdef DEBUG_REPO
 #undef TABLE_SIZE_DEFAULT

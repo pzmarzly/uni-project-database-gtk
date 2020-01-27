@@ -1,12 +1,22 @@
 CC?=gcc
 DESTDIR?=./_install
 override CFLAGS+=-ggdb -std=c11 -xc -Wall -Wextra `pkg-config --cflags gtk+-3.0`
-override LDFLAGS+=-lm `pkg-config --libs gtk+-3.0` \
-	-fstack-protector-all -fsanitize=undefined \
-	-fsanitize=address -fno-omit-frame-pointer
+override LDFLAGS+=-lm `pkg-config --libs gtk+-3.0`
 
 default: wez-mnie-gtk
 all: wez-mnie-gtk test
+
+DEBUG_REPO?=0
+DEBUG_ASAN?=0
+
+ifneq ($(DEBUG_REPO),0)
+    override CFLAGS+=-DDEBUG_REPO=1
+endif
+
+ifneq ($(DEBUG_ASAN),0)
+    override LDFLAGS+=-fstack-protector-all -fsanitize=undefined \
+        -fsanitize=address -fno-omit-frame-pointer
+endif
 
 COMMON = Greeter.o RecentList.o
 COMMON += Editor.o EditorDialogs.o Datepicker.o

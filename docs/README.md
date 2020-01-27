@@ -29,25 +29,8 @@ Zawarty w pliku [contributing.md](contributing.md).
 
 Wymagania: GTK+ 3.18 wzwyż, GNU `make`, GNU `gcc`, `pkg-config`.
 
-Dla budowania plików `.pdf` także: `pandoc`, `xelatex`.
+Dla budowania plików `.pdf` także: `pandoc`, `texlive-xelatex` i `texlive-latex-recommended`.
 
-Do utrzymania stylu kodu użyty został `clang-format`.
-
-```bash
-make # buduje główny program `wez-mnie-gtk` i bazę `demo.db`
-./wez-mnie-gtk # uruchamia program
-make fmt # uruchamia `clang-format`
-make all # równoważne `make wez-mnie-gtk test`
-make clean # usuwa pliki utworzone przez `make all`
-
-make test # buduje program test
-./test # próbuje wykonać wszystkie testy
-
-# buduje pliki `.pdf` na podstawie plików `.md`, używając `pandoc` i `xelatex`
-make docs
-
-# kopiuje `wez-mnie-gtk` i używane przez niego pliki
-# do `DESTDIR` (domyślnie `./_install`)
-make install DESTDIR=./_install
-_install/wez-mnie-gtk # uruchamia program
-```
+Aby zbudować projekt, uruchom `make`. Program będzie można uruchomić za pomocą `./wez-mnie-gtk`,
+lub zainstalować do wybranego folderu używając `make install DESTDIR=folder` (jeśli `DESTDIR`
+nie zostanie podany, użyty zostanie katalog `./_install`).
