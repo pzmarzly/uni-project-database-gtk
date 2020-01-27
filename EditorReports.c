@@ -23,7 +23,7 @@ EditorReports *editor_reports_new(Editor *editor, Repo *repo, GtkBuilder *ui) {
   return this;
 }
 
-void week_clicked(GtkWidget *sender, gpointer user_data) {
+static void week_clicked(GtkWidget *sender, gpointer user_data) {
   (void)sender;
   EditorReports *this = (EditorReports *)user_data;
   Timestamp week_start;
@@ -32,7 +32,7 @@ void week_clicked(GtkWidget *sender, gpointer user_data) {
   dialog_week_summary(this->repo, week_start);
 }
 
-void available_clicked(GtkWidget *sender, gpointer user_data) {
+static void available_clicked(GtkWidget *sender, gpointer user_data) {
   (void)sender;
   EditorReports *this = (EditorReports *)user_data;
   Timestamp moment;
@@ -41,7 +41,7 @@ void available_clicked(GtkWidget *sender, gpointer user_data) {
   dialog_available_summary(this->repo, moment);
 }
 
-void availability_clicked(GtkWidget *sender, gpointer user_data) {
+static void availability_clicked(GtkWidget *sender, gpointer user_data) {
   (void)sender;
   EditorReports *this = (EditorReports *)user_data;
   dialog_availability_ranking(this->repo);

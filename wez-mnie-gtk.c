@@ -4,7 +4,7 @@
 #include <string.h>
 
 // No CLI options provided.
-int nothing() {
+static int nothing() {
   Greeter *greeter = greeter_new();
   greeter_set_quit_on_destroy(greeter, true);
   if (greeter_start(greeter))
@@ -13,7 +13,7 @@ int nothing() {
 }
 
 // A flag was specified.
-int flags(char *argv[]) {
+static int flags(char *argv[]) {
   if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
     printf("WeźMnie - system rezerwacji sprzętu\n");
     printf("Użycie: %s [-v|--version|-h|--help|FILE]\n", argv[0]);
@@ -29,7 +29,7 @@ int flags(char *argv[]) {
 }
 
 // Something else was provided - treat it as a file path.
-int file(char *argv[]) {
+static int file(char *argv[]) {
   // Open the editor directly.
   RepoType repo_type = file_exists(argv[1]) ? RepoOpen : RepoNew;
   Editor *editor = editor_new(argv[1], repo_type);

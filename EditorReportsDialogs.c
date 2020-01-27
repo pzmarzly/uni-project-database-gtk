@@ -5,7 +5,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
-int one_time_chronological_order(const void *ot1, const void *ot2) {
+static int one_time_chronological_order(const void *ot1, const void *ot2) {
   OneTimeReservation *a = (OneTimeReservation *)ot1;
   OneTimeReservation *b = (OneTimeReservation *)ot2;
   if (a->start < b->start)
@@ -101,7 +101,7 @@ typedef struct {
   float hours;
 } EquipmentStats;
 
-int equipment_usage_order(const void *s1, const void *s2) {
+static int equipment_usage_order(const void *s1, const void *s2) {
   EquipmentStats *a = (EquipmentStats *)s1;
   EquipmentStats *b = (EquipmentStats *)s2;
   if (a->hours < b->hours)

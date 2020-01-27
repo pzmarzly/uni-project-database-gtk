@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void generate_demo() {
+static void generate_demo() {
   rm_demo();
   Timestamp start = timestamp(2020, 1, 1, 0, 0);
   Timestamp end = timestamp(2021, 1, 1, 0, 0);

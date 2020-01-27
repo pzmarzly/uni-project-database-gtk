@@ -10,7 +10,7 @@
 
 // Repo.h tests
 
-void opens_and_overwrites() {
+static void opens_and_overwrites() {
   rm_test();
   Repo *r = repo_open("./test-repo.db", true, 1, 2);
   assert(r != NULL);
@@ -26,7 +26,7 @@ void opens_and_overwrites() {
   repo_close(r);
 }
 
-void handles_data() {
+static void handles_data() {
   rm_test();
   Repo *r = repo_open("./test-repo.db", true, 0, 1);
   Equipment eq = {1, {0}, 3};
@@ -58,7 +58,7 @@ void handles_data() {
   repo_close(r);
 }
 
-void handles_strings() {
+static void handles_strings() {
   rm_test();
   Repo *r = repo_open("./test-repo.db", true, 0, 1);
   char *c1 = "Troche tekstu.", *c2 = "Drugi tekst.", *c3 = "Trzeci tekst.";
@@ -94,7 +94,7 @@ void handles_strings() {
   repo_close(r);
 }
 
-void handles_data_large() {
+static void handles_data_large() {
   rm_test();
   Repo *r = repo_open("./test-repo.db", true, 0, 1);
   Equipment eq = {1, {0}, 3};
@@ -143,7 +143,7 @@ void handles_data_large() {
   repo_close(r);
 }
 
-void small_tests() {
+static void small_tests() {
   opens_and_overwrites();
   handles_data();
   handles_strings();
@@ -151,7 +151,7 @@ void small_tests() {
   printf("small tests OK\n");
 }
 
-void large_tests() {
+static void large_tests() {
   handles_data_large();
 
   printf("large tests OK\n");
