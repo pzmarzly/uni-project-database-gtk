@@ -1,5 +1,6 @@
 reports
 periodic event cancellation, and maybe better view for one time reservations
+at e.g. 00:15 timestamp_to_day is incorrect
 
 WONT-FIXes:
 - proper classes https://developer.gnome.org/gtk-tutorial/stable/x2200.html
@@ -11,6 +12,7 @@ WONT-FIXes:
 
 Pre-release checklist:
 [ ] GTK+ 3.20 -> 3.18
+[ ] widgets in forms have hexpand/vexpand
 [ ] ensure all headers have pragma once
 [ ] ensure all files have a signature
 [ ] static functions everywhere
