@@ -43,6 +43,7 @@ void dialog_week_summary(Repo *repo, Timestamp week_start) {
     gtk_text_buffer_insert_at_cursor(buf, name, -1);
     gtk_text_buffer_insert_at_cursor(buf, "\n", -1);
   }
+  free(ot_list);
   GtkWidget *text_view = gtk_text_view_new_with_buffer(buf);
   gtk_box_pack_start(GTK_BOX(list), text_view, 1, 1, 0);
 
@@ -145,6 +146,7 @@ void dialog_availability_ranking(Repo *repo) {
     gtk_text_buffer_insert_at_cursor(buf, hours, -1);
     gtk_text_buffer_insert_at_cursor(buf, " godzin\n", -1);
   }
+  free(eq_list);
   GtkWidget *text_view = gtk_text_view_new_with_buffer(buf);
   gtk_box_pack_start(GTK_BOX(list), text_view, 1, 1, 0);
 
