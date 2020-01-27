@@ -1,6 +1,6 @@
 CC?=gcc
 DESTDIR?=./_install
-override CFLAGS+=-ggdb -std=c11 -xc -Wall -Wextra `pkg-config --cflags gtk+-3.0`
+override CFLAGS+=-std=c11 -xc -Wall -Wextra `pkg-config --cflags gtk+-3.0`
 override LDFLAGS+=-lm `pkg-config --libs gtk+-3.0`
 
 default: wez-mnie-gtk
@@ -14,7 +14,7 @@ ifneq ($(DEBUG_REPO),0)
 endif
 
 ifneq ($(DEBUG_ASAN),0)
-    override LDFLAGS+=-fstack-protector-all -fsanitize=undefined \
+    override LDFLAGS+=-ggdb -fstack-protector-all -fsanitize=undefined \
         -fsanitize=address -fno-omit-frame-pointer
 endif
 
