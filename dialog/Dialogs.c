@@ -21,7 +21,7 @@ PreparedEditDialog dialog_edit(char *title) {
   GObject *dialog = gtk_builder_get_object(ui, "dialog");
   gtk_window_set_title(GTK_WINDOW(dialog), title);
   gtk_dialog_add_buttons(GTK_DIALOG(dialog), "Anuluj", GTK_RESPONSE_CANCEL,
-                         "Zapisz", GTK_RESPONSE_OK, NULL);
+                         "OK", GTK_RESPONSE_OK, NULL);
 
   PreparedEditDialog ret = {
       .ui = ui,
