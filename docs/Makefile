@@ -1,5 +1,5 @@
 default: all
-all: initial-project-description.pdf
+all: initial-project-description.pdf user-guide.pdf
 
 %.pdf: %.md
 	pandoc --pdf-engine=xelatex $< -o $@ \

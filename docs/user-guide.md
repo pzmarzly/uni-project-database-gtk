@@ -1,3 +1,8 @@
+---
+lang: pl
+papersize: a4
+---
+
 # Poradnik użytkownika
 
 ## Uruchamianie programu
@@ -18,7 +23,7 @@ Zmiany nie zostaną zapisane, chyba że zostanie kliknięty przycisk *Utwórz ko
 
 ## Okno edytora
 
-Okno edytora składa się z 5 kart.
+Okno edytora składa się z 5 kart. Zmiany zapisywane są automatycznie.
 
 ### *Semestr*
 
@@ -36,6 +41,14 @@ Umożliwia dodawanie, usuwanie i edycję sprzętu.
 
 Umożliwia dodawanie, usuwanie i edycję informacji o cotygodniowych (cyklicznych) rezerwacjach.
 
+W formularzu dodawania i edycji wybór sprzętu następuje po zatwierdzeniu dat.
+
 ### *Rezerwacje*
 
-TODO: napisać
+Umożliwia definiowanie, usuwanie i edycję rezerwacji, które występują tylko raz.
+
+### *Raporty*
+
+Umożliwia generowanie raportów w formie tekstowej.
+
+*Wskazówka*: Możesz zaznaczać i kopiować tekst raportów.

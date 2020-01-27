@@ -1,5 +1,3 @@
-periodic event cancellation, and maybe better view for one time reservations
-
 WONT-FIXes:
 - proper classes https://developer.gnome.org/gtk-tutorial/stable/x2200.html
 - faster enlarge_table algorithm
@@ -7,6 +5,9 @@ WONT-FIXes:
 - translation via gettext
 - handle corrupted files safely
 - full text search or property search
+- periodic reservations being timezone-aware
+- periodic event cancellation
+- better view for one time reservations
 
 Pre-release checklist:
 [ ] GTK+ 3.20 -> 3.18
