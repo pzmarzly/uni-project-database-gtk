@@ -10,22 +10,17 @@
 #include <string.h>
 
 struct EditorEquipment {
+  Editor *editor;
   Repo *repo;
   GtkBuilder *ui;
 };
 
-EditorEquipment *editor_equipment_new(Repo *repo, GtkBuilder *ui) {
+EditorEquipment *editor_equipment_new(Editor *editor, Repo *repo, GtkBuilder *ui) {
   EditorEquipment *this = malloc(sizeof(EditorEquipment));
+  this->editor = editor;
   this->repo = repo;
   this->ui = ui;
   return this;
-}
-
-void equipment_refresh(EditorEquipment *this) {
-  GObject *equipment = gtk_builder_get_object(this->ui, "equipment");
-  remove_all_gtk_children(GTK_CONTAINER(equipment));
-  editor_equipment_show(this);
-  gtk_widget_show_all(GTK_WIDGET(equipment));
 }
 
 typedef struct {
@@ -119,7 +114,7 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
     repo_string_set(req->this->repo, e.description, &desc);
     repo_set(req->this->repo, TableEquipment, req->id, &e);
-    equipment_refresh(req->this);
+    editor_refresh(req->this->editor);
     break;
   }
   gtk_widget_destroy(GTK_WIDGET(dialog));
@@ -146,12 +141,13 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   if (editor_removal_dialog(TableEquipment, e.name)) {
     repo_string_del(req->this->repo, e.description);
     repo_equipment_del(req->this->repo, req->id);
-    equipment_refresh(req->this);
+    editor_refresh(req->this->editor);
   }
 }
 
-void editor_equipment_show(EditorEquipment *this) {
+void editor_equipment_repopulate(EditorEquipment *this) {
   GObject *equipment = gtk_builder_get_object(this->ui, "equipment");
+  remove_all_gtk_children(GTK_CONTAINER(equipment));
 
   GtkWidget *new = gtk_button_new_with_label("Nowy");
   g_signal_connect(G_OBJECT(new), "clicked", G_CALLBACK(on_edit),
@@ -184,4 +180,6 @@ void editor_equipment_show(EditorEquipment *this) {
 
     gtk_box_pack_start(GTK_BOX(equipment), box, 0, 0, 0);
   }
+
+  gtk_widget_show_all(GTK_WIDGET(equipment));
 }

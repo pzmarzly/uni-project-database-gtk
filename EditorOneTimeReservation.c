@@ -10,24 +10,18 @@
 #include <stdlib.h>
 
 struct EditorOneTimeReservation {
+  Editor *editor;
   Repo *repo;
   GtkBuilder *ui;
 };
 
-EditorOneTimeReservation *editor_one_time_reservation_new(Repo *repo,
+EditorOneTimeReservation *editor_one_time_reservation_new(Editor *editor, Repo *repo,
                                                           GtkBuilder *ui) {
   EditorOneTimeReservation *this = malloc(sizeof(EditorOneTimeReservation));
+  this->editor = editor;
   this->repo = repo;
   this->ui = ui;
   return this;
-}
-
-void one_time_reservation_refresh(EditorOneTimeReservation *this) {
-  GObject *one_time_reservation =
-      gtk_builder_get_object(this->ui, "one-time-reservation");
-  remove_all_gtk_children(GTK_CONTAINER(one_time_reservation));
-  editor_one_time_reservation_show(this);
-  gtk_widget_show_all(GTK_WIDGET(one_time_reservation));
 }
 
 typedef struct {
@@ -141,7 +135,7 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
     repo_string_set(req->this->repo, r.description, &desc);
     repo_set(req->this->repo, TableOneTimeReservation, req->id, &r);
-    one_time_reservation_refresh(req->this);
+    editor_refresh(req->this->editor);
     break;
   }
   gtk_widget_destroy(GTK_WIDGET(dialog));
@@ -169,14 +163,15 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   if (editor_removal_dialog(TableOneTimeReservation, name)) {
     repo_string_del(req->this->repo, r.description);
     repo_one_time_del(req->this->repo, req->id);
-    one_time_reservation_refresh(req->this);
+    editor_refresh(req->this->editor);
   }
   free(name);
 }
 
-void editor_one_time_reservation_show(EditorOneTimeReservation *this) {
+void editor_one_time_reservation_repopulate(EditorOneTimeReservation *this) {
   GObject *one_time_reservation =
       gtk_builder_get_object(this->ui, "one-time-reservation");
+  remove_all_gtk_children(GTK_CONTAINER(one_time_reservation));
 
   GtkWidget *new = gtk_button_new_with_label("Nowy");
   g_signal_connect(G_OBJECT(new), "clicked", G_CALLBACK(on_edit),
@@ -207,4 +202,6 @@ void editor_one_time_reservation_show(EditorOneTimeReservation *this) {
 
     gtk_box_pack_start(GTK_BOX(one_time_reservation), box, 0, 0, 0);
   }
+
+  gtk_widget_show_all(GTK_WIDGET(one_time_reservation));
 }

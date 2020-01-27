@@ -10,24 +10,18 @@
 #include <stdlib.h>
 
 struct EditorPeriodicReservation {
+  Editor *editor;
   Repo *repo;
   GtkBuilder *ui;
 };
 
-EditorPeriodicReservation *editor_periodic_reservation_new(Repo *repo,
+EditorPeriodicReservation *editor_periodic_reservation_new(Editor *editor, Repo *repo,
                                                            GtkBuilder *ui) {
   EditorPeriodicReservation *this = malloc(sizeof(EditorPeriodicReservation));
+  this->editor = editor;
   this->repo = repo;
   this->ui = ui;
   return this;
-}
-
-void periodic_reservation_refresh(EditorPeriodicReservation *this) {
-  GObject *periodic_reservation =
-      gtk_builder_get_object(this->ui, "periodic-reservation");
-  remove_all_gtk_children(GTK_CONTAINER(periodic_reservation));
-  editor_periodic_reservation_show(this);
-  gtk_widget_show_all(GTK_WIDGET(periodic_reservation));
 }
 
 typedef struct {
@@ -161,7 +155,7 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
     repo_string_set(req->this->repo, r.description, &desc);
     repo_set(req->this->repo, TablePeriodicReservation, req->id, &r);
-    periodic_reservation_refresh(req->this);
+    editor_refresh(req->this->editor);
     break;
   }
   gtk_widget_destroy(GTK_WIDGET(dialog));
@@ -189,14 +183,15 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   if (editor_removal_dialog(TablePeriodicReservation, name)) {
     repo_string_del(req->this->repo, r.description);
     repo_periodic_del(req->this->repo, req->id);
-    periodic_reservation_refresh(req->this);
+    editor_refresh(req->this->editor);
   }
   free(name);
 }
 
-void editor_periodic_reservation_show(EditorPeriodicReservation *this) {
+void editor_periodic_reservation_repopulate(EditorPeriodicReservation *this) {
   GObject *periodic_reservation =
       gtk_builder_get_object(this->ui, "periodic-reservation");
+  remove_all_gtk_children(GTK_CONTAINER(periodic_reservation));
 
   GtkWidget *new = gtk_button_new_with_label("Nowy");
   g_signal_connect(G_OBJECT(new), "clicked", G_CALLBACK(on_edit),
@@ -227,4 +222,6 @@ void editor_periodic_reservation_show(EditorPeriodicReservation *this) {
 
     gtk_box_pack_start(GTK_BOX(periodic_reservation), box, 0, 0, 0);
   }
+
+  gtk_widget_show_all(GTK_WIDGET(periodic_reservation));
 }

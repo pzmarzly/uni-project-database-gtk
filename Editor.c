@@ -40,13 +40,13 @@ Editor *editor_new(char *path, RepoType repo_type) {
       error("Nie wybrano daty!");
   this->repo = repo_open(path, repo_type, start, end);
   this->repo_path = g_strdup(path);
-  this->semester = editor_semester_new(this->repo, this->ui, this);
-  this->equipment = editor_equipment_new(this->repo, this->ui);
+  this->semester = editor_semester_new(this, this->repo, this->ui);
+  this->equipment = editor_equipment_new(this, this->repo, this->ui);
   this->periodic_reservation =
-      editor_periodic_reservation_new(this->repo, this->ui);
+      editor_periodic_reservation_new(this, this->repo, this->ui);
   this->one_time_reservation =
-      editor_one_time_reservation_new(this->repo, this->ui);
-  this->reports = editor_reports_new(this->repo, this->ui);
+      editor_one_time_reservation_new(this, this->repo, this->ui);
+  this->reports = editor_reports_new(this, this->repo, this->ui);
   return this;
 }
 
@@ -84,14 +84,18 @@ bool editor_start(Editor *this) {
     return false;
   }
 
-  editor_semester_show(this->semester);
-  editor_equipment_show(this->equipment);
-  editor_periodic_reservation_show(this->periodic_reservation);
-  editor_one_time_reservation_show(this->one_time_reservation);
-  editor_reports_show(this->reports);
+  editor_refresh(this);
 
   gtk_widget_show_all(GTK_WIDGET(this->window));
   GObject *notebook = gtk_builder_get_object(this->ui, "notebook");
   gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook), 0);
   return true;
+}
+
+void editor_refresh(Editor *this) {
+  editor_semester_repopulate(this->semester);
+  editor_equipment_repopulate(this->equipment);
+  editor_periodic_reservation_repopulate(this->periodic_reservation);
+  editor_one_time_reservation_repopulate(this->one_time_reservation);
+  editor_reports_repopulate(this->reports);
 }

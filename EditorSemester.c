@@ -9,19 +9,19 @@
 #include <string.h>
 
 struct EditorSemester {
+  Editor *editor;
   Repo *repo;
   GtkBuilder *ui;
   GtkWindow *parent;
-  Editor *editor;
 };
 
-EditorSemester *editor_semester_new(Repo *repo, GtkBuilder *ui,
-                                    Editor *editor) {
+EditorSemester *editor_semester_new(Editor *editor, Repo *repo, GtkBuilder *ui
+                                    ) {
   EditorSemester *this = malloc(sizeof(EditorSemester));
+  this->editor = editor;
   this->repo = repo;
   this->ui = ui;
   this->parent = GTK_WINDOW(gtk_builder_get_object(ui, "window"));
-  this->editor = editor;
   return this;
 }
 
@@ -113,7 +113,7 @@ static void on_export(GtkWidget *sender, gpointer user_data) {
     do_save_as(this, start_fresh);
 }
 
-void editor_semester_show(EditorSemester *this) {
+void editor_semester_repopulate(EditorSemester *this) {
   char *text;
 
   GObject *start = gtk_builder_get_object(this->ui, "semester-start");

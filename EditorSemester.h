@@ -4,5 +4,5 @@
 #include <gtk/gtk.h>
 
 typedef struct EditorSemester EditorSemester;
-EditorSemester *editor_semester_new(Repo *repo, GtkBuilder *ui, Editor *editor);
-void editor_semester_show(EditorSemester *this);
+EditorSemester *editor_semester_new(Editor *editor, Repo *repo, GtkBuilder *ui);
+void editor_semester_repopulate(EditorSemester *this);
