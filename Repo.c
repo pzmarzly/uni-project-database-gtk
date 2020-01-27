@@ -270,32 +270,34 @@ ID repo_len(Repo *repo, TableID table) {
 void repo_equipment_del(Repo *repo, ID id) {
   // Remove and fix relations in TablePeriodicReservation.
   ID per_max = repo_len(repo, TablePeriodicReservation);
+  ID per_deleted = 0;
   for (ID i = 0; i < per_max; i++) {
     PeriodicReservation per;
-    repo_get(repo, TablePeriodicReservation, i, &per);
+    repo_get(repo, TablePeriodicReservation, i - per_deleted, &per);
     if (per.item == id) {
       // Remove periodic reservations where item=id.
-      repo_periodic_del(repo, i);
-      i--;
+      repo_periodic_del(repo, i - per_deleted);
+      per_deleted++;
     } else if (per.item > id) {
       // Decrease item in periodic reservations where item>id.
       per.item--;
-      repo_set(repo, TablePeriodicReservation, i, &per);
+      repo_set(repo, TablePeriodicReservation, i - per_deleted, &per);
     }
   }
   // Remove and fix relations in TableOneTimeReservation.
   ID ot_max = repo_len(repo, TableOneTimeReservation);
+  ID ot_deleted = 0;
   for (ID i = 0; i < ot_max; i++) {
     OneTimeReservation ot;
-    repo_get(repo, TableOneTimeReservation, i, &ot);
+    repo_get(repo, TableOneTimeReservation, i - ot_deleted, &ot);
     if (ot.item == id) {
       // Remove one time reservations where item=id.
-      repo_one_time_del(repo, i);
-      i--;
+      repo_one_time_del(repo, i - ot_deleted);
+      ot_deleted++;
     } else if (ot.item > id) {
       // Decrease item in one time reservations where item>id.
       ot.item--;
-      repo_set(repo, TableOneTimeReservation, i, &ot);
+      repo_set(repo, TableOneTimeReservation, i - ot_deleted, &ot);
     }
   }
   // Now remove the equipment.
