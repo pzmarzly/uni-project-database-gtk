@@ -27,6 +27,8 @@ void dialog_week_summary(Repo *repo, Timestamp week_start) {
   gtk_text_buffer_insert_at_cursor(buf, " - ", -1);
   gtk_text_buffer_insert_at_cursor(buf, week_end_str, -1);
   gtk_text_buffer_insert_at_cursor(buf, ":\n\n", -1);
+  free(week_start_str);
+  free(week_end_str);
 
   OneTimeReservation *ot_list;
   ID ot_list_len = reservations_for_time_period(repo, week_start, week_end,
@@ -43,6 +45,7 @@ void dialog_week_summary(Repo *repo, Timestamp week_start) {
     char *name = describe_one_time_reservation(repo, ot_list + i);
     gtk_text_buffer_insert_at_cursor(buf, name, -1);
     gtk_text_buffer_insert_at_cursor(buf, "\n", -1);
+    free(name);
   }
   free(ot_list);
   GtkWidget *text_view = gtk_text_view_new_with_buffer(buf);
@@ -62,6 +65,8 @@ void dialog_available_summary(Repo *repo, Timestamp moment) {
   gtk_text_buffer_insert_at_cursor(buf, " ", -1);
   gtk_text_buffer_insert_at_cursor(buf, hm, -1);
   gtk_text_buffer_insert_at_cursor(buf, ":\n\n", -1);
+  free(day);
+  free(hm);
 
   // We create a fake OneTimeReservation and search
   // for available items.

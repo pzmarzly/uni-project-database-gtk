@@ -81,12 +81,16 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
   gtk_grid_attach(grid, GTK_WIDGET(date_button), 1, 0, 1, 1);
 
   GtkEntry *start_entry = GTK_ENTRY(gtk_entry_new());
-  gtk_entry_set_text(start_entry, hm_str(timestamp_to_hm(r.start)));
+  char *start_initial_str = hm_str(timestamp_to_hm(r.start));
+  gtk_entry_set_text(start_entry, start_initial_str);
+  free(start_initial_str);
   gtk_entry_set_max_length(start_entry, 5);
   gtk_grid_attach(grid, GTK_WIDGET(start_entry), 1, 1, 1, 1);
 
   GtkEntry *end_entry = GTK_ENTRY(gtk_entry_new());
-  gtk_entry_set_text(end_entry, hm_str(timestamp_to_hm(r.end)));
+  char *end_initial_str = hm_str(timestamp_to_hm(r.end));
+  gtk_entry_set_text(end_entry, end_initial_str);
+  free(end_initial_str);
   gtk_entry_set_max_length(end_entry, 5);
   gtk_grid_attach(grid, GTK_WIDGET(end_entry), 1, 2, 1, 1);
 

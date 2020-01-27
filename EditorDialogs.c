@@ -95,7 +95,9 @@ bool ask_for_moment(Timestamp *moment) {
   gtk_grid_attach(grid, day_btn, 1, 0, 1, 1);
 
   GtkEntry *hm_entry = GTK_ENTRY(gtk_entry_new());
-  gtk_entry_set_text(hm_entry, hm_str(timestamp_to_hm(timestamp_now())));
+  char *hm_initial_str = hm_str(timestamp_to_hm(timestamp_now()));
+  gtk_entry_set_text(hm_entry, hm_initial_str);
+  free(hm_initial_str);
   gtk_entry_set_max_length(hm_entry, 5);
   gtk_grid_attach(grid, GTK_WIDGET(hm_entry), 1, 1, 1, 1);
   gtk_widget_set_hexpand(GTK_WIDGET(hm_entry), true);
@@ -209,6 +211,7 @@ bool ask_for_item_one_time(OneTimeReservation *ot, ID ot_id, Repo *repo) {
     int result = gtk_dialog_run(dialog);
     if (result != GTK_RESPONSE_OK) {
       gtk_widget_destroy(GTK_WIDGET(dialog));
+      free(mappings);
       return false;
     }
     item = gtk_combo_box_get_active(item_combo_box);
@@ -218,5 +221,6 @@ bool ask_for_item_one_time(OneTimeReservation *ot, ID ot_id, Repo *repo) {
 
   ot->item = mappings[item];
   gtk_widget_destroy(GTK_WIDGET(dialog));
+  free(mappings);
   return true;
 }
