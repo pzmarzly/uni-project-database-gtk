@@ -22,8 +22,8 @@ bool one_time_is_within_time_range(OneTimeReservation *ot, Timestamp start,
   return true;
 }
 
-/// Returns the timestamp of the start of the last reservation outside of the
-/// time range.
+// Returns the timestamp of the start of the last reservation outside of the
+// time range.
 Timestamp last_occurrence_before_time_range(PeriodicReservation *per,
                                             Timestamp start) {
   Timestamp last_before = start;
@@ -59,8 +59,8 @@ void periodic_generate_within_time_range(PeriodicReservation *per,
   }
 }
 
-/// You can filter the reservations by equipment ID by providing eq_id other
-/// than INVALID_ID.
+// You can filter the reservations by equipment ID by providing eq_id other
+// than INVALID_ID.
 // Or you can exclude a single reservation by providing its ID via skip_id.
 ID reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
                                 OneTimeReservation **ot_list_destination,
@@ -73,8 +73,10 @@ ID reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
     repo_get(repo, TablePeriodicReservation, i, &per);
     if (eq_id != INVALID_ID && eq_id != per.item)
       continue;
+
     periodic_generate_within_time_range(&per, start, end, list);
   }
+
   ID ot_max = repo_len(repo, TableOneTimeReservation);
   for (ID i = 0; i < ot_max; i++) {
     if (skip_id != INVALID_ID && skip_id == i)
@@ -82,8 +84,10 @@ ID reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
 
     OneTimeReservation *ot = malloc(sizeof(OneTimeReservation));
     repo_get(repo, TableOneTimeReservation, i, ot);
+
     if (eq_id != INVALID_ID && eq_id != ot->item)
       continue;
+
     if (one_time_is_within_time_range(ot, start, end))
       linked_list_add(list, ot);
     else
@@ -110,6 +114,7 @@ bool one_time_conflicts_with_periodic(PeriodicReservation *per,
                                       OneTimeReservation *ot) {
   if (ot->item != per->item)
     return false;
+
   LinkedList *ot_list = linked_list_new();
   periodic_generate_within_time_range(per, ot->start, ot->end, ot_list);
   OneTimeReservation *ots;
