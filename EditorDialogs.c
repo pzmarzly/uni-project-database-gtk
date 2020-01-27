@@ -34,10 +34,12 @@ bool ask_for_semester_dates(Timestamp *start, Timestamp *end) {
   Datepicker *start_dp =
       datepicker_new(GTK_BUTTON(start_btn), timestamp_today());
   gtk_grid_attach(grid, start_btn, 1, 0, 1, 1);
+  gtk_widget_set_hexpand(start_btn, true);
 
   GtkWidget *end_btn = gtk_button_new_with_label("");
   Datepicker *end_dp = datepicker_new(GTK_BUTTON(end_btn), timestamp_today());
   gtk_grid_attach(grid, end_btn, 1, 1, 1, 1);
+  gtk_widget_set_hexpand(end_btn, true);
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
 
@@ -59,13 +61,14 @@ bool ask_for_week_start(Timestamp *week_start) {
   GtkGrid *grid = GTK_GRID(gtk_builder_get_object(ui, "grid"));
 
   GtkWidget *week_start_label =
-      gtk_label_new("Wybierz dowolny dzień w danym tygodniu");
+      gtk_label_new("Wybierz dowolny dzień w danym tygodniu.");
   gtk_grid_attach(grid, week_start_label, 0, 0, 1, 1);
 
   GtkWidget *week_start_btn = gtk_button_new_with_label("");
   Datepicker *week_start_dp =
       datepicker_new(GTK_BUTTON(week_start_btn), timestamp_today());
-  gtk_grid_attach(grid, week_start_btn, 1, 0, 1, 1);
+  gtk_grid_attach(grid, week_start_btn, 0, 1, 1, 1);
+  gtk_widget_set_hexpand(week_start_btn, true);
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
 
@@ -95,6 +98,7 @@ bool ask_for_moment(Timestamp *moment) {
   gtk_entry_set_text(hm_entry, hm_str(timestamp_to_hm(timestamp_now())));
   gtk_entry_set_max_length(hm_entry, 5);
   gtk_grid_attach(grid, GTK_WIDGET(hm_entry), 1, 1, 1, 1);
+  gtk_widget_set_hexpand(GTK_WIDGET(hm_entry), true);
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
 
@@ -145,6 +149,7 @@ bool ask_for_item_periodic(PeriodicReservation *per, ID per_id, Repo *repo) {
   }
   gtk_combo_box_set_active(GTK_COMBO_BOX(item_combo_box), per->item);
   gtk_grid_attach(grid, GTK_WIDGET(item_combo_box), 0, 1, 1, 1);
+  gtk_widget_set_hexpand(GTK_WIDGET(item_combo_box), true);
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
 
@@ -195,6 +200,7 @@ bool ask_for_item_one_time(OneTimeReservation *ot, ID ot_id, Repo *repo) {
   }
   gtk_combo_box_set_active(GTK_COMBO_BOX(item_combo_box), ot->item);
   gtk_grid_attach(grid, GTK_WIDGET(item_combo_box), 0, 1, 1, 1);
+  gtk_widget_set_hexpand(GTK_WIDGET(item_combo_box), true);
 
   gtk_widget_show_all(GTK_WIDGET(dialog));
 
