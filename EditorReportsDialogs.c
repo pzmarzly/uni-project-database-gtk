@@ -39,7 +39,40 @@ void dialog_week_summary(Repo *repo, Timestamp week_start) {
 }
 
 void dialog_available_summary(Repo *repo, Timestamp moment) {
-    printf("A\n");
+    GtkTextBuffer *buf = gtk_text_buffer_new(NULL);
+
+    // We create a fake OneTimeReservation and search
+    // for available items.
+    OneTimeReservation ot = {
+        .item = INVALID_ID,
+        .type = Reservation,
+        .start = moment,
+        .end = moment + 1,
+        .description = INVALID_ID,
+    };
+    ID eq_len = repo_len(repo, TableEquipment);
+    for (ID i = 0; i < eq_len; i++) {
+        if (!one_time_can_have_equipment_attached(repo, &ot, i))
+            continue;
+
+        Equipment eq;
+        repo_get(repo, TableEquipment, i, &eq);
+        gtk_text_buffer_insert_at_cursor(buf, eq.name, -1);
+        gtk_text_buffer_insert_at_cursor(buf, "\n", -1);
+    }
+
+    GtkBuilder *ui = get_builder("EditorReportsDialogs.glade");
+    GObject *dialog = gtk_builder_get_object(ui, "dialog");
+    gtk_dialog_add_buttons(GTK_DIALOG(dialog), "OK", GTK_RESPONSE_YES, NULL);
+
+    GObject *list = gtk_builder_get_object(ui, "list");
+
+    GtkWidget *text_view = gtk_text_view_new_with_buffer(buf);
+    gtk_box_pack_start(GTK_BOX(list), text_view, 1, 1, 0);
+
+    gtk_widget_show_all(GTK_WIDGET(list));
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
 typedef struct {
