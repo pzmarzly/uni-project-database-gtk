@@ -9,7 +9,7 @@
 typedef struct {
   Timestamp semester_start;
   Timestamp semester_end;
-  // section sizes
+  // Section sizes.
   unsigned table_size[TABLE_NUM];
   unsigned table_used[TABLE_NUM];
 } Header;
@@ -158,7 +158,7 @@ static void enlarge_table(Repo *repo) {
   return;
 }
 
-// Data types
+// Data types.
 typedef struct {
   unsigned position, size;
 } Position;

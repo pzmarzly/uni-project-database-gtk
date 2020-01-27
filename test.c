@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Repo.h tests
+// Repo.h tests.
 
 static void opens_and_overwrites() {
   rm_test();

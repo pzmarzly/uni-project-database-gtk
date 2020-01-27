@@ -17,7 +17,7 @@ _Noreturn void bug(char *msg) {
   exit(1);
 }
 
-// https://stackoverflow.com/q/1516370
+// Source: https://stackoverflow.com/q/1516370
 void warn(const char *format, ...) {
   va_list args;
   printf("WARNING: ");
