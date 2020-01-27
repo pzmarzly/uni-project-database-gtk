@@ -53,6 +53,7 @@ clean:
 	-rm -f gen-demo
 	-rm -f demo.db
 	-rm -f *.o
+	-rm -f *.d
 	-rm -f dialog/*.o
 	-rm -f dialog/*.d
 	$(MAKE) -C docs clean
