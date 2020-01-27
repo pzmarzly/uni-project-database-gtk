@@ -35,9 +35,9 @@ void linked_list_add(LinkedList *list, void *item) {
   list->len++;
 }
 
-int linked_list_into_array(LinkedList *list, int element_size, void **dest) {
+ID linked_list_into_array(LinkedList *list, int element_size, void **dest) {
   void *arr = malloc(list->len * element_size);
-  int i = 0;
+  ID i = 0;
   Node *node = list->start;
   while (node != NULL) {
     memcpy(arr + i * element_size, node->data, element_size);

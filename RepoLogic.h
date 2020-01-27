@@ -7,7 +7,7 @@ Timestamp last_occurrence_before_time_range(PeriodicReservation *per,
 void periodic_generate_within_time_range(PeriodicReservation *per,
                                          Timestamp start, Timestamp end,
                                          LinkedList *ot_list);
-int reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
+ID reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
                                  OneTimeReservation **ot_list_destination,
                                  ID eq_id);
 bool periodic_conflicts_with_periodic(PeriodicReservation *per1,

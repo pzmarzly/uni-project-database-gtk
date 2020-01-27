@@ -61,7 +61,7 @@ void periodic_generate_within_time_range(PeriodicReservation *per,
 
 /// You can filter the reservation by item ID by providing eq_id other than
 /// INVALID_ID.
-int reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
+ID reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
                                  OneTimeReservation **ot_list_destination,
                                  ID eq_id) {
   ID per_max = repo_len(repo, TablePeriodicReservation);
