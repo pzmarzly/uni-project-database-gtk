@@ -129,7 +129,7 @@ void dialog_availability_ranking(Repo *repo) {
     ID ot_list_len =
         reservations_for_time_period(repo, start, end, &ot_list, i);
     for (ID j = 0; j < ot_list_len; j++) {
-      eq_list[i].hours += (ot_list[j].end - ot_list[j].start) / (60 * 60);
+      eq_list[i].hours += (float)(ot_list[j].end - ot_list[j].start) / (60 * 60);
     }
     free(ot_list);
   }
