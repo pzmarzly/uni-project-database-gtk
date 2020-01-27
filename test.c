@@ -8,14 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// RepoLogic.h tests
-
-void detects_conflicts() {
-  rm_test();
-  Repo *r = repo_open("./test-repo.db", true, timestamp(2020, 1, 1, 0, 0),
-                      timestamp(2021, 1, 1, 0, 0));
-}
-
 // Repo.h tests
 
 void opens_and_overwrites() {
@@ -152,8 +144,6 @@ void handles_data_large() {
 }
 
 void small_tests() {
-  detects_conflicts();
-
   opens_and_overwrites();
   handles_data();
   handles_strings();
@@ -162,7 +152,7 @@ void small_tests() {
 }
 
 void large_tests() {
-  // handles_data_large();
+  handles_data_large();
 
   printf("large tests OK\n");
 }
