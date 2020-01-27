@@ -8,17 +8,17 @@
 void rm_test() { system("rm -f test.db || true"); }
 void rm_demo() { system("rm -f demo.db || true"); }
 
-Timestamp timestamp(int year, int month, int day, unsigned char hour, unsigned char minute) {
+Timestamp timestamp(int year, int month, int day, unsigned char hour,
+                    unsigned char minute) {
   GTimeZone *tz_utc = g_time_zone_new_utc();
-  GDateTime *utc_time = g_date_time_new(tz_utc, year, month, day, hour, minute, 0);
+  GDateTime *utc_time =
+      g_date_time_new(tz_utc, year, month, day, hour, minute, 0);
   Timestamp ret = g_date_time_to_unix(utc_time);
   g_date_time_unref(utc_time);
   return ret;
 }
 
-HourAndMinutes h(unsigned char hour) {
-  return hour * 60;
-}
+HourAndMinutes h(unsigned char hour) { return hour * 60; }
 
 HourAndMinutes hm(unsigned char hour, unsigned char minute) {
   return hour * 60 + minute;

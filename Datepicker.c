@@ -68,7 +68,8 @@ Datepicker *datepicker_new(GtkButton *button, Timestamp initial) {
   return this;
 }
 
-void datepicker_set_callback(Datepicker *this, datepicker_callback update, void *user_data) {
+void datepicker_set_callback(Datepicker *this, datepicker_callback update,
+                             void *user_data) {
   this->update = update;
   this->user_data = user_data;
 }

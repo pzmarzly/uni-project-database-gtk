@@ -4,7 +4,8 @@
 void rm_test();
 void rm_demo();
 
-Timestamp timestamp(int year, int month, int day, unsigned char hour, unsigned char minute);
+Timestamp timestamp(int year, int month, int day, unsigned char hour,
+                    unsigned char minute);
 HourAndMinutes h(unsigned char hour);
 HourAndMinutes hm(unsigned char hour, unsigned char minute);
 

@@ -188,8 +188,8 @@ char *describe_one_time_reservation(Repo *repo, OneTimeReservation *r) {
   char *day = timestamp_day_str(timestamp_midnight(r->start));
   char *start = hm_str(timestamp_to_hm(r->start));
   char *end = hm_str(timestamp_to_hm(r->end));
-  sprintf(ret, "%s, %s od %s do %s", equipment_str(repo, r->item), day,
-          start, end);
+  sprintf(ret, "%s, %s od %s do %s", equipment_str(repo, r->item), day, start,
+          end);
   free(end);
   free(start);
 
