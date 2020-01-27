@@ -1,5 +1,7 @@
 # Poradnik rozwoju programu
 
+Lista zadań i pomysłów: [TODO](../TODO).
+
 ## Pełny opis Makefile
 
 Do utrzymania stylu kodu użyty został `clang-format`.
@@ -48,7 +50,7 @@ pozostałe:
 - RepoString - konwersja między tekstem zapisanym w bazie a `char *`
 - RepoData - funkcje operujące na typach zdefiniowanych w Repo, oraz biblioteka czasu
 - RepoGenerate - funkcje pomocnicze dla gen-demo i test
-- RepoLogic - funkcje sprawdzające konflikty i generujące wystąpienia cyklicznych wypożyczeń
+- RepoLogic - funkcje sprawdzające konflikty i generujące wystąpienia cyklicznych rezerwacji
 - Utils - różne funkcje pomocnicze, upraszczające korzystanie z GLib i GTK
 ikony:
 - question-mark.png image-projector.png laptop.png:
@@ -59,8 +61,6 @@ Licencja ikon znajduje się również w AboutDialog.
 ```
 
 ## Konwencja nazewnicza
-
-Wypożyczenia są nazywane w kodzie programu rezerwacjami (`Reservation`).
 
 Funkcje prywatne - dowolne nazwy.
 

@@ -244,7 +244,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Wypożyczenia</property>
+            <property name="label" translatable="yes">Rezerwacje</property>
           </object>
           <packing>
             <property name="position">3</property>

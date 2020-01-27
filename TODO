@@ -1,15 +1,14 @@
-full text search or property search
-
-repo_del -> repo_force_del
-
-instrukcja dla uzytkownika i dokumentacja programisty
-error handling
+repo_del -> repo_force_del (IDs need to stay the same)
+reports
+periodic event cancellation, and maybe better view for one time reservations
 
 WONT-FIXes:
 - proper classes https://developer.gnome.org/gtk-tutorial/stable/x2200.html
 - faster enlarge_table algorithm
 - faster search
 - translation via gettext
+- handle corrupted files safely
+- full text search or property search
 
 Pre-release checklist:
 [ ] GTK+ 3.20 -> 3.18
