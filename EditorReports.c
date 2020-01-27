@@ -27,7 +27,8 @@ void week_clicked(GtkWidget *sender, gpointer user_data) {
   (void)sender;
   EditorReports *this = (EditorReports *)user_data;
   Timestamp week_start;
-  if (!ask_for_week_start(&week_start)) return;
+  if (!ask_for_week_start(&week_start))
+    return;
   dialog_week_summary(this->repo, week_start);
 }
 
@@ -35,7 +36,8 @@ void available_clicked(GtkWidget *sender, gpointer user_data) {
   (void)sender;
   EditorReports *this = (EditorReports *)user_data;
   Timestamp moment;
-  if (!ask_for_moment(&moment)) return;
+  if (!ask_for_moment(&moment))
+    return;
   dialog_available_summary(this->repo, moment);
 }
 
@@ -55,12 +57,14 @@ void editor_reports_repopulate(EditorReports *this) {
 
   GtkWidget *available = gtk_button_new_with_label("Lista wolnego sprzętu");
   gtk_box_pack_start(GTK_BOX(reports), available, 0, 0, 0);
-  g_signal_connect(G_OBJECT(available), "clicked", G_CALLBACK(available_clicked), this);
+  g_signal_connect(G_OBJECT(available), "clicked",
+                   G_CALLBACK(available_clicked), this);
 
   GtkWidget *availability =
       gtk_button_new_with_label("Ranking sprzętu wg dostępności");
   gtk_box_pack_start(GTK_BOX(reports), availability, 0, 0, 0);
-  g_signal_connect(G_OBJECT(availability), "clicked", G_CALLBACK(availability_clicked), this);
+  g_signal_connect(G_OBJECT(availability), "clicked",
+                   G_CALLBACK(availability_clicked), this);
 
   gtk_widget_show_all(GTK_WIDGET(reports));
 }

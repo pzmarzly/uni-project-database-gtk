@@ -1,6 +1,6 @@
 #pragma once
-#include "Repo.h"
 #include "Editor.h"
+#include "Repo.h"
 #include <gtk/gtk.h>
 
 typedef struct EditorReports EditorReports;

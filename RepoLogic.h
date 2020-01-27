@@ -8,8 +8,8 @@ void periodic_generate_within_time_range(PeriodicReservation *per,
                                          Timestamp start, Timestamp end,
                                          LinkedList *ot_list);
 ID reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
-                                 OneTimeReservation **ot_list_destination,
-                                 ID eq_id);
+                                OneTimeReservation **ot_list_destination,
+                                ID eq_id);
 bool periodic_conflicts_with_periodic(PeriodicReservation *per1,
                                       PeriodicReservation *per2);
 bool one_time_conflicts_with_periodic(PeriodicReservation *per,

@@ -15,8 +15,8 @@ struct EditorOneTimeReservation {
   GtkBuilder *ui;
 };
 
-EditorOneTimeReservation *editor_one_time_reservation_new(Editor *editor, Repo *repo,
-                                                          GtkBuilder *ui) {
+EditorOneTimeReservation *
+editor_one_time_reservation_new(Editor *editor, Repo *repo, GtkBuilder *ui) {
   EditorOneTimeReservation *this = malloc(sizeof(EditorOneTimeReservation));
   this->editor = editor;
   this->repo = repo;

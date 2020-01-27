@@ -58,7 +58,8 @@ bool ask_for_week_start(Timestamp *week_start) {
   GtkDialog *dialog = d.dialog;
   GtkGrid *grid = GTK_GRID(gtk_builder_get_object(ui, "grid"));
 
-  GtkWidget *week_start_label = gtk_label_new("Wybierz dowolny dzień w danym tygodniu");
+  GtkWidget *week_start_label =
+      gtk_label_new("Wybierz dowolny dzień w danym tygodniu");
   gtk_grid_attach(grid, week_start_label, 0, 0, 1, 1);
 
   GtkWidget *week_start_btn = gtk_button_new_with_label("");
@@ -87,8 +88,7 @@ bool ask_for_moment(Timestamp *moment) {
   gtk_grid_attach(grid, hm_label, 0, 1, 1, 1);
 
   GtkWidget *day_btn = gtk_button_new_with_label("");
-  Datepicker *day_dp =
-      datepicker_new(GTK_BUTTON(day_btn), timestamp_today());
+  Datepicker *day_dp = datepicker_new(GTK_BUTTON(day_btn), timestamp_today());
   gtk_grid_attach(grid, day_btn, 1, 0, 1, 1);
 
   GtkEntry *hm_entry = GTK_ENTRY(gtk_entry_new());

@@ -15,7 +15,8 @@ struct EditorEquipment {
   GtkBuilder *ui;
 };
 
-EditorEquipment *editor_equipment_new(Editor *editor, Repo *repo, GtkBuilder *ui) {
+EditorEquipment *editor_equipment_new(Editor *editor, Repo *repo,
+                                      GtkBuilder *ui) {
   EditorEquipment *this = malloc(sizeof(EditorEquipment));
   this->editor = editor;
   this->repo = repo;

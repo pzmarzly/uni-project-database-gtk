@@ -15,8 +15,8 @@ struct EditorPeriodicReservation {
   GtkBuilder *ui;
 };
 
-EditorPeriodicReservation *editor_periodic_reservation_new(Editor *editor, Repo *repo,
-                                                           GtkBuilder *ui) {
+EditorPeriodicReservation *
+editor_periodic_reservation_new(Editor *editor, Repo *repo, GtkBuilder *ui) {
   EditorPeriodicReservation *this = malloc(sizeof(EditorPeriodicReservation));
   this->editor = editor;
   this->repo = repo;

@@ -26,7 +26,8 @@ Timestamp timestamp_midnight(Timestamp timestamp) {
 }
 
 Timestamp timestamp_week_start(Timestamp timestamp) {
-  while (timestamp_to_day(timestamp_midnight(timestamp)) != Monday) timestamp -= 24 * 60 * 60;
+  while (timestamp_to_day(timestamp_midnight(timestamp)) != Monday)
+    timestamp -= 24 * 60 * 60;
   return timestamp_midnight(timestamp);
 }
 

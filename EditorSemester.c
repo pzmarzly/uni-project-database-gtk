@@ -15,8 +15,8 @@ struct EditorSemester {
   GtkWindow *parent;
 };
 
-EditorSemester *editor_semester_new(Editor *editor, Repo *repo, GtkBuilder *ui
-                                    ) {
+EditorSemester *editor_semester_new(Editor *editor, Repo *repo,
+                                    GtkBuilder *ui) {
   EditorSemester *this = malloc(sizeof(EditorSemester));
   this->editor = editor;
   this->repo = repo;
