@@ -32,12 +32,12 @@ bool ask_for_semester_dates(Timestamp *start, Timestamp *end) {
 
   GtkWidget *start_btn = gtk_button_new_with_label("");
   Datepicker *start_dp =
-      datepicker_new(GTK_BUTTON(start_btn), timestamp_today(), NULL, NULL);
+      datepicker_new(GTK_BUTTON(start_btn), timestamp_today());
   gtk_grid_attach(grid, start_btn, 1, 0, 1, 1);
 
   GtkWidget *end_btn = gtk_button_new_with_label("");
   Datepicker *end_dp =
-      datepicker_new(GTK_BUTTON(end_btn), timestamp_today(), NULL, NULL);
+      datepicker_new(GTK_BUTTON(end_btn), timestamp_today());
   gtk_grid_attach(grid, end_btn, 1, 1, 1, 1);
 
   gtk_widget_show_all(GTK_WIDGET(dialog));

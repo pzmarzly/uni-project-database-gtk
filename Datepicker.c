@@ -3,11 +3,9 @@
 #include "dialog/Dialogs.h"
 #include <stdlib.h>
 
-typedef void (*callback)(Timestamp, void *);
-
 struct Datepicker {
   Timestamp current;
-  callback update;
+  datepicker_callback update;
   void *user_data;
 };
 
@@ -60,15 +58,19 @@ static void on_click(GtkWidget *sender, gpointer user_data) {
   gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
-Datepicker *datepicker_new(GtkButton *button, Timestamp initial,
-                           callback update, void *user_data) {
+Datepicker *datepicker_new(GtkButton *button, Timestamp initial) {
   update_text(button, initial);
   Datepicker *this = malloc(sizeof(Datepicker));
-  this->update = update;
   this->current = initial;
-  this->user_data = user_data;
+  this->update = NULL;
+  this->user_data = NULL;
   g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(on_click), this);
   return this;
+}
+
+void datepicker_set_callback(Datepicker *this, datepicker_callback update, void *user_data) {
+  this->update = update;
+  this->user_data = user_data;
 }
 
 Timestamp datepicker_read(Datepicker *this) { return this->current; }

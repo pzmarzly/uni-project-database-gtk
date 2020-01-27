@@ -109,12 +109,12 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
   GtkButton *active_since_button = GTK_BUTTON(gtk_button_new_with_label(""));
   Datepicker *active_since =
-      datepicker_new(active_since_button, r.active_since, NULL, NULL);
+      datepicker_new(active_since_button, r.active_since);
   gtk_grid_attach(grid, GTK_WIDGET(active_since_button), 1, 3, 1, 1);
 
   GtkButton *active_until_button = GTK_BUTTON(gtk_button_new_with_label(""));
   Datepicker *active_until =
-      datepicker_new(active_until_button, r.active_until, NULL, NULL);
+      datepicker_new(active_until_button, r.active_until);
   gtk_grid_attach(grid, GTK_WIDGET(active_until_button), 1, 4, 1, 1);
 
   GtkTextView *description_text_view = GTK_TEXT_VIEW(gtk_text_view_new());

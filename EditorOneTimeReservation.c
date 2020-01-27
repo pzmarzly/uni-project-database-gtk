@@ -84,7 +84,7 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
 
   GtkButton *date_button = GTK_BUTTON(gtk_button_new_with_label(""));
   Datepicker *date =
-      datepicker_new(date_button, timestamp_midnight(r.start), NULL, NULL);
+      datepicker_new(date_button, timestamp_midnight(r.start));
   gtk_grid_attach(grid, GTK_WIDGET(date_button), 1, 0, 1, 1);
 
   GtkEntry *start_entry = GTK_ENTRY(gtk_entry_new());
