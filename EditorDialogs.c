@@ -133,11 +133,13 @@ bool ask_for_item_periodic(PeriodicReservation *per, ID per_id, Repo *repo) {
   ID *mappings = malloc(eq_len * sizeof(ID));
   ID mapping_len = 0;
   for (ID i = 0; i < eq_len; i++) {
-    Equipment eq;
-    repo_get(repo, TableEquipment, i, &eq);
     if (!periodic_can_have_equipment_attached(repo, per, per_id, i))
       continue;
+
     mappings[mapping_len++] = i;
+
+    Equipment eq;
+    repo_get(repo, TableEquipment, i, &eq);
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(item_combo_box), NULL,
                               eq.name);
   }
@@ -181,11 +183,13 @@ bool ask_for_item_one_time(OneTimeReservation *ot, ID ot_id, Repo *repo) {
   ID *mappings = malloc(eq_len * sizeof(ID));
   ID mapping_len = 0;
   for (ID i = 0; i < eq_len; i++) {
-    Equipment eq;
-    repo_get(repo, TableEquipment, i, &eq);
     if (!one_time_can_have_equipment_attached(repo, ot, i))
       continue;
+
     mappings[mapping_len++] = i;
+
+    Equipment eq;
+    repo_get(repo, TableEquipment, i, &eq);
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(item_combo_box), NULL,
                               eq.name);
   }
