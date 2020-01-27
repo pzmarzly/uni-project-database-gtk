@@ -31,8 +31,8 @@ void dialog_week_summary(Repo *repo, Timestamp week_start) {
   free(week_end_str);
 
   OneTimeReservation *ot_list;
-  ID ot_list_len = reservations_for_time_period(repo, week_start, week_end,
-                                                &ot_list, INVALID_ID);
+  ID ot_list_len = reservations_for_time_period(
+      repo, week_start, week_end, &ot_list, INVALID_ID, INVALID_ID);
   qsort(ot_list, ot_list_len, sizeof(OneTimeReservation),
         one_time_chronological_order);
 
@@ -79,7 +79,7 @@ void dialog_available_summary(Repo *repo, Timestamp moment) {
   };
   ID eq_len = repo_len(repo, TableEquipment);
   for (ID i = 0; i < eq_len; i++) {
-    if (!one_time_can_have_equipment_attached(repo, &ot, i))
+    if (!one_time_can_have_equipment_attached(repo, &ot, INVALID_ID, i))
       continue;
 
     Equipment eq;
@@ -127,9 +127,10 @@ void dialog_availability_ranking(Repo *repo) {
     repo_get(repo, TableEquipment, i, &eq_list[i].eq);
     OneTimeReservation *ot_list;
     ID ot_list_len =
-        reservations_for_time_period(repo, start, end, &ot_list, i);
+        reservations_for_time_period(repo, start, end, &ot_list, i, INVALID_ID);
     for (ID j = 0; j < ot_list_len; j++) {
-      eq_list[i].hours += (float)(ot_list[j].end - ot_list[j].start) / (60 * 60);
+      eq_list[i].hours +=
+          (float)(ot_list[j].end - ot_list[j].start) / (60 * 60);
     }
     free(ot_list);
   }

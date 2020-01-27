@@ -14,7 +14,7 @@ void periodic_generate_within_time_range(PeriodicReservation *per,
                                          LinkedList *ot_list);
 ID reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
                                 OneTimeReservation **ot_list_destination,
-                                ID eq_id);
+                                ID eq_id, ID skip_id);
 bool periodic_conflicts_with_periodic(PeriodicReservation *per1,
                                       PeriodicReservation *per2);
 bool one_time_conflicts_with_periodic(PeriodicReservation *per,
@@ -23,4 +23,4 @@ bool one_time_conflicts_with_periodic(PeriodicReservation *per,
 bool periodic_can_have_equipment_attached(Repo *repo, PeriodicReservation *per,
                                           ID per_id, ID eq_id);
 bool one_time_can_have_equipment_attached(Repo *repo, OneTimeReservation *ot,
-                                          ID eq_id);
+                                          ID ot_id, ID eq_id);

@@ -59,13 +59,15 @@ void periodic_generate_within_time_range(PeriodicReservation *per,
   }
 }
 
-/// You can filter the reservation by item ID by providing eq_id other than
-/// INVALID_ID.
+/// You can filter the reservations by equipment ID by providing eq_id other
+/// than INVALID_ID.
+// Or you can exclude a single reservation by providing its ID via skip_id.
 ID reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
                                 OneTimeReservation **ot_list_destination,
-                                ID eq_id) {
-  ID per_max = repo_len(repo, TablePeriodicReservation);
+                                ID eq_id, ID skip_id) {
   LinkedList *list = linked_list_new();
+
+  ID per_max = repo_len(repo, TablePeriodicReservation);
   for (ID i = 0; i < per_max; i++) {
     PeriodicReservation per;
     repo_get(repo, TablePeriodicReservation, i, &per);
@@ -75,6 +77,9 @@ ID reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
   }
   ID ot_max = repo_len(repo, TableOneTimeReservation);
   for (ID i = 0; i < ot_max; i++) {
+    if (skip_id != INVALID_ID && skip_id == i)
+      continue;
+
     OneTimeReservation *ot = malloc(sizeof(OneTimeReservation));
     repo_get(repo, TableOneTimeReservation, i, ot);
     if (eq_id != INVALID_ID && eq_id != ot->item)
@@ -150,10 +155,10 @@ bool periodic_can_have_equipment_attached(Repo *repo, PeriodicReservation *per,
 }
 
 bool one_time_can_have_equipment_attached(Repo *repo, OneTimeReservation *ot,
-                                          ID eq_id) {
+                                          ID ot_id, ID eq_id) {
   OneTimeReservation *ots;
-  int amount =
-      reservations_for_time_period(repo, ot->start, ot->end, &ots, eq_id);
+  int amount = reservations_for_time_period(repo, ot->start, ot->end, &ots,
+                                            eq_id, ot_id);
   free(ots);
   // Return true if no other reservation exists.
   return amount == 0;

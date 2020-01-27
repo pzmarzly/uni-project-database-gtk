@@ -173,7 +173,6 @@ bool ask_for_item_periodic(PeriodicReservation *per, ID per_id, Repo *repo) {
 }
 
 bool ask_for_item_one_time(OneTimeReservation *ot, ID ot_id, Repo *repo) {
-  (void)ot_id; // Unused, but kept for consistency with ask_for_item_periodic.
   ot->item = INVALID_ID;
 
   PreparedEditDialog d = dialog_edit("Wybierz przedmiot");
@@ -190,7 +189,7 @@ bool ask_for_item_one_time(OneTimeReservation *ot, ID ot_id, Repo *repo) {
   ID *mappings = malloc(eq_len * sizeof(ID));
   ID mapping_len = 0;
   for (ID i = 0; i < eq_len; i++) {
-    if (!one_time_can_have_equipment_attached(repo, ot, i))
+    if (!one_time_can_have_equipment_attached(repo, ot, ot_id, i))
       continue;
 
     mappings[mapping_len++] = i;
