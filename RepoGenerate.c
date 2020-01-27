@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void rm_test() { system("rm -f test.db || true"); }
+void rm_test() { system("rm -f test-repo.db || true"); }
 void rm_demo() { system("rm -f demo.db || true"); }
 
 Timestamp timestamp(int year, int month, int day, unsigned char hour,
