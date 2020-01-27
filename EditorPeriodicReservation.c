@@ -188,7 +188,7 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   char *name = describe_periodic_reservation(req->this->repo, &r);
   if (editor_removal_dialog(TablePeriodicReservation, name)) {
     repo_string_del(req->this->repo, r.description);
-    repo_periodic_del(req->this->repo, TablePeriodicReservation, req->id);
+    repo_periodic_del(req->this->repo, req->id);
     periodic_reservation_refresh(req->this);
   }
   free(name);

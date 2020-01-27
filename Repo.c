@@ -269,7 +269,7 @@ ID repo_len(Repo *repo, TableID table) {
 // Note: cyclic dependency in the functions below could be catastrophic.
 void repo_equipment_del(Repo *repo, ID id) {
   // Remove and fix relations in TablePeriodicReservation.
-  int per_max = repo_len(repo, TablePeriodicReservation);
+  ID per_max = repo_len(repo, TablePeriodicReservation);
   for (ID i = 0; i < per_max; i++) {
     PeriodicReservation per;
     repo_get(repo, TablePeriodicReservation, i, &per);
@@ -284,7 +284,7 @@ void repo_equipment_del(Repo *repo, ID id) {
     }
   }
   // Remove and fix relations in TableOneTimeReservation.
-  int ot_max = repo_len(repo, TableOneTimeReservation);
+  ID ot_max = repo_len(repo, TableOneTimeReservation);
   for (ID i = 0; i < ot_max; i++) {
     OneTimeReservation ot;
     repo_get(repo, TableOneTimeReservation, i, &ot);
