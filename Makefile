@@ -48,7 +48,13 @@ gen-demo: gen-demo.o ${COMMON}
 fmt:
 	clang-format -i *.c *.h
 clean:
-	-rm -f wez-mnie-gtk test gen-demo *.o *.d demo.db
+	-rm -f wez-mnie-gtk
+	-rm -f test
+	-rm -f gen-demo
+	-rm -f demo.db
+	-rm -f *.o
+	-rm -f dialog/*.o
+	-rm -f dialog/*.d
 	$(MAKE) -C docs clean
 docs:
 	$(MAKE) -C docs
