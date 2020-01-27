@@ -1,3 +1,4 @@
+#pragma once
 #include "Repo.h"
 #include <gtk/gtk.h>
 
