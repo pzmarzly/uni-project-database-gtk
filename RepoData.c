@@ -146,7 +146,7 @@ char *hm_str(HourAndMinutes hm) {
 
 HourAndMinutes hm_parse(const char *str) {
   unsigned char h, m;
-  if (sscanf(str, "%hhu:%hhu", &h, &m) != 1)
+  if (sscanf(str, "%hhu:%hhu", &h, &m) != 2)
     return HM_INVALID;
   if (h > 23)
     return HM_INVALID;
