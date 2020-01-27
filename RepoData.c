@@ -143,7 +143,7 @@ char *day_str(Day day) {
 }
 
 char *hm_str(HourAndMinutes hm) {
-  char *ret = malloc(6);
+  char *ret = malloc(8);
   sprintf(ret, "%02d:%02d", hm / 60, hm % 60);
   return ret;
 }

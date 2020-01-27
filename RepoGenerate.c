@@ -4,9 +4,11 @@
 #include "RepoString.h"
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
-void rm_test() { system("rm -f test-repo.db || true"); }
-void rm_demo() { system("rm -f demo.db || true"); }
+// If running `true` returns an error, we're dealing with an insane system.
+void rm_test() { assert(system("rm -f test-repo.db || true") == 0); }
+void rm_demo() { assert(system("rm -f demo.db || true") == 0); }
 
 Timestamp timestamp(int year, int month, int day, unsigned char hour,
                     unsigned char minute) {
