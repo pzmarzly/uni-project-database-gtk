@@ -3,7 +3,8 @@
 #include "RepoLogic.h"
 #include "Utils.h"
 #include <gtk/gtk.h>
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 static int one_time_chronological_order(const void *ot1, const void *ot2) {
   OneTimeReservation *a = (OneTimeReservation *)ot1;
