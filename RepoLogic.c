@@ -1,6 +1,8 @@
 #include "RepoLogic.h"
 #include "LinkedList.h"
 #include "RepoData.h"
+#include <stdlib.h>
+#include <string.h>
 
 bool periodic_is_active_within_time_range(PeriodicReservation *per,
                                           Timestamp start, Timestamp end) {

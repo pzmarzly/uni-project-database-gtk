@@ -6,6 +6,7 @@
 #include "RepoString.h"
 #include "Utils.h"
 #include <stdlib.h>
+#include <string.h>
 
 struct EditorSemester {
   Repo *repo;
