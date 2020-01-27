@@ -46,7 +46,6 @@ Day timestamp_to_day(Timestamp timestamp) {
   GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
   GTimeZone *tz_local = g_time_zone_new_local();
   GDateTime *time = g_date_time_to_timezone(utc_time, tz_local);
-  // TODO: think about timezones
   int ret = g_date_time_get_day_of_week(time) - 1;
   g_date_time_unref(time);
   g_date_time_unref(utc_time);
@@ -77,7 +76,11 @@ Timestamp hm_to_timestamp(Timestamp midnight, HourAndMinutes hm) {
   g_date_time_unref(time);
 
   time = g_date_time_new_local(year, month, day, hm / 60, hm % 60, 0);
-  Timestamp ret = g_date_time_to_unix(time);
+  GTimeZone *tz_utc = g_time_zone_new_utc();
+  GDateTime *utc_time = g_date_time_to_timezone(time, tz_utc);
+  Timestamp ret = g_date_time_to_unix(utc_time);
+  g_date_time_unref(utc_time);
+  g_time_zone_unref(tz_utc);
   g_date_time_unref(time);
   return ret;
 }
@@ -157,12 +160,24 @@ HourAndMinutes hm_parse(const char *str) {
 }
 
 char *timestamp_day_str(Timestamp timestamp) {
-  GDateTime *time = g_date_time_new_from_unix_utc(timestamp);
-  if (time == NULL) {
-    warn("invalid date format");
+  GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
+  if (utc_time == NULL) {
+    warn("invalid timestamp");
     return g_strdup("BŁĄD");
   }
-  return g_date_time_format(time, "%d. %b %Y");
+  GTimeZone *tz_local = g_time_zone_new_local();
+  GDateTime *time = g_date_time_to_timezone(utc_time, tz_local);
+  if (time == NULL) {
+    warn("invalid date format");
+    free(tz_local);
+    free(utc_time);
+    return g_strdup("BŁĄD");
+  }
+  char *ret = g_date_time_format(time, "%d. %b %Y");
+  g_date_time_unref(time);
+  g_time_zone_unref(tz_local);
+  g_date_time_unref(utc_time);
+  return ret;
 }
 
 char *equipment_str(Repo *repo, ID equipment_id) {
