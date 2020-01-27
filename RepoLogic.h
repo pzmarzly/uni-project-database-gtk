@@ -2,6 +2,11 @@
 #include "LinkedList.h"
 #include "Repo.h"
 
+bool periodic_is_active_within_time_range(PeriodicReservation *per,
+                                          Timestamp start, Timestamp end);
+bool one_time_is_within_time_range(OneTimeReservation *ot, Timestamp start,
+                                   Timestamp end);
+
 Timestamp last_occurrence_before_time_range(PeriodicReservation *per,
                                             Timestamp start);
 void periodic_generate_within_time_range(PeriodicReservation *per,
