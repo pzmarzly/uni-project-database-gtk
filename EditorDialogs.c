@@ -45,8 +45,10 @@ bool ask_for_semester_dates(Timestamp *start, Timestamp *end) {
 
   do {
     int result = gtk_dialog_run(dialog);
-    if (result != GTK_RESPONSE_OK)
+    if (result != GTK_RESPONSE_OK) {
+      gtk_widget_destroy(GTK_WIDGET(dialog));
       return false;
+    }
     *start = datepicker_read(start_dp);
     *end = datepicker_read(end_dp);
   } while (*start + 3600 * 24 * 28 >= *end);
