@@ -138,6 +138,10 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
       validation_error("Niepoprawny format godziny!");
       continue;
     }
+    if (r.start >= r.end) {
+      validation_error("Godzina startu nie może być wcześniejsza niż godzina końca!");
+      continue;
+    }
 
     r.active_since = datepicker_read(active_since);
     r.active_until = datepicker_read(active_until);
