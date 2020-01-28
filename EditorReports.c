@@ -67,6 +67,4 @@ void editor_reports_prepare(EditorReports *this) {
                    G_CALLBACK(availability_clicked), this);
 }
 
-void editor_reports_refresh(EditorReports *this) {
-  (void)this;
-}
+void editor_reports_refresh(EditorReports *this) { (void)this; }

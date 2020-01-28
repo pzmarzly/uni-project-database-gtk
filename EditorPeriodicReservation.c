@@ -139,7 +139,8 @@ static void on_edit(GtkWidget *sender, gpointer user_data) {
       continue;
     }
     if (r.start >= r.end) {
-      validation_error("Godzina startu nie może być wcześniejsza niż godzina końca!");
+      validation_error(
+          "Godzina startu nie może być wcześniejsza niż godzina końca!");
       continue;
     }
 

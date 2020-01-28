@@ -146,9 +146,7 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   }
 }
 
-void editor_equipment_prepare(EditorEquipment *this) {
-  (void)this;
-}
+void editor_equipment_prepare(EditorEquipment *this) { (void)this; }
 
 void editor_equipment_refresh(EditorEquipment *this) {
   GObject *equipment = gtk_builder_get_object(this->ui, "equipment");

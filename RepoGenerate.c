@@ -2,9 +2,9 @@
 #include "Repo.h"
 #include "RepoData.h"
 #include "RepoString.h"
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
 // If running `true` returns an error, we're dealing with an insane system.
 void rm_test() { assert(system("rm -f test-repo.db || true") == 0); }

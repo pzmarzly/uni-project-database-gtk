@@ -60,7 +60,7 @@ HourAndMinutes timestamp_to_hm(Timestamp timestamp) {
 Timestamp hm_to_timestamp(Timestamp midnight, HourAndMinutes hm) {
   if (midnight != timestamp_midnight(midnight)) {
     warn("internal bug: midnight provided to hm_to_timestamp is not midnight");
-    *((int *)0xDDDD)=0;
+    *((int *)0xDDDD) = 0;
     midnight = timestamp_midnight(midnight);
   }
   GDateTime *old_time = g_date_time_new_from_unix_local(midnight);
@@ -68,7 +68,8 @@ Timestamp hm_to_timestamp(Timestamp midnight, HourAndMinutes hm) {
   g_date_time_get_ymd(old_time, &year, &month, &day);
   g_date_time_unref(old_time);
 
-  GDateTime *time = g_date_time_new_local(year, month, day, hm / 60, hm % 60, 0);
+  GDateTime *time =
+      g_date_time_new_local(year, month, day, hm / 60, hm % 60, 0);
   Timestamp ret = g_date_time_to_unix(time);
   g_date_time_unref(time);
   return ret;
