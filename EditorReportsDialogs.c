@@ -22,7 +22,7 @@ void dialog_week_summary(Repo *repo, Timestamp week_start) {
   GtkTextBuffer *buf = gtk_text_buffer_new(NULL);
   gtk_text_buffer_insert_at_cursor(buf, "Rezerwacje w tygodniu ", -1);
   char *week_start_str = timestamp_day_str(week_start);
-  char *week_end_str = timestamp_day_str(week_end);
+  char *week_end_str = timestamp_day_str(week_end - 1);
   gtk_text_buffer_insert_at_cursor(buf, week_start_str, -1);
   gtk_text_buffer_insert_at_cursor(buf, " - ", -1);
   gtk_text_buffer_insert_at_cursor(buf, week_end_str, -1);
