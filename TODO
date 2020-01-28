@@ -5,9 +5,9 @@ WONT-FIXes:
 - translation via gettext
 - handle corrupted files safely
 - full text search or property search
-- periodic reservations being timezone-aware
 - periodic event cancellation
 - better view for one time reservations
+- UTC (note: periodic reservations must also be timezone-aware)
 
 Pre-release checklist:
 [ ] GTK+ 3.20 -> 3.18

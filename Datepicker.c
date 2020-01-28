@@ -26,9 +26,9 @@ static void on_click(GtkWidget *sender, gpointer user_data) {
   GtkWidget *calendar_label = GTK_WIDGET(gtk_label_new("Data:"));
   gtk_grid_attach(grid, calendar_label, 0, 0, 1, 1);
 
-  GDateTime *time = g_date_time_new_from_unix_utc(this->current);
+  GDateTime *time = g_date_time_new_from_unix_local(this->current);
   if (time == NULL)
-    time = g_date_time_new_from_unix_utc(timestamp_now());
+    time = g_date_time_new_from_unix_local(timestamp_now());
   int year, month, day;
   g_date_time_get_ymd(time, &year, &month, &day);
 
@@ -46,7 +46,7 @@ static void on_click(GtkWidget *sender, gpointer user_data) {
   if (result == GTK_RESPONSE_OK) {
     gtk_calendar_get_date(calendar, (unsigned *)&year, (unsigned *)&month,
                           (unsigned *)&day);
-    GTimeZone *tz = g_time_zone_new_utc();
+    GTimeZone *tz = g_time_zone_new_local();
     time = g_date_time_new(tz, year, month + 1, day, 0, 0, 0);
 
     Timestamp ts = g_date_time_to_unix(time);

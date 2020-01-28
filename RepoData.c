@@ -4,23 +4,23 @@
 #include <string.h>
 
 Timestamp timestamp_now() {
-  GDateTime *utc_time = g_date_time_new_now_utc();
-  Timestamp ret = g_date_time_to_unix(utc_time);
-  g_date_time_unref(utc_time);
+  GDateTime *time = g_date_time_new_now_local();
+  Timestamp ret = g_date_time_to_unix(time);
+  g_date_time_unref(time);
   return ret;
 }
 
 Timestamp timestamp_midnight(Timestamp timestamp) {
-  GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
+  GDateTime *old_time = g_date_time_new_from_unix_local(timestamp);
   int year, month, day;
-  g_date_time_get_ymd(utc_time, &year, &month, &day);
-  g_date_time_unref(utc_time);
+  g_date_time_get_ymd(old_time, &year, &month, &day);
+  g_date_time_unref(old_time);
 
-  GTimeZone *tz_utc = g_time_zone_new_utc();
-  utc_time = g_date_time_new(tz_utc, year, month, day, 0, 0, 0);
-  Timestamp ret = g_date_time_to_unix(utc_time);
-  g_date_time_unref(utc_time);
-  g_time_zone_unref(tz_utc);
+  GTimeZone *tz_local = g_time_zone_new_local();
+  GDateTime *time = g_date_time_new(tz_local, year, month, day, 0, 0, 0);
+  Timestamp ret = g_date_time_to_unix(time);
+  g_date_time_unref(time);
+  g_time_zone_unref(tz_local);
 
   return ret;
 }
@@ -34,53 +34,42 @@ Timestamp timestamp_week_start(Timestamp timestamp) {
 Timestamp timestamp_today() { return timestamp_midnight(timestamp_now()); }
 
 Timestamp timestamp_add_week(Timestamp timestamp) {
-  GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
-  GDateTime *utc_time_plus_week = g_date_time_add_weeks(utc_time, 1);
-  Timestamp ret = g_date_time_to_unix(utc_time_plus_week);
-  g_date_time_unref(utc_time);
-  g_date_time_unref(utc_time_plus_week);
+  GDateTime *time = g_date_time_new_from_unix_local(timestamp);
+  GDateTime *time_plus_week = g_date_time_add_weeks(time, 1);
+  Timestamp ret = g_date_time_to_unix(time_plus_week);
+  g_date_time_unref(time);
+  g_date_time_unref(time_plus_week);
   return ret;
 }
 
 Day timestamp_to_day(Timestamp timestamp) {
-  GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
-  GTimeZone *tz_local = g_time_zone_new_local();
-  GDateTime *time = g_date_time_to_timezone(utc_time, tz_local);
+  GDateTime *time = g_date_time_new_from_unix_local(timestamp);
   int ret = g_date_time_get_day_of_week(time) - 1;
   g_date_time_unref(time);
-  g_date_time_unref(utc_time);
-  g_time_zone_unref(tz_local);
   return ret;
 }
 
 HourAndMinutes timestamp_to_hm(Timestamp timestamp) {
-  GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
-  GTimeZone *tz_local = g_time_zone_new_local();
-  GDateTime *time = g_date_time_to_timezone(utc_time, tz_local);
+  GDateTime *time = g_date_time_new_from_unix_local(timestamp);
   int hour = g_date_time_get_hour(time);
   int minute = g_date_time_get_minute(time);
   g_date_time_unref(time);
-  g_date_time_unref(utc_time);
-  g_time_zone_unref(tz_local);
   return hour * 60 + minute;
 }
 
 Timestamp hm_to_timestamp(Timestamp midnight, HourAndMinutes hm) {
   if (midnight != timestamp_midnight(midnight)) {
     warn("internal bug: midnight provided to hm_to_timestamp is not midnight");
+    *((int *)0xDDDD)=0;
     midnight = timestamp_midnight(midnight);
   }
-  GDateTime *time = g_date_time_new_from_unix_utc(midnight);
+  GDateTime *old_time = g_date_time_new_from_unix_local(midnight);
   int year, month, day;
-  g_date_time_get_ymd(time, &year, &month, &day);
-  g_date_time_unref(time);
+  g_date_time_get_ymd(old_time, &year, &month, &day);
+  g_date_time_unref(old_time);
 
-  time = g_date_time_new_local(year, month, day, hm / 60, hm % 60, 0);
-  GTimeZone *tz_utc = g_time_zone_new_utc();
-  GDateTime *utc_time = g_date_time_to_timezone(time, tz_utc);
-  Timestamp ret = g_date_time_to_unix(utc_time);
-  g_date_time_unref(utc_time);
-  g_time_zone_unref(tz_utc);
+  GDateTime *time = g_date_time_new_local(year, month, day, hm / 60, hm % 60, 0);
+  Timestamp ret = g_date_time_to_unix(time);
   g_date_time_unref(time);
   return ret;
 }
@@ -160,23 +149,13 @@ HourAndMinutes hm_parse(const char *str) {
 }
 
 char *timestamp_day_str(Timestamp timestamp) {
-  GDateTime *utc_time = g_date_time_new_from_unix_utc(timestamp);
-  if (utc_time == NULL) {
-    warn("invalid timestamp");
-    return g_strdup("BŁĄD");
-  }
-  GTimeZone *tz_local = g_time_zone_new_local();
-  GDateTime *time = g_date_time_to_timezone(utc_time, tz_local);
+  GDateTime *time = g_date_time_new_from_unix_local(timestamp);
   if (time == NULL) {
-    warn("invalid date format");
-    free(tz_local);
-    free(utc_time);
+    warn("invalid timestamp");
     return g_strdup("BŁĄD");
   }
   char *ret = g_date_time_format(time, "%d. %b %Y");
   g_date_time_unref(time);
-  g_time_zone_unref(tz_local);
-  g_date_time_unref(utc_time);
   return ret;
 }
 

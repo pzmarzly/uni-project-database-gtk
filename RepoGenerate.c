@@ -12,11 +12,11 @@ void rm_demo() { assert(system("rm -f demo.db || true") == 0); }
 
 Timestamp timestamp(int year, int month, int day, unsigned char hour,
                     unsigned char minute) {
-  GTimeZone *tz_utc = g_time_zone_new_utc();
-  GDateTime *utc_time =
-      g_date_time_new(tz_utc, year, month, day, hour, minute, 0);
-  Timestamp ret = g_date_time_to_unix(utc_time);
-  g_date_time_unref(utc_time);
+  GTimeZone *tz_local = g_time_zone_new_local();
+  GDateTime *time =
+      g_date_time_new(tz_local, year, month, day, hour, minute, 0);
+  Timestamp ret = g_date_time_to_unix(time);
+  g_date_time_unref(time);
   return ret;
 }
 
