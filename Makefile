@@ -14,6 +14,7 @@ ifneq ($(DEBUG_REPO),0)
 endif
 
 ifneq ($(DEBUG_ASAN),0)
+	override CFLAGS+=-ggdb
     override LDFLAGS+=-ggdb -fstack-protector-all -fsanitize=undefined \
         -fsanitize=address -fno-omit-frame-pointer
 endif
