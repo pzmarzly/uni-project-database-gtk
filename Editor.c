@@ -81,6 +81,12 @@ bool editor_start(Editor *this) {
     return false;
   }
 
+  editor_semester_prepare(this->semester);
+  editor_equipment_prepare(this->equipment);
+  editor_periodic_reservation_prepare(this->periodic_reservation);
+  editor_one_time_reservation_prepare(this->one_time_reservation);
+  editor_reports_prepare(this->reports);
+
   editor_refresh(this);
 
   gtk_widget_show_all(GTK_WIDGET(this->window));
@@ -90,9 +96,11 @@ bool editor_start(Editor *this) {
 }
 
 void editor_refresh(Editor *this) {
-  editor_semester_repopulate(this->semester);
-  editor_equipment_repopulate(this->equipment);
-  editor_periodic_reservation_repopulate(this->periodic_reservation);
-  editor_one_time_reservation_repopulate(this->one_time_reservation);
-  editor_reports_repopulate(this->reports);
+  editor_semester_refresh(this->semester);
+  editor_equipment_refresh(this->equipment);
+  editor_periodic_reservation_refresh(this->periodic_reservation);
+  editor_one_time_reservation_refresh(this->one_time_reservation);
+  editor_reports_refresh(this->reports);
+
+  gtk_widget_show_all(GTK_WIDGET(this->window));
 }

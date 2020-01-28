@@ -47,7 +47,7 @@ static void availability_clicked(GtkWidget *sender, gpointer user_data) {
   dialog_availability_ranking(this->repo);
 }
 
-void editor_reports_repopulate(EditorReports *this) {
+void editor_reports_prepare(EditorReports *this) {
   GObject *reports = gtk_builder_get_object(this->ui, "reports");
   remove_all_gtk_children(GTK_CONTAINER(reports));
 
@@ -65,6 +65,8 @@ void editor_reports_repopulate(EditorReports *this) {
   gtk_box_pack_start(GTK_BOX(reports), availability, 0, 0, 0);
   g_signal_connect(G_OBJECT(availability), "clicked",
                    G_CALLBACK(availability_clicked), this);
+}
 
-  gtk_widget_show_all(GTK_WIDGET(reports));
+void editor_reports_refresh(EditorReports *this) {
+  (void)this;
 }

@@ -114,7 +114,13 @@ static void on_export(GtkWidget *sender, gpointer user_data) {
     do_save_as(this, start_fresh);
 }
 
-void editor_semester_repopulate(EditorSemester *this) {
+void editor_semester_prepare(EditorSemester *this) {
+  GObject *export_btn = gtk_builder_get_object(this->ui, "semester-export");
+  g_signal_connect(G_OBJECT(export_btn), "clicked", G_CALLBACK(on_export),
+                   this);
+}
+
+void editor_semester_refresh(EditorSemester *this) {
   char *text;
 
   GObject *start = gtk_builder_get_object(this->ui, "semester-start");
@@ -126,8 +132,4 @@ void editor_semester_repopulate(EditorSemester *this) {
   text = timestamp_day_str(repo_get_semester_end(this->repo));
   gtk_label_set_text(GTK_LABEL(end), text);
   free(text);
-
-  GObject *export_btn = gtk_builder_get_object(this->ui, "semester-export");
-  g_signal_connect(G_OBJECT(export_btn), "clicked", G_CALLBACK(on_export),
-                   this);
 }

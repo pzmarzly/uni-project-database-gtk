@@ -172,7 +172,11 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   free(name);
 }
 
-void editor_one_time_reservation_repopulate(EditorOneTimeReservation *this) {
+void editor_one_time_reservation_prepare(EditorOneTimeReservation *this) {
+  (void)this;
+}
+
+void editor_one_time_reservation_refresh(EditorOneTimeReservation *this) {
   GObject *one_time_reservation =
       gtk_builder_get_object(this->ui, "one-time-reservation");
   remove_all_gtk_children(GTK_CONTAINER(one_time_reservation));
@@ -206,6 +210,4 @@ void editor_one_time_reservation_repopulate(EditorOneTimeReservation *this) {
 
     gtk_box_pack_start(GTK_BOX(one_time_reservation), box, 0, 0, 0);
   }
-
-  gtk_widget_show_all(GTK_WIDGET(one_time_reservation));
 }

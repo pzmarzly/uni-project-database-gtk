@@ -146,7 +146,11 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   }
 }
 
-void editor_equipment_repopulate(EditorEquipment *this) {
+void editor_equipment_prepare(EditorEquipment *this) {
+  (void)this;
+}
+
+void editor_equipment_refresh(EditorEquipment *this) {
   GObject *equipment = gtk_builder_get_object(this->ui, "equipment");
   remove_all_gtk_children(GTK_CONTAINER(equipment));
 
@@ -181,6 +185,4 @@ void editor_equipment_repopulate(EditorEquipment *this) {
 
     gtk_box_pack_start(GTK_BOX(equipment), box, 0, 0, 0);
   }
-
-  gtk_widget_show_all(GTK_WIDGET(equipment));
 }

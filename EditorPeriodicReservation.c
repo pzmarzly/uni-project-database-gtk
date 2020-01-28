@@ -192,7 +192,11 @@ static void on_del(GtkWidget *sender, gpointer user_data) {
   free(name);
 }
 
-void editor_periodic_reservation_repopulate(EditorPeriodicReservation *this) {
+void editor_periodic_reservation_prepare(EditorPeriodicReservation *this) {
+  (void)this;
+}
+
+void editor_periodic_reservation_refresh(EditorPeriodicReservation *this) {
   GObject *periodic_reservation =
       gtk_builder_get_object(this->ui, "periodic-reservation");
   remove_all_gtk_children(GTK_CONTAINER(periodic_reservation));
@@ -226,6 +230,4 @@ void editor_periodic_reservation_repopulate(EditorPeriodicReservation *this) {
 
     gtk_box_pack_start(GTK_BOX(periodic_reservation), box, 0, 0, 0);
   }
-
-  gtk_widget_show_all(GTK_WIDGET(periodic_reservation));
 }

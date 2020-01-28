@@ -6,4 +6,5 @@
 typedef struct EditorPeriodicReservation EditorPeriodicReservation;
 EditorPeriodicReservation *
 editor_periodic_reservation_new(Editor *editor, Repo *repo, GtkBuilder *ui);
-void editor_periodic_reservation_repopulate(EditorPeriodicReservation *this);
+void editor_periodic_reservation_prepare(EditorPeriodicReservation *this);
+void editor_periodic_reservation_refresh(EditorPeriodicReservation *this);
