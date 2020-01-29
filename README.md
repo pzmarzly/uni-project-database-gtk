@@ -5,4 +5,4 @@ Docs \[PL\]: [docs/README.md](docs/README.md)
 An equipment database and reservation system, written in C and GTK. To run, use
 `make && ./wez-mnie-gtk`.
 
-Licensed MIT.
+(c) 2019-2020 Paweł Zmarzły, licensed MIT.
