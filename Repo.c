@@ -1,6 +1,7 @@
 #include "Repo.h"
 #include "RepoData.h"
 #include "Utils.h"
+#include <assert.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,6 +54,7 @@ static void save_header(Repo *repo) {
   fseek(repo->file, 0, SEEK_SET);
   fwrite(&repo->header, sizeof(Header), 1, repo->file);
   fflush(repo->file);
+  assert(system("sync || true") == 0);
 }
 
 char *repo_get_path(Repo *repo) { return g_strdup(repo->path); }
