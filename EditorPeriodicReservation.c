@@ -17,7 +17,7 @@ struct EditorPeriodicReservation {
 
 EditorPeriodicReservation *
 editor_periodic_reservation_new(Editor *editor, Repo *repo, GtkBuilder *ui) {
-  EditorPeriodicReservation *this = malloc(sizeof(EditorPeriodicReservation));
+  EditorPeriodicReservation *this = (EditorPeriodicReservation *)smalloc(sizeof(EditorPeriodicReservation));
   this->editor = editor;
   this->repo = repo;
   this->ui = ui;
@@ -32,7 +32,7 @@ typedef struct {
 
 static EditRequest *prepare_edit(EditorPeriodicReservation *this, bool empty,
                                  ID id) {
-  EditRequest *req = malloc(sizeof(EditRequest));
+  EditRequest *req = (EditRequest *)smalloc(sizeof(EditRequest));
   req->this = this;
   req->empty = empty;
   req->id = id;
@@ -172,7 +172,7 @@ typedef struct {
 } DelRequest;
 
 static DelRequest *prepare_del(EditorPeriodicReservation *this, ID id) {
-  DelRequest *req = malloc(sizeof(DelRequest));
+  DelRequest *req = (DelRequest *)smalloc(sizeof(DelRequest));
   req->this = this;
   req->id = id;
   return req;

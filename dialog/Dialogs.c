@@ -46,7 +46,7 @@ bool dialog_confirm(char *title, char *text) {
 }
 
 bool dialog_remove(char *title, char *element_name) {
-  char *text = malloc(strlen(element_name) + 64);
+  char *text = (char *)smalloc(strlen(element_name) + 64);
   strcpy(text, "Czy na pewno chcesz usunąć ");
   strcat(text, element_name);
   strcat(text, "?");

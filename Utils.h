@@ -2,6 +2,9 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
+void *smalloc(size_t bytes);
+void *scalloc(size_t amount, size_t size);
+
 _Noreturn void error(char *msg);
 _Noreturn void bug(char *msg);
 void warn(const char *format, ...);

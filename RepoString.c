@@ -9,7 +9,7 @@ void repo_string_get(Repo *repo, ID id, char **dest) {
   if (metadata.len == 0)
     error("Błąd odczytu - tekst usunięty");
 
-  *dest = malloc(metadata.len * STRING_FRAGMENT_MAX);
+  *dest = (char *)smalloc(metadata.len * STRING_FRAGMENT_MAX);
   for (ID i = 0; i < metadata.len; i++) {
     StringFragment fragment;
     repo_get(repo, TableStringFragment, metadata.start + i, &fragment);

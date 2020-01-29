@@ -122,7 +122,7 @@ void dialog_availability_ranking(Repo *repo) {
   Timestamp end = repo_get_semester_end(repo);
 
   ID eq_list_len = repo_len(repo, TableEquipment);
-  EquipmentStats *eq_list = calloc(eq_list_len, sizeof(EquipmentStats));
+  EquipmentStats *eq_list = (EquipmentStats *)scalloc(eq_list_len, sizeof(EquipmentStats));
   for (ID i = 0; i < eq_list_len; i++) {
     repo_get(repo, TableEquipment, i, &eq_list[i].eq);
     OneTimeReservation *ot_list;

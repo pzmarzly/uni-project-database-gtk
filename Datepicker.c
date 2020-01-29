@@ -1,6 +1,7 @@
 #include "Datepicker.h"
 #include "RepoData.h"
 #include "dialog/Dialogs.h"
+#include "Utils.h"
 #include <stdlib.h>
 
 struct Datepicker {
@@ -60,7 +61,7 @@ static void on_click(GtkWidget *sender, gpointer user_data) {
 
 Datepicker *datepicker_new(GtkButton *button, Timestamp initial) {
   update_text(button, initial);
-  Datepicker *this = malloc(sizeof(Datepicker));
+  Datepicker *this = (Datepicker *)smalloc(sizeof(Datepicker));
   this->current = initial;
   this->update = NULL;
   this->user_data = NULL;

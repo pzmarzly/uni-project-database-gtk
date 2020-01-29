@@ -93,7 +93,7 @@ static Repo *repo_open_internal(Repo *repo, RepoType type, Timestamp start,
 }
 
 Repo *repo_open(char *path, RepoType type, Timestamp start, Timestamp end) {
-  Repo *repo = malloc(sizeof(Repo));
+  Repo *repo = (Repo *)smalloc(sizeof(Repo));
   repo->path = g_strdup(path);
   return repo_open_internal(repo, type, start, end);
 }
@@ -110,7 +110,7 @@ void repo_close(Repo *repo) {
 static Repo *repo_save_as(Repo *repo, char *dest) {
   save_header(repo);
   // Turn repo into old_repo.
-  Repo *old_repo = malloc(sizeof(Repo));
+  Repo *old_repo = (Repo *)smalloc(sizeof(Repo));
   memcpy(old_repo, repo, sizeof(Repo));
   // Load new repo in place.
   repo->path = g_strdup(dest);
@@ -145,7 +145,7 @@ static void enlarge_table(Repo *repo) {
   char *temp = temp_file();
   if (temp == NULL) {
     warn("temp_file strategy failed");
-    temp = malloc(strlen(old_path) + 2);
+    temp = (char *)smalloc(strlen(old_path) + 2);
     strcpy(temp, old_path);
     strcat(temp, "~");
   }

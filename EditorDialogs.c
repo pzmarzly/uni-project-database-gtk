@@ -2,6 +2,7 @@
 #include "Datepicker.h"
 #include "RepoData.h"
 #include "RepoLogic.h"
+#include "Utils.h"
 #include <stdlib.h>
 
 PreparedEditDialog editor_edit_dialog_prepare(TableID type) {
@@ -138,7 +139,7 @@ bool ask_for_item_periodic(PeriodicReservation *per, ID per_id, Repo *repo) {
   GtkComboBox *item_combo_box = GTK_COMBO_BOX(gtk_combo_box_text_new());
 
   ID eq_len = repo_len(repo, TableEquipment);
-  ID *mappings = malloc(eq_len * sizeof(ID));
+  ID *mappings = (ID *)smalloc(eq_len * sizeof(ID));
   ID mapping_len = 0;
   for (ID i = 0; i < eq_len; i++) {
     if (!periodic_can_have_equipment_attached(repo, per, per_id, i))
@@ -188,7 +189,7 @@ bool ask_for_item_one_time(OneTimeReservation *ot, ID ot_id, Repo *repo) {
   GtkComboBox *item_combo_box = GTK_COMBO_BOX(gtk_combo_box_text_new());
 
   ID eq_len = repo_len(repo, TableEquipment);
-  ID *mappings = malloc(eq_len * sizeof(ID));
+  ID *mappings = (ID *)smalloc(eq_len * sizeof(ID));
   ID mapping_len = 0;
   for (ID i = 0; i < eq_len; i++) {
     if (!one_time_can_have_equipment_attached(repo, ot, ot_id, i))

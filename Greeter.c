@@ -14,7 +14,7 @@ struct Greeter {
 };
 
 Greeter *greeter_new() {
-  Greeter *this = malloc(sizeof(Greeter));
+  Greeter *this = (Greeter *)smalloc(sizeof(Greeter));
   this->ui = get_builder("Greeter.glade");
   this->quit_on_destroy = false;
   this->window = NULL;
@@ -41,7 +41,7 @@ typedef struct {
 
 static LoadEditorRequest *prepare_load(Greeter *this, char *path,
                                        RepoType repo_type) {
-  LoadEditorRequest *req = malloc(sizeof(LoadEditorRequest));
+  LoadEditorRequest *req = (LoadEditorRequest *)smalloc(sizeof(LoadEditorRequest));
   req->this = this;
   req->path = g_strdup(path);
   req->repo_type = repo_type;

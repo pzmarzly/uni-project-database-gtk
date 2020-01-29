@@ -1,4 +1,5 @@
 #include "LinkedList.h"
+#include "Utils.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -14,7 +15,7 @@ struct LinkedList {
 };
 
 LinkedList *linked_list_new() {
-  LinkedList *ret = malloc(sizeof(LinkedList));
+  LinkedList *ret = (LinkedList *)smalloc(sizeof(LinkedList));
   ret->start = NULL;
   ret->end = NULL;
   ret->len = 0;
@@ -22,7 +23,7 @@ LinkedList *linked_list_new() {
 }
 
 void linked_list_add(LinkedList *list, void *item) {
-  Node *node = malloc(sizeof(Node));
+  Node *node = (Node *)smalloc(sizeof(Node));
   node->data = item;
   node->next = NULL;
   if (list->len == 0) {
@@ -36,7 +37,7 @@ void linked_list_add(LinkedList *list, void *item) {
 }
 
 ID linked_list_into_array(LinkedList *list, int element_size, void **dest) {
-  void *arr = malloc(list->len * element_size);
+  void *arr = (void *)smalloc(list->len * element_size);
   ID i = 0;
   Node *node = list->start;
   while (node != NULL) {

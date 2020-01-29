@@ -17,7 +17,7 @@ struct EditorSemester {
 
 EditorSemester *editor_semester_new(Editor *editor, Repo *repo,
                                     GtkBuilder *ui) {
-  EditorSemester *this = malloc(sizeof(EditorSemester));
+  EditorSemester *this = (EditorSemester *)smalloc(sizeof(EditorSemester));
   this->editor = editor;
   this->repo = repo;
   this->ui = ui;

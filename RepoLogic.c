@@ -1,6 +1,7 @@
 #include "RepoLogic.h"
 #include "LinkedList.h"
 #include "RepoData.h"
+#include "Utils.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -49,7 +50,7 @@ void periodic_generate_within_time_range(PeriodicReservation *per,
 
   for (Timestamp i = timestamp_add_week(last_before); i < end;
        i = timestamp_add_week(i)) {
-    OneTimeReservation *ot = malloc(sizeof(OneTimeReservation));
+    OneTimeReservation *ot = (OneTimeReservation *)smalloc(sizeof(OneTimeReservation));
     ot->type = Reservation;
     ot->item = per->item;
     ot->start = i;
@@ -82,7 +83,7 @@ ID reservations_for_time_period(Repo *repo, Timestamp start, Timestamp end,
     if (skip_id != INVALID_ID && skip_id == i)
       continue;
 
-    OneTimeReservation *ot = malloc(sizeof(OneTimeReservation));
+    OneTimeReservation *ot = (OneTimeReservation *)smalloc(sizeof(OneTimeReservation));
     repo_get(repo, TableOneTimeReservation, i, ot);
 
     if (eq_id != INVALID_ID && eq_id != ot->item)

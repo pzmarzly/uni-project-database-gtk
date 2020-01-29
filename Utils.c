@@ -5,6 +5,25 @@
 #include <string.h>
 #include <unistd.h>
 
+void *smalloc(size_t bytes) {
+  void *ret = malloc(bytes);
+  if (ret == NULL) {
+    // We probably can't display a GTK window right now.
+    printf("System ran out of memory\n");
+    exit(1);
+  }
+  return ret;
+}
+
+void *scalloc(size_t amount, size_t size) {
+  void *ret = calloc(amount, size);
+  if (ret == NULL) {
+    printf("System ran out of memory\n");
+    exit(1);
+  }
+  return ret;
+}
+
 _Noreturn void error(char *msg) {
   printf("ERROR: %s\n", msg);
   dialog_info("Błąd krytyczny", msg);
@@ -45,7 +64,7 @@ char *program_dir(int extra_bytes) {
   // on any sane Unix system.
   *(strrchr(path, '/') + 1) = '\0';
   // Make a copy.
-  char *ret = malloc(strlen(path) + extra_bytes + 1);
+  char *ret = (char *)smalloc(strlen(path) + extra_bytes + 1);
   strcpy(ret, path);
   free(path);
   return ret;

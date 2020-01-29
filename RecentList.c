@@ -12,7 +12,7 @@ const char *RECENT_FILE = "recent_list.bin";
 
 static void create_program_folder() {
   int path_len = strlen(getenv("HOME")) + 1 + strlen(PROGRAM_FOLDER);
-  char *path = malloc(path_len + 1);
+  char *path = (char *)smalloc(path_len + 1);
   strcpy(path, getenv("HOME"));
   strcat(path, "/");
   strcat(path, PROGRAM_FOLDER);
@@ -30,7 +30,7 @@ static FILE *open_recent_list_file(const char *mode) {
 
   int path_len = strlen(getenv("HOME")) + 1 + strlen(PROGRAM_FOLDER) + 1 +
                  strlen(RECENT_FILE);
-  char *path = malloc(path_len + 1);
+  char *path = (char *)smalloc(path_len + 1);
   strcpy(path, getenv("HOME"));
   strcat(path, "/");
   strcat(path, PROGRAM_FOLDER);
@@ -43,7 +43,7 @@ static FILE *open_recent_list_file(const char *mode) {
 }
 
 RecentList *recent_list_load() {
-  RecentList *r = malloc(sizeof(RecentList));
+  RecentList *r = (RecentList *)smalloc(sizeof(RecentList));
   FILE *fp = open_recent_list_file("rb");
   if (fp == NULL)
     goto fail;
@@ -58,7 +58,7 @@ RecentList *recent_list_load() {
     int len;
     if (fread(&len, sizeof(int), 1, fp) != 1)
       goto fail;
-    r->paths[i] = malloc(len + 1);
+    r->paths[i] = (char *)smalloc(len + 1);
     if (fread(r->paths[i], len + 1, 1, fp) != 1)
       goto fail;
   }

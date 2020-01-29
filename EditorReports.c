@@ -16,7 +16,7 @@ struct EditorReports {
 };
 
 EditorReports *editor_reports_new(Editor *editor, Repo *repo, GtkBuilder *ui) {
-  EditorReports *this = malloc(sizeof(EditorReports));
+  EditorReports *this = (EditorReports *)smalloc(sizeof(EditorReports));
   this->editor = editor;
   this->repo = repo;
   this->ui = ui;

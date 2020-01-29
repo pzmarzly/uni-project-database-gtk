@@ -25,7 +25,7 @@ struct Editor {
 };
 
 Editor *editor_new(char *path, RepoType repo_type) {
-  Editor *this = malloc(sizeof(Editor));
+  Editor *this = (Editor *)smalloc(sizeof(Editor));
   this->ui = get_builder("Editor.glade");
   this->quit_on_destroy = false;
   this->window = NULL;

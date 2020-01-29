@@ -132,7 +132,7 @@ char *day_str(Day day) {
 }
 
 char *hm_str(HourAndMinutes hm) {
-  char *ret = malloc(8);
+  char *ret = (char *)smalloc(8);
   sprintf(ret, "%02d:%02d", hm / 60, hm % 60);
   return ret;
 }
@@ -166,7 +166,7 @@ char *equipment_str(Repo *repo, ID equipment_id) {
 }
 
 char *describe_periodic_reservation(Repo *repo, PeriodicReservation *r) {
-  char *ret = malloc(1024);
+  char *ret = (char *)smalloc(1024);
 
   char *start = hm_str(r->start);
   char *end = hm_str(r->end);
@@ -183,7 +183,7 @@ char *describe_periodic_reservation(Repo *repo, PeriodicReservation *r) {
 }
 
 char *describe_one_time_reservation(Repo *repo, OneTimeReservation *r) {
-  char *ret = malloc(1024);
+  char *ret = (char *)smalloc(1024);
 
   char *day = timestamp_day_str(timestamp_midnight(r->start));
   char *start = hm_str(timestamp_to_hm(r->start));

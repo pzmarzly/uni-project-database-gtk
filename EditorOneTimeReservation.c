@@ -17,7 +17,7 @@ struct EditorOneTimeReservation {
 
 EditorOneTimeReservation *
 editor_one_time_reservation_new(Editor *editor, Repo *repo, GtkBuilder *ui) {
-  EditorOneTimeReservation *this = malloc(sizeof(EditorOneTimeReservation));
+  EditorOneTimeReservation *this = (EditorOneTimeReservation *)smalloc(sizeof(EditorOneTimeReservation));
   this->editor = editor;
   this->repo = repo;
   this->ui = ui;
@@ -32,7 +32,7 @@ typedef struct {
 
 static EditRequest *prepare_edit(EditorOneTimeReservation *this, bool empty,
                                  ID id) {
-  EditRequest *req = malloc(sizeof(EditRequest));
+  EditRequest *req = (EditRequest *)smalloc(sizeof(EditRequest));
   req->this = this;
   req->empty = empty;
   req->id = id;
@@ -151,7 +151,7 @@ typedef struct {
 } DelRequest;
 
 static DelRequest *prepare_del(EditorOneTimeReservation *this, ID id) {
-  DelRequest *req = malloc(sizeof(DelRequest));
+  DelRequest *req = (DelRequest *)smalloc(sizeof(DelRequest));
   req->this = this;
   req->id = id;
   return req;
