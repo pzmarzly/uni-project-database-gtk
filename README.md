@@ -14,8 +14,10 @@ Interesting files:
 `GtkCssProvider`), `remove_all_gtk_children`
 - [`RepoData.c`](./RepoData.c) - validation, formatting, wrappers around `GDateTime`
 - [`RepoLogic.c`](./RepoLogic.c) - checking conflicts (functions are named in 1st conditional),
-generating events from periodic event descriptions
-- [`Datepicker.c`](./Datepicker.c) - GTK datepicker in a pop-up window
+generating events from periodic event descriptions (imagine
+[`spatie/opening-hours` library](https://github.com/spatie/opening-hours) but worse)
+- [`Datepicker.c`](./Datepicker.c) - GTK datepicker in a pop-up window, builder pattern API (though
+in the end the optional callback was never set anywhere in the project)
 
 (c) 2019-2020 Paweł Zmarzły, licensed MIT.
 
