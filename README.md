@@ -19,6 +19,8 @@ generating events from periodic event descriptions (imagine
 - [`Datepicker.c`](./Datepicker.c) - GTK datepicker in a pop-up window, builder pattern API (though
 in the end the optional callback was never set anywhere in the project)
 
+![screenshot](docs/window.png)
+
 (c) 2019-2020 Paweł Zmarzły, licensed MIT.
 
 ## Icons
